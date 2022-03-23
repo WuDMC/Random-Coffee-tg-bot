@@ -13,4 +13,5 @@ def is_correct_mail(mail):
 
 
 def generate_password():
-    return ''.join(secrets.choice(alphabet) for i in range(20))
+    passwrd = 'Batumi'
+    return passwrd

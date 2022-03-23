@@ -475,14 +475,13 @@ def start_handler(message):
     if (not user or not user.is_verified) and message.from_user.username not in ADMINS:
         create_user(user_id)
 
-        answer = ('Привет!🤩\n'
+        answer = ('Гамарджоба!🤩\n'
                   'Я Random Coffee бот 🤖\n\n'
                   'Каждую неделю я буду предлагать '
                   'тебе для встречи интересного человека, '
                   'случайно выбранного среди '
                   'других участников🎲\n\n'
-                  'Введи свой корпоративный mail, '
-                  'чтобы получить пароль📧')
+                  'Напиши ОК, чтобы продолжить')
     elif not user and message.from_user.username in ADMINS:
         create_user(user_id)
         set_field(user_id, 'is_admin', True)
