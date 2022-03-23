@@ -15,4 +15,3 @@ def generate_password():
     print(passwrd)
     return passwrd
 
-generate_password()
