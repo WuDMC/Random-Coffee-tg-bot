@@ -475,14 +475,13 @@ def start_handler(message):
     if (not user or not user.is_verified) and message.from_user.username not in ADMINS:
         create_user(user_id)
 
-        answer = ('Гамарджоба!🤩\n'
+        answer = ('Привет!🤩\n'
                   'Я Random Coffee бот 🤖\n\n'
-                  'Рад видеть тебя в Грузии\n\n'
                   'Каждую неделю я буду предлагать '
                   'тебе для встречи интересного человека, '
                   'случайно выбранного среди '
                   'других участников🎲\n\n'
-                  'напиши "Ок" '
+                  'Введи пароль, '
                   'чтобы начать')
     elif not user and message.from_user.username in ADMINS:
         create_user(user_id)
@@ -532,28 +531,13 @@ def ask_mail_handler(message):
 
             bot.send_message(admin.telegram_id,
                              answer_to_admin, parse_mode='Markdown')
-    else:
-        admins = get_admins()
-        user = get_user(user_id)
-        for admin in admins:
-            answer_to_admin = (
-                'Новый пользователь!\n'
-                f'@{message.from_user.username}\n'
-                f'[{message.from_user.first_name}](tg://user?id={user.telegram_id})\n'
-                f'{user.mail}\n'
-                f'{user.password}'
-            )
-
-            bot.send_message(admin.telegram_id,
-                             answer_to_admin, parse_mode='Markdown')
-
 
     if is_correct_mail(mail) and SMTP:
         answer = ('Отправил📮\n'
                   'Введи пароль из письма🔑')
     elif is_correct_mail(mail) and not SMTP:
-        answer = ('Поспрашивай знакомых, '
-                  f'чтобы узнать пароль ({", ".join(["@"+i for i in ADMINS])})🛡️\n'
+        answer = ('Напиши админу, '
+                  f'чтобы получить пароль ({", ".join(["@"+i for i in ADMINS])})🛡️\n'
                   'И введи его сюда🔑')
     else:
         answer = ('[Что-то пошло не так] Напиши админу, '
