@@ -557,7 +557,7 @@ def ask_password_handler(message):
     password = message.text
     user = get_user(user_id)
 
-    if user.password == 'BatumiForPeace':
+    if user.password ==  password:
         answer = ('Ты в системе🌐\n\n'
                   'Как тебя зовут?☕️')
         set_field(user_id, 'is_verified', True)
