@@ -475,14 +475,14 @@ def start_handler(message):
     if (not user or not user.is_verified) and message.from_user.username not in ADMINS:
         create_user(user_id)
 
-        answer = ('Привет!🤩\n'
+        answer = ('Гамарджоба!🤩\n'
                   'Я Random Coffee бот 🤖\n\n'
-                  'Каждую неделю я буду предлагать '
+                  'Что-бы по быстрее найти друзей в Грузии '
+                  'я каждую неделю я буду предлагать '
                   'тебе для встречи интересного человека, '
                   'случайно выбранного среди '
                   'других участников🎲\n\n'
-                  'Введи пароль, '
-                  'чтобы начать')
+                  'Напиши ОК, чтобы начать')
     elif not user and message.from_user.username in ADMINS:
         create_user(user_id)
         set_field(user_id, 'is_admin', True)
@@ -491,13 +491,7 @@ def start_handler(message):
         answer = ('Привет, админ!⭐\n\n'
                   'Как тебя зовут?☕️')
         next_state = States.ask_name
-    elif message.from_user.username == 'WuDMC':
-        set_field(user_id, 'is_admin', True)
-        set_field(user_id, 'is_verified', True)
 
-        answer = ('Привет, админ!⭐\n\n'
-                  'Как тебя зовут?☕️')
-        next_state = States.ask_name
     else:
         answer = ('Рад тебя видеть!🔥\n'
                   'Если есть вопросы - /help\n'
@@ -518,6 +512,21 @@ def ask_mail_handler(message):
 
     if is_correct_mail(mail):
         set_field(user_id, 'mail', mail)
+        admins = get_admins()
+        user = get_user(user_id)
+        for admin in admins:
+            answer_to_admin = (
+                'Новый пользователь!\n'
+                f'@{message.from_user.username}\n'
+                f'[{message.from_user.first_name}](tg://user?id={user.telegram_id})\n'
+                f'{user.mail}\n'
+                f'{user.password}'
+            )
+
+            bot.send_message(admin.telegram_id,
+                             answer_to_admin, parse_mode='Markdown')
+    else:
+        set_field(user_id, 'mail', 'undefined')
         admins = get_admins()
         user = get_user(user_id)
         for admin in admins:
