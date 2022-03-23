@@ -9,7 +9,7 @@ alphabet = string.ascii_letters + string.digits
 
 
 def is_correct_mail(mail):
-    return re_mail.fullmatch(mail) and mail.endswith(f'@{COMPANY}')
+    return re_mail.fullmatch(mail)
 
 
 def generate_password():
