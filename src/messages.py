@@ -7,7 +7,7 @@ alphabet = string.ascii_letters + string.digits
 
 
 def is_correct_mail(mail):
-    return re_mail.fullmatch(mail)
+    return re_mail.match(mail)
 
 
 def generate_password():

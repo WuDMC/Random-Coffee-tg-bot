@@ -523,21 +523,7 @@ def ask_mail_handler(message):
 
             bot.send_message(admin.telegram_id,
                              answer_to_admin, parse_mode='Markdown')
-    else:
-        set_field(user_id, 'mail', 'undefined')
-        admins = get_admins()
-        user = get_user(user_id)
-        for admin in admins:
-            answer_to_admin = (
-                'Новый пользователь!\n'
-                f'@{message.from_user.username}\n'
-                f'[{message.from_user.first_name}](tg://user?id={user.telegram_id})\n'
-                f'{user.mail}\n'
-                f'{user.password}'
-            )
 
-            bot.send_message(admin.telegram_id,
-                             answer_to_admin, parse_mode='Markdown')
 
     if is_correct_mail(mail) and SMTP:
         answer = ('Отправил📮\n'
