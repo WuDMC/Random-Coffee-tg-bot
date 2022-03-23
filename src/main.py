@@ -494,7 +494,7 @@ def start_handler(message):
     else:
         answer = ('Рад тебя видеть!🔥\n'
                   'Если есть вопросы - /help\n'
-                  f'твой ник @{message.from_user.username}\n')
+                  f'твой ник нейм @{message.from_user.username}\n')
         next_state = States.complete
 
     bot.send_chat_action(user_id, 'typing')
