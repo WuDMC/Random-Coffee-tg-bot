@@ -492,9 +492,9 @@ def start_handler(message):
                   'Как тебя зовут?☕️')
         next_state = States.ask_name
     else:
-        print(message.from_user.username)
         answer = ('Рад тебя видеть!🔥\n'
-                  'Если есть вопросы - /help')
+                  'Если есть вопросы - /help\n'
+                  f'твой ник @{message.from_user.username}\n')
         next_state = States.complete
 
     bot.send_chat_action(user_id, 'typing')
