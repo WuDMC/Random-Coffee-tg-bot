@@ -475,14 +475,24 @@ def start_handler(message):
     if (not user or not user.is_verified) and message.from_user.username not in ADMINS:
         create_user(user_id)
 
-        answer = ('Привет!🤩\n'
+        answer = ('Гамарджоба!🤩\n'
                   'Я Random Coffee бот 🤖\n\n'
+                  'Рад видеть тебя в Грузии\n\n'
                   'Каждую неделю я буду предлагать '
                   'тебе для встречи интересного человека, '
                   'случайно выбранного среди '
                   'других участников🎲\n\n'
-                  'Введи пароль, '
+                  'напиши "Ок" '
                   'чтобы начать')
+
+        keyboard = types.InlineKeyboardMarkup()
+        keyboard.row_width = 1
+
+        keyboard.add(
+            types.InlineKeyboardButton(
+                text='Ок'
+            )
+        )
     elif not user and message.from_user.username in ADMINS:
         create_user(user_id)
         set_field(user_id, 'is_admin', True)
@@ -551,8 +561,8 @@ def ask_mail_handler(message):
         answer = ('Отправил📮\n'
                   'Введи пароль из письма🔑')
     elif is_correct_mail(mail) and not SMTP:
-        answer = ('Напиши админу, '
-                  f'чтобы получить пароль ({", ".join(["@"+i for i in ADMINS])})🛡️\n'
+        answer = ('Поспрашивай знакомых, '
+                  f'чтобы узнать пароль ({", ".join(["@"+i for i in ADMINS])})🛡️\n'
                   'И введи его сюда🔑')
     else:
         answer = ('[Что-то пошло не так] Напиши админу, '
