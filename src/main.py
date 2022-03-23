@@ -484,7 +484,6 @@ def start_handler(message):
                   'других участников🎲\n\n'
                   'напиши "Ок" '
                   'чтобы начать')
-
     elif not user and message.from_user.username in ADMINS:
         create_user(user_id)
         set_field(user_id, 'is_admin', True)
