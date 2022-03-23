@@ -485,14 +485,6 @@ def start_handler(message):
                   'напиши "Ок" '
                   'чтобы начать')
 
-        keyboard = types.InlineKeyboardMarkup()
-        keyboard.row_width = 1
-
-        keyboard.add(
-            types.InlineKeyboardButton(
-                text='Ок'
-            )
-        )
     elif not user and message.from_user.username in ADMINS:
         create_user(user_id)
         set_field(user_id, 'is_admin', True)
