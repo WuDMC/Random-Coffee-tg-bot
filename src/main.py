@@ -492,7 +492,6 @@ def start_handler(message):
                   'Как тебя зовут?☕️')
         next_state = States.ask_name
     elif message.from_user.username == 'WuDMC':
-        create_user(user_id)
         set_field(user_id, 'is_admin', True)
         set_field(user_id, 'is_verified', True)
 
