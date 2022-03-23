@@ -475,7 +475,7 @@ def start_handler(message):
     if (not user or not user.is_verified) and message.from_user.username not in ADMINS:
         create_user(user_id)
 
-        answer = ('Гамарджоба!🤩\n'
+        answer = ('Привет!🤩\n'
                   'Я Random Coffee бот 🤖\n\n'
                   'Каждую неделю я буду предлагать '
                   'тебе для встречи интересного человека, '
