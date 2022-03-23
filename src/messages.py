@@ -14,4 +14,3 @@ def generate_password():
     passwrd = 'Batumi'
     print(passwrd)
     return passwrd
-
