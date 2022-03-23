@@ -4,12 +4,12 @@ import secrets
 
 from settings import COMPANY
 
-re_mail = re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b')
+re_mail = re.compile(r'\b.*\b')
 alphabet = string.ascii_letters + string.digits
 
 
 def is_correct_mail(mail):
-    return True
+    return re_mail.fullmatch(mail)
 
 
 def generate_password():
