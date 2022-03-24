@@ -27,10 +27,11 @@ class User(Base):
 
     def __repr__(self):
         return (f'{self.name}\n'
-                f'*Профиль:* {self.link}\n\n'
+                f'*Соц. сеть:* {self.link}\n\n'
                 f'*Чем занимается:* {self.work}\n'
                 f'*Зацепки для начала разговора:* {self.about}\n\n'
-                f'Напиши собеседнику в Telegram – [{self.name}](tg://user?id={self.telegram_id})')
+                f'Напиши собеседнику в Telegram – [{self.name}](tg://user?id={self.telegram_id})\n\n'
+                f'Доп. ссылка на Telegram – tg://user?id={self.telegram_id}\n\n')
 
 
 class Pair(Base):
