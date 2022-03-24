@@ -482,6 +482,15 @@ def start_handler(message):
                   'случайно выбранного среди '
                   'других участников🎲\n\n'
                   'Напиши ОК, чтобы продолжить')
+
+        keyboard = types.InlineKeyboardMarkup()
+
+        keyboard.add(
+            types.InlineKeyboardButton(
+                text='ОК',
+                callback_data=f'OK'
+            )
+        )
     elif not user and message.from_user.username in ADMINS:
         create_user(user_id)
         set_field(user_id, 'is_admin', True)
