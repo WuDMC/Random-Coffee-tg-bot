@@ -523,7 +523,6 @@ def ask_password_handler(message):
 
         bot.send_message(admin,
                          'success', parse_mode='Markdown')
-
         answer_to_admin = (
                 'Новый пользователь!\n'
                 f'@{message.from_user.username}\n'
