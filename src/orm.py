@@ -63,8 +63,10 @@ def get_active_users():
 def create_user(user_id):
     if not get_user(user_id):
         session.add(User(
+            mail='none',
             telegram_id=user_id,
             password=generate_password(),
+
         ))
         session.commit()
 
