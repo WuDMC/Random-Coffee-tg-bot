@@ -6,7 +6,7 @@ from threading import Thread
 from telebot import types, custom_filters
 
 from settings import ADMINS, TELEGRAM_TOKEN, SMTP
-from messages import generate_password, is_correct_mail
+from messages import generate_password
 from orm import get_user, set_field, create_user, get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
@@ -470,6 +470,7 @@ def start_handler(message):
     user_id = message.from_user.id
     next_state = States.ask_password
 
+
     user = get_user(user_id)
     if (not user or not user.is_verified) and message.from_user.username not in ADMINS:
         create_user(user_id)
@@ -520,7 +521,6 @@ def ask_password_handler(message):
                 'Новый пользователь!\n'
                 f'@{message.from_user.username}\n'
                 f'[{message.from_user.first_name}](tg://user?id={user.telegram_id})\n'
-                f'{user.mail}\n'
                 f'{user.password}'
             )
             bot.send_message(admin.telegram_id,
