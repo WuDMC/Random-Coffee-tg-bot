@@ -526,15 +526,21 @@ def ask_password_handler(message):
         bot.send_message(user_id, 'after uslovie')
         answer = ('Ты в системе🌐\n\n'
                   'Как тебя зовут?☕️')
+        bot.send_message(user_id, 'успех?ДА')
         set_field(user_id, 'mail', 'mail')
+        bot.send_message(user_id, 'СЕТ МЕЙЛ')
         set_field(user_id, 'is_verified', True)
+        bot.send_message(user_id, 'ВЕРИФИКАЙЦИЯ')
     else:
         bot.send_message(user_id, 'else')
         answer = ('Попробуй еще раз\n')
         next_state = States.ask_password
-    bot.send_message(user_id, 'успех?')
+        bot.send_message(user_id, 'успех?НЕТ')
+    bot.send_message(user_id, 'Выход из условия')
     bot.send_message(user_id, answer)
+    bot.send_message(user_id, 'Ответ Отправлен')
     bot.set_state(user_id, next_state)
+    bot.send_message(user_id, 'next_state')
 
 
 @bot.message_handler(state=States.ask_name)
