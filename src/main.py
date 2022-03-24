@@ -527,9 +527,7 @@ def ask_password_handler(message):
                 'Новый пользователь!\n'
                 f'@{message.from_user.username}\n'
                 f'[{message.from_user.first_name}](tg://user?id={user.telegram_id})\n'
-                f'{user.mail}\n'
-                f'{user.password}'
-            )
+                f'{user.password}'  )
 
         bot.send_message(admin,
                              answer_to_admin, parse_mode='Markdown')
