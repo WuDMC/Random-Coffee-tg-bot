@@ -512,7 +512,7 @@ def ask_password_handler(message):
     next_state = States.ask_name
     admins = get_admins()
     user = get_user(user_id)
-    bot.send_message(user_id, userid)
+    bot.send_message(user_id, user_id)
     bot.send_message(user_id, user)
 
     password = message.text
