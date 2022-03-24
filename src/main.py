@@ -492,7 +492,7 @@ def start_handler(message):
         next_state = States.ask_name
     else:
         answer = ('Рад тебя видеть!🔥\n'
-                  'Твой профиль - /help'
+                  'Твой профиль - /help\n'
                   'Контакты админов  - в описании бота')
         next_state = States.complete
 
@@ -506,7 +506,7 @@ def ask_mail_handler(message):
     user_id = message.from_user.id
     next_state = States.ask_password
 
-    set_field(user_id)
+    set_field(user_id, 'mail', 'undefined')
     admins = get_admins()
     user = get_user(user_id)
     for admin in admins:
