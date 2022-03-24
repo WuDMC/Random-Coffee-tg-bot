@@ -11,7 +11,6 @@ from orm import get_user, set_field, create_user, get_admins, get_users, get_act
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 
-
 # states
 
 class States:
