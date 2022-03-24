@@ -15,16 +15,15 @@ bot = telebot.TeleBot(TELEGRAM_TOKEN)
 # states
 
 class States:
-    ask_mail = 1
-    ask_password = 2
-    ask_name = 3
-    ask_link = 4
-    complete = 5
-    change_name = 6
-    change_link = 7
-    change_work = 8
-    change_about = 9
-    change_user_for_ask_id_admin = 10
+    ask_password = 1
+    ask_name = 2
+    ask_link = 3
+    complete = 4
+    change_name = 5
+    change_link = 6
+    change_work = 7
+    change_about = 8
+    change_user_for_ask_id_admin = 9
 
 # general functions
 
@@ -503,36 +502,6 @@ def start_handler(message):
     bot.send_message(user_id, answer)
     bot.set_state(user_id, next_state)
 
-
-@bot.message_handler(state=States.ask_mail)
-def ask_mail_handler(message):
-    user_id = message.from_user.id
-    next_state = States.ask_password
-
-    set_field(user_id, 'mail', mail)
-    admins = get_admins()
-    user = get_user(user_id)
-    for admin in admins:
-        answer_to_admin = (
-            'Новый пользователь!\n'
-            f'@{message.from_user.username}\n'
-            f'[{message.from_user.first_name}](tg://user?id={user.telegram_id})\n'
-            f'{user.mail}\n'
-            f'{user.password}'
-        )
-
-        bot.send_message(admin.telegram_id,
-                         answer_to_admin, parse_mode='Markdown')
-
-
-    answer = ('Поспрашивай знакомых в Батуми, '
-              f'чтобы получить пароль🛡️\n'
-              'И введи его сюда🔑')
-
-
-    bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer)
-    bot.set_state(user_id, next_state)
 
 
 
