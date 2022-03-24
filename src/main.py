@@ -506,9 +506,7 @@ def ask_mail_handler(message):
     user_id = message.from_user.id
     next_state = States.ask_password
 
-    mail = message.text
-
-    set_field(user_id, 'mail', 'без имейла')
+    set_field(user_id)
     admins = get_admins()
     user = get_user(user_id)
     for admin in admins:
