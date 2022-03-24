@@ -508,33 +508,26 @@ def ask_mail_handler(message):
 
     mail = message.text
 
-    if is_correct_mail(mail):
-        set_field(user_id, 'mail', mail)
-        admins = get_admins()
-        user = get_user(user_id)
-        for admin in admins:
-            answer_to_admin = (
-                'Новый пользователь!\n'
-                f'@{message.from_user.username}\n'
-                f'[{message.from_user.first_name}](tg://user?id={user.telegram_id})\n'
-                f'{user.mail}\n'
-                f'{user.password}'
-            )
+    set_field(user_id, 'mail', 'без имейла')
+    admins = get_admins()
+    user = get_user(user_id)
+    for admin in admins:
+        answer_to_admin = (
+            'Новый пользователь!\n'
+            f'@{message.from_user.username}\n'
+            f'[{message.from_user.first_name}](tg://user?id={user.telegram_id})\n'
+            f'{user.mail}\n'
+            f'{user.password}'
+        )
 
-            bot.send_message(admin.telegram_id,
-                             answer_to_admin, parse_mode='Markdown')
+        bot.send_message(admin.telegram_id,
+                         answer_to_admin, parse_mode='Markdown')
 
-    if is_correct_mail(mail) and SMTP:
-        answer = ('Отправил📮\n'
-                  'Введи пароль из письма🔑')
-    elif is_correct_mail(mail) and not SMTP:
-        answer = ('Поспрашивай знакомых в Батуми, '
-                  f'чтобы получить пароль🛡️\n'
-                  'И введи его сюда🔑')
-    else:
-        answer = ('[Что-то пошло не так]'
-                  'Напиши админу, '
-                  f'чтобы получить помощь ({", ".join(["@"+i for i in ADMINS])})🛡️\n')
+
+    answer = ('Поспрашивай знакомых в Батуми, '
+              f'чтобы получить пароль🛡️\n'
+              'И введи его сюда🔑')
+
 
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer)
