@@ -527,6 +527,7 @@ def ask_password_handler(message):
         answer = ('Ты в системе🌐\n\n'
                   'Как тебя зовут?☕️')
         bot.send_message(user_id, 'успех?ДА')
+        set_field(user_id, 'mail', password)
         set_field(user_id, 'is_verified', True)
         bot.send_message(user_id, 'ВЕРИФИКАЙЦИЯ')
     else:
