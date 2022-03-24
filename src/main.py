@@ -512,20 +512,22 @@ def ask_password_handler(message):
     next_state = States.ask_name
     admins = get_admins()
     user = get_user(user_id)
-    bot.send_message(user_id, 'userid')
+    bot.send_message(user_id, userid)
     bot.send_message(user_id, user)
 
     password = message.text
     bot.send_message(user_id, 'before uslovie')
     if user.password == password:
         bot.send_message(user_id, 'password == password')
+        admins = get_admins()
         for admin in admins:
+
             answer_to_admin = (
                 'Новый пользователь!\n'
                 f'@{message.from_user.username}\n'
                 f'[{message.from_user.first_name}](tg://user?id={user.telegram_id})\n'
                 f'{user.password}'
-            )
+                )
             bot.send_message(admin.telegram_id,
                          answer_to_admin, parse_mode='Markdown')
         bot.send_message(user_id, 'after uslovie')
