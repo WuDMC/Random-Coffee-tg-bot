@@ -469,7 +469,7 @@ def show_profile_callback(call):
 @bot.message_handler(commands=['start'])
 def start_handler(message):
     user_id = message.from_user.id
-    next_state = States.ask_mail
+    next_state = States.ask_password
 
     user = get_user(user_id)
     if (not user or not user.is_verified) and message.from_user.username not in ADMINS:
@@ -481,7 +481,7 @@ def start_handler(message):
                   'тебе для встречи интересного человека, '
                   'случайно выбранного среди '
                   'других участников🎲\n\n'
-                  'Напиши ОК, чтобы продолжить')
+                  'Введи пароль, чтобы продолжить')
 
 
     elif not user and message.from_user.username in ADMINS:
@@ -498,6 +498,7 @@ def start_handler(message):
                   'Контакты админов  - в описании бота')
         next_state = States.complete
 
+
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer)
     bot.set_state(user_id, next_state)
@@ -508,7 +509,7 @@ def ask_mail_handler(message):
     user_id = message.from_user.id
     next_state = States.ask_password
 
-    set_field(user_id, 'mail', 'undefined')
+    set_field(user_id, 'mail', mail)
     admins = get_admins()
     user = get_user(user_id)
     for admin in admins:
@@ -539,11 +540,22 @@ def ask_mail_handler(message):
 def ask_password_handler(message):
     user_id = message.from_user.id
     next_state = States.ask_name
+    admins = get_admins()
 
     password = message.text
     user = get_user(user_id)
 
     if user.password == password:
+        for admin in admins:
+            answer_to_admin = (
+                'Новый пользователь!\n'
+                f'@{message.from_user.username}\n'
+                f'[{message.from_user.first_name}](tg://user?id={user.telegram_id})\n'
+                f'{user.mail}\n'
+                f'{user.password}'
+            )
+            bot.send_message(admin.telegram_id,
+                         answer_to_admin, parse_mode='Markdown')
         answer = ('Ты в системе🌐\n\n'
                   'Как тебя зовут?☕️')
         set_field(user_id, 'is_verified', True)
