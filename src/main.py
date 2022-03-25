@@ -512,7 +512,7 @@ def ask_password_handler(message):
 # тут закостылил админа  можно использовать get_admins() с циклом потом
     admin = '220428984'
     user = get_user(user_id)
-    nickname = message.from_user.username
+    nickname = str(message.from_user.username or 'Не указан')
     password = message.text
     bot.send_message(user_id, nickname)
     if user.password == password:
