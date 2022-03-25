@@ -23,6 +23,7 @@ class States:
     change_work = 7
     change_about = 8
     change_user_for_ask_id_admin = 9
+    update_nickname = 10
 
 # general functions
 
@@ -557,7 +558,7 @@ def ask_name_handler(message):
               'Так вы в паре сможете лучше узнать '
               'друг о друге до встречи🔎')
     nickname = str(message.from_user.username or 'Не указан')
-    if nickname != 'Не указан':
+    if nickname == 'Не указан':
         answer = ('Рад познакомиться!)\n\n'
 
               'Пришли ссылку (или никнейм) на свой профиль '
@@ -588,8 +589,6 @@ def ask_link_handler(message):
               'Напиши партнеру в Telegram, '
               'чтобы договориться о встрече или звонке\n'
               'Время и место вы выбираете сами\n\n'
-              'ВАЖНО: Если у вас не указан Username в настройках\n'
-              'Обязательно добавьте ссылку на соц сети, чтобы можно было вас найти \n\n'
               'Дозаполнить и посмотреть свой профиль тут - /help')
 
     set_field(user_id, 'link', link)
@@ -692,6 +691,31 @@ def change_about_handler(message):
     answer = 'Готово'
 
     set_field(user_id, 'about', about)
+
+    keyboard = types.InlineKeyboardMarkup()
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, reply_markup=keyboard)
+    bot.set_state(user_id, next_state)
+
+@bot.message_handler(state=States.update_nickname)
+def update_nickname_handler(message):
+    user_id = message.from_user.id
+    next_state = States.complete
+
+    nickname = str(message.from_user.username or 'Не указан')
+    if nickname != 'Не указан':
+        nickname = '@' + nickname
+
+    answer = 'Готово'
+
+    set_field(user_id, 'mail', nickname)
 
     keyboard = types.InlineKeyboardMarkup()
 
@@ -889,6 +913,37 @@ def change_about_callback(call):
     bot.send_message(user_id, answer, reply_markup=keyboard)
     bot.set_state(user_id, next_state)
 
+@bot.callback_query_handler(func=lambda call: call.data == 'update_nickname')
+def update_nickname_callback(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+    next_state = States.update_nickname
+
+    answer = ('👉 Обновить Имя пользователя')
+
+    bot.send_chat_action(user_id, 'typing')
+    bot.edit_message_text(
+        chat_id=user_id,
+        message_id=message_id,
+        text=answer
+    )
+
+    answer = ('Чтобы обновить никнейм зайди в настройки:'
+              ' Изменить профиль >> Имя пользователя.\n'
+              ' После сохранения введи его сюда')
+
+    keyboard = types.InlineKeyboardMarkup()
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, reply_markup=keyboard)
+    bot.set_state(user_id, next_state)
+
 
 @bot.callback_query_handler(func=lambda call: call.data == 'change_profile')
 def change_profile_callback(call):
@@ -926,6 +981,10 @@ def change_profile_callback(call):
         types.InlineKeyboardButton(
             text='О себе',
             callback_data='change_about'
+        ),
+        types.InlineKeyboardButton(
+            text='Обновить Никнейм',
+            callback_data='update_nickname'
         ),
         types.InlineKeyboardButton(
             text='Назад',
