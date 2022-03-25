@@ -514,6 +514,7 @@ def ask_password_handler(message):
     user = get_user(user_id)
     nickname = message.from_user.username
     password = message.text
+    bot.send_message(user_id, nickname)
     if user.password == password:
 
 
