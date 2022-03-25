@@ -510,43 +510,39 @@ def ask_password_handler(message):
     user_id = message.from_user.id
     bot.send_message(user_id, 'check1')
     next_state = States.ask_name
+# тут закостылил админа  можно использовать get_admins() с циклом потом
     admin = '220428984'
-
     user = get_user(user_id)
     bot.send_message(user_id, user_id)
     bot.send_message(user_id, user)
 
     password = message.text
-    bot.send_message(user_id, 'before uslovie')
     if user.password == password:
-        bot.send_message(user_id, 'password == password')
 
-        bot.send_message(admin,
-                         'success', parse_mode='Markdown')
-        bot.send_message(admin,
-                         f'[{message.from_user.first_name}](tg://user?id={user.telegram_id})\n', parse_mode='Markdown')
 
+        answer_to_admin = (
+                'Новый пользователь!\n'
+                f'[{message.from_user.first_name}](tg://user?id={user.telegram_id})\n'
+                f'{user.password}')
         bot.send_message(admin,
-                         'success2', parse_mode='Markdown')
+                         answer_to_admin, parse_mode='Markdown')
 
-        bot.send_message(user_id, 'after uslovie')
         answer = ('Ты в системе🌐\n\n'
                   'Как тебя зовут?☕️')
-        bot.send_message(user_id, 'успех?ДА')
+
         set_field(user_id, 'mail', 'mail')
-        bot.send_message(user_id, 'СЕТ МЕЙЛ')
+
         set_field(user_id, 'is_verified', True)
-        bot.send_message(user_id, 'ВЕРИФИКАЙЦИЯ')
+
     else:
-        bot.send_message(user_id, 'else')
+
         answer = ('Попробуй еще раз\n')
         next_state = States.ask_password
-        bot.send_message(user_id, 'успех?НЕТ')
-    bot.send_message(user_id, 'Выход из условия')
+
+
     bot.send_message(user_id, answer)
-    bot.send_message(user_id, 'Ответ Отправлен')
     bot.set_state(user_id, next_state)
-    bot.send_message(user_id, 'next_state')
+
 
 
 @bot.message_handler(state=States.ask_name)
