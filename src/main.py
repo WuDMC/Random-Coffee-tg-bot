@@ -729,17 +729,14 @@ def show_profile_callback(call):
 
     answer = ('👉 Хочу посмотреть свой профиль')
 
-    bot.send_message(user_id, 'step1', parse_mode='Markdown')
-    bot.send_chat_action(user_id, 'typing')
+    # bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
         message_id=message_id,
         text=answer
     )
-    bot.send_message(user_id, 'step2', parse_mode='Markdown')
 
     user = get_user(user_id)
-    bot.send_message(user_id, 'step3', parse_mode='Markdown')
 
     answer = (
         'Вот так будет выглядеть твой профиль для собеседника:\n\n'
