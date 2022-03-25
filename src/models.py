@@ -13,7 +13,7 @@ class User(Base):
 
     id = Column(Integer, primary_key=True)
     telegram_id = Column(String, nullable=False)
-    mail = Column(String, default='', nullable=False)
+    mail = Column(String, default='', nullable=True)
     name = Column(String, default='', nullable=False)
     link = Column(String, default='', nullable=False)
     work = Column(String, default='', nullable=False)
