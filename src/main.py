@@ -523,14 +523,16 @@ def ask_password_handler(message):
 
         bot.send_message(admin,
                          'success', parse_mode='Markdown')
+        bot.send_message(admin,
+                         f'@{message.from_user.username}', parse_mode='Markdown')
         answer_to_admin = (
                 'Новый пользователь!\n'
                 f'@{message.from_user.username}\n'
                 f'[{message.from_user.first_name}](tg://user?id={user.telegram_id})\n'
                 f'{user.password}'  )
-
         bot.send_message(admin,
-                             answer_to_admin, parse_mode='Markdown')
+                         'success2', parse_mode='Markdown')
+
         bot.send_message(user_id, 'after uslovie')
         answer = ('Ты в системе🌐\n\n'
                   'Как тебя зовут?☕️')
