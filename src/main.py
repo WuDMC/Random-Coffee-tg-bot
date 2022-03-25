@@ -508,13 +508,10 @@ def start_handler(message):
 @bot.message_handler(state=States.ask_password)
 def ask_password_handler(message):
     user_id = message.from_user.id
-    bot.send_message(user_id, 'check1')
     next_state = States.ask_name
 # тут закостылил админа  можно использовать get_admins() с циклом потом
     admin = '220428984'
     user = get_user(user_id)
-    bot.send_message(user_id, user_id)
-    bot.send_message(user_id, user)
 
     password = message.text
     if user.password == password:
