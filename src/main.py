@@ -90,6 +90,10 @@ def help(message):
             types.InlineKeyboardButton(
                 text='Отправить приглашения',
                 callback_data='send_invites'
+            ),
+            types.InlineKeyboardButton(
+                text='Отправить тест',
+                callback_data='send_checks'
             )
         )
     help_txt = ('Обсуждение и вопросы по боту @BatumiRandomCoffee\n\n'
@@ -439,6 +443,12 @@ def show_profile_callback(call):
     bot.send_message(user_id, answer, parse_mode='Markdown',
                      reply_markup=keyboard)
 
+def send_checks():
+    for user in get_active_users():
+        if user.is_admin:
+            bot.send_message(
+                user.id, f'Тест сообщения', parse_mode='Markdown')
+
 
 def send_invites():
     for pair in get_pairs():
@@ -483,6 +493,38 @@ def show_profile_callback(call):
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, parse_mode='Markdown',
                      reply_markup=keyboard)
+
+    @bot.callback_query_handler(func=lambda call: call.data == 'send_checks')
+    def show_profile_callback(call):
+        user_id = call.message.chat.id
+        message_id = call.message.message_id
+
+        send_checks()
+
+        answer = ('👉 Отправить тест')
+
+        bot.send_chat_action(user_id, 'typing')
+        bot.edit_message_text(
+            chat_id=user_id,
+            message_id=message_id,
+            text=answer
+        )
+
+        answer = (
+            'Отправил тест'
+        )
+
+        keyboard = types.InlineKeyboardMarkup()
+
+        keyboard.add(
+            types.InlineKeyboardButton(
+                text='Назад',
+                callback_data='help'
+            )
+        )
+        bot.send_chat_action(user_id, 'typing')
+        bot.send_message(user_id, answer, parse_mode='Markdown',
+                         reply_markup=keyboard)
 
 # user commands
 
