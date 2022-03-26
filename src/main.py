@@ -40,10 +40,10 @@ def help(message):
             text='Посмотреть свой профиль',
             callback_data='show_profile'
         ),
-        types.InlineKeyboardButton(
-            text='Поменять данные профиля',
-            callback_data='change_profile'
-        ),
+        # types.InlineKeyboardButton(
+        #     text='Поменять данные профиля',
+        #     callback_data='change_profile'
+        # ),
         types.InlineKeyboardButton(
             text='Поставить на паузу',
             callback_data='set_pause'
