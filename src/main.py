@@ -469,12 +469,15 @@ def show_profile_callback(call):
 def start_handler(message):
     user_id = message.from_user.id
     next_state = States.ask_password
-
+    nickname = str(message.from_user.username or 'Не указан')
+    if nickname != 'Не указан':
+        nickname = '@' + nickname
 
     user = get_user(user_id)
     if (not user or not user.is_verified) and message.from_user.username not in ADMINS:
         create_user(user_id)
 
+        set_field(user_id, 'mail', nickname)
         answer = ('Гамарджоба!🤩\n'
                   'Я Random Coffee бот 🤖 в Батуми\n\n'
                   'Каждую неделю я буду предлагать '
@@ -486,6 +489,7 @@ def start_handler(message):
 
     elif not user and message.from_user.username in ADMINS:
         create_user(user_id)
+        set_field(user_id, 'mail', nickname)
         set_field(user_id, 'is_admin', True)
         set_field(user_id, 'is_verified', True)
 
@@ -513,9 +517,6 @@ def ask_password_handler(message):
 # тут закостылил админа  можно использовать get_admins() с циклом потом
     admin = '220428984'
     user = get_user(user_id)
-    nickname = str(message.from_user.username or 'Не указан')
-    if nickname != 'Не указан':
-        nickname = '@' + nickname
     password = message.text
 
     if user.password == password:
@@ -530,7 +531,7 @@ def ask_password_handler(message):
 
         answer = ('Ты в системе🌐\n\n'
                   'Как тебя зовут?☕️')
-        set_field(user_id, 'mail', nickname)
+
 
         set_field(user_id, 'is_verified', True)
 
