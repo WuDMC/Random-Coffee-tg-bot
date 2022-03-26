@@ -13,22 +13,9 @@ bot = telebot.TeleBot(TELEGRAM_TOKEN)
 
 # проблема с маркдаун
 __escape_markdown_map = {
-    "\\" : "\\\\",   # backslash
-    ""  : "\\" ,   # backtick (see also escaping backticks in code)
-    "*"  : "\\*" ,    # asterisk
+
     "_"  : "\\_" ,    # underscore
-    "{"  : "\\{" ,
-    "}"  : "\\}" ,    # curly braces
-    "["  : "\\[" ,
-    "]"  : "\\]" ,    # brackets
-    "("  : "\\(" ,
-    ")"  : "\\)" ,    # parentheses
-    "#"  : "\\#" ,    # pound sign
-    "+"  : "\\+" ,    # plus sign
-    "-"  : "\\-" ,    # minus sign (hyphen)
-    "."  : "\\." ,    # dot
-    "!"  : "\\!" ,    # exclamation mark
-    "|"  : "\\|" ,    # pipe (see also escaping pipe in tables)
+
 }
 
 
