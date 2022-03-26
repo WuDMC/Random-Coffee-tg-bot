@@ -11,7 +11,7 @@ from orm import get_user, set_field, create_user, get_admins, get_users, get_act
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 
-# проблема с маркдаун
+# проблема с маркдаун только решает никнеймы
 __escape_markdown_map = {
 
     "_"  : "\\_" ,    # underscore
@@ -305,7 +305,7 @@ def show_profile_callback(call):
     users = get_users()
     answer = (
         '\n'.join(
-            [f'[{user.name}](tg://user?id={user.telegram_id}) - {user.telegram_id} - {__escape_markdown(user.mail)} - {"Verified" if user.is_verified else "Blocked"} - {"Run" if user.is_active else "Pause"} - {user.password}' for user in users])
+            [f'[{user.name}](tg://user?id={user.telegram_id}) - {user.telegram_id} - {__escape_markdown(user.mail)} - {"Verified" if user.is_verified else "Blocked"} - {"Run" if user.is_active else "Pause"} - {"Link: Yes" if user.link else "Link: NO"}' for user in users])
     )
 
 
@@ -318,12 +318,9 @@ def show_profile_callback(call):
         )
     )
     bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer,
-                     reply_markup=keyboard)
     bot.send_message(user_id, answer, parse_mode='Markdown',
                      reply_markup=keyboard)
-    bot.send_message(user_id, answer, parse_mode='MarkdownV2',
-                     reply_markup=keyboard)
+
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'change_user')
