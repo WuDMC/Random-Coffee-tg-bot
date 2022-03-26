@@ -11,6 +11,33 @@ from orm import get_user, set_field, create_user, get_admins, get_users, get_act
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 
+# проблема с маркдаун
+__escape_markdown_map = {
+    "\\" : "\\\\",   # backslash
+    ""  : "\\" ,   # backtick (see also escaping backticks in code)
+    "*"  : "\\*" ,    # asterisk
+    "_"  : "\\_" ,    # underscore
+    "{"  : "\\{" ,
+    "}"  : "\\}" ,    # curly braces
+    "["  : "\\[" ,
+    "]"  : "\\]" ,    # brackets
+    "("  : "\\(" ,
+    ")"  : "\\)" ,    # parentheses
+    "#"  : "\\#" ,    # pound sign
+    "+"  : "\\+" ,    # plus sign
+    "-"  : "\\-" ,    # minus sign (hyphen)
+    "."  : "\\." ,    # dot
+    "!"  : "\\!" ,    # exclamation mark
+    "|"  : "\\|" ,    # pipe (see also escaping pipe in tables)
+}
+
+
+def __escape_markdown(raw_string):
+    s = raw_string
+    for k in __escape_markdown_map:
+        s = s.replace(k, __escape_markdown_map[k])
+    return s
+
 # states
 
 class States:
@@ -293,6 +320,7 @@ def show_profile_callback(call):
         '\n'.join(
             [f'[{user.name}](tg://user?id={user.telegram_id}) - {user.telegram_id} - {user.mail} - {"Verified" if user.is_verified else "Blocked"} - {"Run" if user.is_active else "Pause"} - {user.password}' for user in users])
     )
+    answer = __escape_markdown(answer)
 
     keyboard = types.InlineKeyboardMarkup()
 
@@ -303,7 +331,7 @@ def show_profile_callback(call):
         )
     )
     bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, parse_mode='MarkdownV2',
+    bot.send_message(user_id, answer, parse_mode='Markdown',
                      reply_markup=keyboard)
 
 
