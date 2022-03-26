@@ -1072,8 +1072,8 @@ def schedule_checker():
 
 
 if __name__ == "__main__":
-    schedule.every().sunday.at('12:00').do(generate_pairs)
-    schedule.every().monday.at('12:00').do(send_invites)
+    schedule.every().monday.at('10:00').do(generate_pairs)
+    schedule.every().monday.at('11:00').do(send_invites)
     Thread(target=schedule_checker).start()
 
     bot.polling()
