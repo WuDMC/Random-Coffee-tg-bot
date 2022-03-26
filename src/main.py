@@ -494,37 +494,37 @@ def show_profile_callback(call):
     bot.send_message(user_id, answer, parse_mode='Markdown',
                      reply_markup=keyboard)
 
-    @bot.callback_query_handler(func=lambda call: call.data == 'send_checks')
-    def show_profile_callback(call):
-        user_id = call.message.chat.id
-        message_id = call.message.message_id
+@bot.callback_query_handler(func=lambda call: call.data == 'send_checks')
+def send_checks_callback(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
 
-        send_checks()
+    send_checks()
 
-        answer = ('👉 Отправить тест')
+    answer = ('👉 Отправить тест')
 
-        bot.send_chat_action(user_id, 'typing')
-        bot.edit_message_text(
-            chat_id=user_id,
-            message_id=message_id,
-            text=answer
+    bot.send_chat_action(user_id, 'typing')
+    bot.edit_message_text(
+        chat_id=user_id,
+        message_id=message_id,
+        text=answer
+    )
+
+    answer = (
+        'Отправил тест'
+    )
+
+    keyboard = types.InlineKeyboardMarkup()
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
         )
-
-        answer = (
-            'Отправил тест'
-        )
-
-        keyboard = types.InlineKeyboardMarkup()
-
-        keyboard.add(
-            types.InlineKeyboardButton(
-                text='Назад',
-                callback_data='help'
-            )
-        )
-        bot.send_chat_action(user_id, 'typing')
-        bot.send_message(user_id, answer, parse_mode='Markdown',
-                         reply_markup=keyboard)
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, parse_mode='Markdown',
+                     reply_markup=keyboard)
 
 # user commands
 
