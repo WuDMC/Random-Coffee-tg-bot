@@ -308,7 +308,7 @@ def show_profile_callback(call):
 
     answer = (
         '\n'.join(
-            [f'[{user.name}](tg://user?id={user.telegram_id}) \- {user.telegram_id} \- {__escape_markdown(user.mail)} \- {"Verified" if user.is_verified else "Blocked"} \- {"Run" if user.is_active else "Pause"} \- {"Link: Yes" if user.link else "Link: NO"}' for user in users])
+            [f'[{user.name}](tg://user?id={user.telegram_id}) \- {user.telegram_id} \- {__escape_markdown(user.mail)} \- {"Verified" if user.is_verified else "Blocked"} \- {"Run" if user.is_active else "Pause"} ' for user in users])
     )
 
 
@@ -499,7 +499,7 @@ def start_handler(message):
     user = get_user(user_id)
     if (not user or not user.is_verified) and message.from_user.username not in ADMINS:
         create_user(user_id)
-
+        set_field(user_id, 'link', 'Не указана')
         set_field(user_id, 'mail', nickname)
         set_field(user_id, 'name', 'Имя не указано')
         answer = ('Гамарджоба!🤩\n'
