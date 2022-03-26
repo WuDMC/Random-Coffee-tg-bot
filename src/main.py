@@ -303,7 +303,7 @@ def show_profile_callback(call):
         )
     )
     bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, parse_mode='Markdown',
+    bot.send_message(user_id, answer,
                      reply_markup=keyboard)
 
 
