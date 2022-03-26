@@ -53,7 +53,8 @@ def get_active_users():
             User
         )
         .filter(
-            User.is_active == True
+            User.is_active == True,
+            User.is_verified == True
         )
         .all()
     )
