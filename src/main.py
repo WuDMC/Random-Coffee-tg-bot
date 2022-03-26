@@ -331,6 +331,10 @@ def show_profile_callback(call):
         )
     )
     bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer,
+                     reply_markup=keyboard)
+    bot.send_message(user_id, answer, parse_mode='Markdown',
+                     reply_markup=keyboard)
     bot.send_message(user_id, answer, parse_mode='MarkdownV2',
                      reply_markup=keyboard)
 
