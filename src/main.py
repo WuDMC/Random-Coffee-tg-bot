@@ -288,7 +288,7 @@ def show_profile_callback(call):
     users = get_users()
     answer = (
         '\n'.join(
-            [f'[{user.name}](tg://user?id={user.telegram_id}) - {user.telegram_id} - {"Verified" if user.is_verified else "Blocked"} - {"Run" if user.is_active else "Pause"} - {user.password}' for user in users])
+            [f'[{user.name}](tg://user?id={user.telegram_id}) - {user.telegram_id} - {user.mail} - {"Verified" if user.is_verified else "Blocked"} - {"Run" if user.is_active else "Pause"} - {user.password}' for user in users])
     )
 
     keyboard = types.InlineKeyboardMarkup()
