@@ -8,21 +8,6 @@ Base = declarative_base()
 engine = create_engine('sqlite:///data/db.db?check_same_thread=False')
 
 
-# проблема с маркдаун только решает никнеймы
-__escape_markdown_map = {
-
-    "_"  : "\\_" ,    # underscore
-
-}
-
-
-def __escape_markdown(raw_string):
-    s = raw_string
-    for k in __escape_markdown_map:
-        s = s.replace(k, __escape_markdown_map[k])
-    return s
-
-
 class User(Base):
     __tablename__ = 'user'
 
