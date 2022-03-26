@@ -39,19 +39,20 @@ def help(message):
         types.InlineKeyboardButton(
             text='Посмотреть свой профиль',
             callback_data='show_profile'
-        ),
+        )
+        # ,
         # types.InlineKeyboardButton(
         #     text='Поменять данные профиля',
         #     callback_data='change_profile'
         # ),
-        types.InlineKeyboardButton(
-            text='Поставить на паузу',
-            callback_data='set_pause'
-        ),
-        types.InlineKeyboardButton(
-            text='Снять c паузы',
-            callback_data='set_run'
-        )
+        # types.InlineKeyboardButton(
+        #     text='Поставить на паузу',
+        #     callback_data='set_pause'
+        # ),
+        # types.InlineKeyboardButton(
+        #     text='Снять c паузы',
+        #     callback_data='set_run'
+        # )
     )
 
     user = get_user(user_id)
