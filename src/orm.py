@@ -60,6 +60,34 @@ def get_active_users():
     )
     return users if users else []
 
+def get_no_nickname_users():
+    users = (
+        session.query(
+            User
+        )
+        .filter(
+            User.is_active == True,
+            User.is_verified == True,
+            User.mail == 'Не указан'
+        )
+        .all()
+    )
+    return users if users else []
+
+def get_no_link_users():
+    users = (
+        session.query(
+            User
+        )
+        .filter(
+            User.is_active == True,
+            User.is_verified == True,
+            User.link == None
+        )
+        .all()
+    )
+    return users if users else []
+
 
 def create_user(user_id):
     if not get_user(user_id):
