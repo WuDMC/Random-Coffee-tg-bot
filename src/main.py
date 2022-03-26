@@ -78,9 +78,10 @@ def help(message):
                 callback_data='send_invites'
             )
         )
-
+    help_txt = ('Обсуждение и вопросы по боту @BatumiRandomCoffee\n\n'
+                'Выбери подходящую опцию ниже')
     bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, 'Выбери подходящую опцию ниже',
+    bot.send_message(user_id, help_txt,
                      reply_markup=keyboard)
     bot.set_state(user_id, next_state)
 
@@ -501,7 +502,7 @@ def start_handler(message):
     else:
         answer = ('Рад тебя видеть!🔥\n'
                   'Твой профиль - /help\n'
-                  'Контакты админов  - в описании бота')
+                  'Обсуждение и вопросы по боту @BatumiRandomCoffee')
         next_state = States.complete
 
 
