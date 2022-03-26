@@ -53,20 +53,19 @@ def help(message):
         types.InlineKeyboardButton(
             text='Посмотреть свой профиль',
             callback_data='show_profile'
+        ),
+        types.InlineKeyboardButton(
+            text='Поменять данные профиля',
+            callback_data='change_profile'
+        ),
+        types.InlineKeyboardButton(
+            text='Поставить на паузу',
+            callback_data='set_pause'
+        ),
+        types.InlineKeyboardButton(
+            text='Снять c паузы',
+            callback_data='set_run'
         )
-        # ,
-        # types.InlineKeyboardButton(
-        #     text='Поменять данные профиля',
-        #     callback_data='change_profile'
-        # ),
-        # types.InlineKeyboardButton(
-        #     text='Поставить на паузу',
-        #     callback_data='set_pause'
-        # ),
-        # types.InlineKeyboardButton(
-        #     text='Снять c паузы',
-        #     callback_data='set_run'
-        # )
     )
 
     user = get_user(user_id)
@@ -1000,14 +999,14 @@ def change_profile_callback(call):
             text='Ссылку на социальную сеть',
             callback_data='change_link'
         ),
-        types.InlineKeyboardButton(
-            text='Кем работаю',
-            callback_data='change_work'
-        ),
-        types.InlineKeyboardButton(
-            text='О себе',
-            callback_data='change_about'
-        ),
+        # types.InlineKeyboardButton(
+        #     text='Кем работаю',
+        #     callback_data='change_work'
+        # ),
+        # types.InlineKeyboardButton(
+        #     text='О себе',
+        #     callback_data='change_about'
+        # ),
         types.InlineKeyboardButton(
             text='Обновить Никнейм',
             callback_data='update_nickname'
