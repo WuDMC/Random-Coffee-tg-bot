@@ -26,12 +26,26 @@ class User(Base):
     updated_at = Column(DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
     def __repr__(self):
+        # проблема с маркдаун только решает никнеймы
+        __escape_markdown_map = {
+
+            "_": "\\_",  # underscore
+
+        }
+
+        def __escape_markdown(raw_string):
+            s = raw_string
+            for k in __escape_markdown_map:
+                s = s.replace(k, __escape_markdown_map[k])
+            return s
+
+        # states
         return (f'{self.name}\n'
                 f'*Соц. сеть:* {self.link}\n\n'
                 # f'*Чем занимается:* {self.work}\n'
                 # f'*Зацепки для начала разговора:* {self.about}\n\n'
                 f'Напиши собеседнику в Telegram – [{self.name}](tg://user?id={self.telegram_id})\n\n'
-                f'*Никнейм в тг* {self.mail}\n\n')
+                f'*Никнейм в тг* {__escape_markdown(self.mail)}\n\n')
 
 
 class Pair(Base):
