@@ -292,8 +292,8 @@ def show_profile_callback(call):
 def show_profile_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-
-    answer = ('👉 Участники2')
+    users = get_users()
+    answer = (f'👉 Участники: {len(users)}')
 
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
@@ -302,7 +302,7 @@ def show_profile_callback(call):
         text=answer
     )
 
-    users = get_users()
+
     answer = (
         '\n'.join(
             [f'[{user.name}](tg://user?id={user.telegram_id}) \- {user.telegram_id} \- {__escape_markdown(user.mail)} \- {"Verified" if user.is_verified else "Blocked"} \- {"Run" if user.is_active else "Pause"} \- {"Link: Yes" if user.link else "Link: NO"}' for user in users])

@@ -46,7 +46,7 @@ class User(Base):
                 # f'*Чем занимается:* {self.work}\n'
                 # f'*Зацепки для начала разговора:* {self.about}\n\n'
                 f'Напиши собеседнику в Telegram – [{self.name}](tg://user?id={self.telegram_id})\n\n'
-                f'*Никнейм в тг* {__escape_markdown(self.mail)}\n\n')
+                f'*Никнейм в тг* {self.mail}\n\n')
 
 
 class Pair(Base):
