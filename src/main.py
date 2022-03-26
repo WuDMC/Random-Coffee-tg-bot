@@ -480,7 +480,7 @@ def start_handler(message):
         create_user(user_id)
 
         set_field(user_id, 'mail', nickname)
-        set_field(user_id, 'name', 'Имя не указано')
+        set_field(user_id, 'name', 'Имя_не_указано')
         answer = ('Гамарджоба!🤩\n'
                   'Я Random Coffee бот 🤖 в Батуми\n\n'
                   'Каждую неделю я буду предлагать '
