@@ -82,7 +82,7 @@ def get_no_link_users():
         .filter(
             User.is_active == True,
             User.is_verified == True,
-            User.link is None
+            User.link.is_(None)
         )
         .all()
     )
