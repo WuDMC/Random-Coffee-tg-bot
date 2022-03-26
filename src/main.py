@@ -305,7 +305,7 @@ def show_profile_callback(call):
     users = get_users()
     answer = (
         '\n'.join(
-            [f'[{user.name}](tg://user?id={user.telegram_id}) - {user.telegram_id} - {__escape_markdown(user.mail)} - {"Verified" if user.is_verified else "Blocked"} - {"Run" if user.is_active else "Pause"} - {"Link: Yes" if user.link else "Link: NO"}' for user in users])
+            [f'[{user.name}](tg://user?id={user.telegram_id}) \- {user.telegram_id} \- {__escape_markdown(user.mail)} \- {"Verified" if user.is_verified else "Blocked"} \- {"Run" if user.is_active else "Pause"} \- {"Link: Yes" if user.link else "Link: NO"}' for user in users])
     )
 
 
