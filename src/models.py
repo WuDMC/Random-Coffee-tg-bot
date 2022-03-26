@@ -8,6 +8,21 @@ Base = declarative_base()
 engine = create_engine('sqlite:///data/db.db?check_same_thread=False')
 
 
+# проблема с маркдаун только решает никнеймы
+__escape_markdown_map = {
+
+    "_"  : "\\_" ,    # underscore
+
+}
+
+
+def __escape_markdown(raw_string):
+    s = raw_string
+    for k in __escape_markdown_map:
+        s = s.replace(k, __escape_markdown_map[k])
+    return s
+
+
 class User(Base):
     __tablename__ = 'user'
 
@@ -31,7 +46,7 @@ class User(Base):
                 # f'*Чем занимается:* {self.work}\n'
                 # f'*Зацепки для начала разговора:* {self.about}\n\n'
                 f'Напиши собеседнику в Telegram – [{self.name}](tg://user?id={self.telegram_id})\n\n'
-                f'*Никнейм в тг* {self.mail}\n\n')
+                f'*Никнейм в тг* {__escape_markdown(self.mail)}\n\n')
 
 
 class Pair(Base):
