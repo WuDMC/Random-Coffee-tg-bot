@@ -1,6 +1,7 @@
 import random
 import telebot
 import schedule
+import traceback
 from time import sleep
 from threading import Thread
 from telebot import types, custom_filters
@@ -95,16 +96,22 @@ def send_admins():
     bot.send_message('220428984', 'Сообщения не авторизованым отправлены')
     bot.send_message('220428984', 'Начинаю отправку пользователям без ссылки')
     for user in get_no_link_users():
-        bot.send_message('220428984', f'отправляю сообщение юзеру {user.telegram_id}')
-        bot.send_message(user.telegram_id, msg_for_no_link, parse_mode='Markdown')
-        bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} успешно отправлено')
+        try:
+            bot.send_message('220428984', f'отправляю сообщение юзеру {user.telegram_id}')
+            bot.send_message(user.telegram_id, msg_for_no_link, parse_mode='Markdown')
+            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} успешно отправлено')
+        except Exception:
+            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
         sleep(2)
     bot.send_message('220428984', 'Сообщения без ссылки отправлены')
     bot.send_message('220428984', 'Начинаю отправку пользователям без никнейма')
     for user in get_no_nickname_users():
-        bot.send_message('220428984', f'отправляю сообщение юзеру {user.telegram_id}')
-        bot.send_message(user.telegram_id, msg_for_no_nickname, parse_mode='Markdown')
-        bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} успешно отправлено')
+        try:
+            bot.send_message('220428984', f'отправляю сообщение юзеру {user.telegram_id}')
+            bot.send_message(user.telegram_id, msg_for_no_nickname, parse_mode='Markdown')
+            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} успешно отправлено')
+        except Exception:
+            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
         sleep(2)
     bot.send_message('220428984', 'Сообщения без никнейма отправлены')
     bot.send_message('220428984', 'Сообщения отправлены')
