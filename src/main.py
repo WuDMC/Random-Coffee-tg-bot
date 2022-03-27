@@ -92,6 +92,10 @@ def help(message):
             types.InlineKeyboardButton(
                 text='Отправить приглашения',
                 callback_data='send_invites'
+            ),
+            types.InlineKeyboardButton(
+                text='Отправить test',
+                callback_data='send_admins'
             )
         )
     help_txt = ('Обсуждение и вопросы по боту @BatumiRandomCoffee\n\n'
@@ -452,6 +456,39 @@ def send_invites():
         else:
             bot.send_message(
                 pair.user_a, f'Привет!\n\nНа этой неделе пары не нашлось😞 Такое случается если количество участников не чётное.', parse_mode='Markdown')
+
+
+@bot.callback_query_handler(func=lambda call: call.data == 'send_admins')
+def send_admins_callback(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+
+    send_admins()
+
+    answer = ('👉 Отправить test')
+
+    bot.send_chat_action(user_id, 'typing')
+    bot.edit_message_text(
+        chat_id=user_id,
+        message_id=message_id,
+        text=answer
+    )
+
+    answer = (
+        'Отправил test'
+    )
+
+    keyboard = types.InlineKeyboardMarkup()
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, parse_mode='Markdown',
+                     reply_markup=keyboard)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'send_invites')
@@ -1098,7 +1135,6 @@ def schedule_checker():
 
 if __name__ == "__main__":
     schedule.every().sunday.at('10:00').do(send_admins)
-
     schedule.every().monday.at('10:00').do(generate_pairs)
     schedule.every().monday.at('11:00').do(send_invites)
     Thread(target=schedule_checker).start()
