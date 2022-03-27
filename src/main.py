@@ -41,12 +41,57 @@ class States:
 
 # general functions
 def send_admins():
-    bot.send_message('220428984', 'test')
-    for user in get_admins():
-        bot.send_message(user.telegram_id, 'test2')
+    msg_for_active = (
+        'Привет уже завтра будут известны первые пары\n'
+        'random coffe в Батуми, поделись ботом с друзьями! \n\n'
+        'Инвайт-код: Batumi \n\n'
+        'Обсуждение и вопросы по боту @BatumiRandomCoffee \n\n'
+    )
+    msg_for_admins = (
+        'Привет уже завтра будут известны первые пары\n'
+        'random coffe в Батуми, поделись ботом\n'
+        'с друзьями! \n\n'
+        'Инвайт-код: Batumi \n\n'
+        'Обсуждение и вопросы по боту @BatumiRandomCoffee \n\n'
+    )
+    msg_for_blocked =(
+        'Привет уже завтра будут известны первые пары\n'
+        'random coffe в Батуми, продолжи регистрацию:\n'
+        'нажми /start \n\n'
+        'И введи инвайт-код: Batumi \n\n'
+        'Обсуждение и вопросы по боту @BatumiRandomCoffee \n\n'
+    )
+    msg_for_no_link = (
+        'У тебя не указана ссылка на соц. сеть\n'
+        'Пожалуйста добавь ее, так твоему собеседнику \n'
+        'будет проще начать разговор\n\n'
+        'Для того, чтобы добавить ссылку нажми /help \n\n'
+    )
+    msg_for_no_nickname = (
+        'У тебя не указано имя пользователя в Telegram\n'
+        'Без нее не получится тебе написать =(\n\n'
+        'Для того, чтобы добавить имя пользователя нажми /help \n\n'
+    )
 
     for user in get_admins():
-        bot.send_message(user.telegram_id, 'test2')
+        bot.send_message(user.telegram_id, msg_for_active, parse_mode='Markdown')
+        bot.send_message(user.telegram_id, msg_for_admins, parse_mode='Markdown')
+        bot.send_message(user.telegram_id, msg_for_blocked, parse_mode='Markdown')
+        bot.send_message(user.telegram_id, msg_for_no_link, parse_mode='Markdown')
+        bot.send_message(user.telegram_id, msg_for_no_nickname, parse_mode='Markdown')
+
+    # for user in get_active_users():
+    #     bot.send_message(user.telegram_id, msg_for_active, parse_mode='Markdown')
+    #
+    # for user in get_blocked_users():
+    #     bot.send_message(user.telegram_id, msg_for_blocked, parse_mode='Markdown')
+    #
+    # for user in get_no_link_users():
+    #     bot.send_message(user.telegram_id, msg_for_no_link, parse_mode='Markdown')
+    #
+    # for user in get_no_nickname_users():
+    #     bot.send_message(user.telegram_id, msg_for_no_nickname, parse_mode='Markdown')
+    bot.send_message('220428984', 'Сообщения отправлены')
 
 def help(message):
     user_id = message.from_user.id
