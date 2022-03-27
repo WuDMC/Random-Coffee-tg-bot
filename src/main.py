@@ -75,22 +75,32 @@ def send_admins():
 
     for user in get_admins():
         bot.send_message(user.telegram_id, msg_for_active, parse_mode='Markdown')
+        sleep(2)
         bot.send_message(user.telegram_id, msg_for_admins, parse_mode='Markdown')
+        sleep(2)
         bot.send_message(user.telegram_id, msg_for_blocked, parse_mode='Markdown')
+        sleep(2)
         bot.send_message(user.telegram_id, msg_for_no_link, parse_mode='Markdown')
+        sleep(2)
         bot.send_message(user.telegram_id, msg_for_no_nickname, parse_mode='Markdown')
-
+        sleep(2)
+    bot.send_message('220428984', 'Сообщения админам отправлены')
     for user in get_active_users():
         bot.send_message(user.telegram_id, msg_for_active, parse_mode='Markdown')
-
+        sleep(2)
+    bot.send_message('220428984', 'Сообщения активным отправлены')
     for user in get_blocked_users():
         bot.send_message(user.telegram_id, msg_for_blocked, parse_mode='Markdown')
-
+        sleep(2)
+    bot.send_message('220428984', 'Сообщения не авторизованым отправлены')
     for user in get_no_link_users():
         bot.send_message(user.telegram_id, msg_for_no_link, parse_mode='Markdown')
-
+        sleep(2)
+    bot.send_message('220428984', 'Сообщения без ссылки отправлены')
     for user in get_no_nickname_users():
         bot.send_message(user.telegram_id, msg_for_no_nickname, parse_mode='Markdown')
+        sleep(2)
+    bot.send_message('220428984', 'Сообщения без никнейма отправлены')
     bot.send_message('220428984', 'Сообщения отправлены')
 
 def help(message):
