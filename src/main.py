@@ -304,7 +304,7 @@ def show_profile_callback(call):
             target_user_id, 'Ваш аккаунт заблокирован!\nДля повторной регистрации напишите /start')
     except Exception:
         bot.send_message('220428984',
-                         f' сообщения юзеру {target_user_id.id} не отправлено: {traceback.format_exc()}')
+                         f' сообщения юзеру {target_user_id} не отправлено: {traceback.format_exc()}')
     answer = ('Пользователь заблокирован')
 
     keyboard = types.InlineKeyboardMarkup()
