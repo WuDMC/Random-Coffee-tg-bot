@@ -42,6 +42,8 @@ class States:
 # general functions
 def send_admins():
     bot.send_message('220428984', 'test')
+    for user in get_admins():
+        bot.send_message(user.telegram_id, 'test2')
 
 def help(message):
     user_id = message.from_user.id
