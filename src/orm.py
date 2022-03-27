@@ -74,6 +74,8 @@ def get_no_nickname_users():
     )
     return users if users else []
 
+
+
 def get_no_link_users():
     users = (
         session.query(

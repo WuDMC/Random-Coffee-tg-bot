@@ -40,7 +40,9 @@ class States:
     update_nickname = 10
 
 # general functions
-
+def send_admins():
+    for user in get_admins():
+        bot.send_message(user.id, 'test')
 
 def help(message):
     user_id = message.from_user.id
@@ -1095,6 +1097,8 @@ def schedule_checker():
 
 
 if __name__ == "__main__":
+    schedule.every().sunday.at('10:00').do(send_admins)
+
     schedule.every().monday.at('10:00').do(generate_pairs)
     schedule.every().monday.at('11:00').do(send_invites)
     Thread(target=schedule_checker).start()
