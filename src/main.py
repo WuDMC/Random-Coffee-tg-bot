@@ -87,33 +87,51 @@ def send_admins():
         sleep(2)
     bot.send_message('220428984', 'Сообщения админам отправлены')
     # for user in get_active_users():
-    #     bot.send_message(user.telegram_id, msg_for_active, parse_mode='Markdown')
+    #     try:
+    #         bot.send_message('220428984', f'отправляю сообщение юзеру {user.telegram_id}')
+    #         bot.send_message(user.telegram_id, msg_for_active, parse_mode='Markdown')
+    #         bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} успешно отправлено')
+    #     except Exception:
+    #         bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
     #     sleep(2)
-    bot.send_message('220428984', 'Сообщения активным отправлены')
-    # for user in get_blocked_users():
-    #     bot.send_message(user.telegram_id, msg_for_blocked, parse_mode='Markdown')
-    #     sleep(2)
+    #
+    # bot.send_message('220428984', 'Сообщения активным отправлены')
+    bot.send_message('220428984', 'Начинаю отправку пользователям без верификации')
+    for user in get_blocked_users():
+        try:
+            bot.send_message('220428984', f'отправляю сообщение юзеру {user.telegram_id}')
+            bot.send_message(user.telegram_id, msg_for_blocked, parse_mode='Markdown')
+            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} успешно отправлено')
+        except Exception:
+            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
+        sleep(2)
     bot.send_message('220428984', 'Сообщения не авторизованым отправлены')
-    bot.send_message('220428984', 'Начинаю отправку пользователям без ссылки')
-    for user in get_no_link_users():
-        try:
-            bot.send_message('220428984', f'отправляю сообщение юзеру {user.telegram_id}')
-            bot.send_message(user.telegram_id, msg_for_no_link, parse_mode='Markdown')
-            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} успешно отправлено')
-        except Exception:
-            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
-        sleep(2)
-    bot.send_message('220428984', 'Сообщения без ссылки отправлены')
-    bot.send_message('220428984', 'Начинаю отправку пользователям без никнейма')
-    for user in get_no_nickname_users():
-        try:
-            bot.send_message('220428984', f'отправляю сообщение юзеру {user.telegram_id}')
-            bot.send_message(user.telegram_id, msg_for_no_nickname, parse_mode='Markdown')
-            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} успешно отправлено')
-        except Exception:
-            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
-        sleep(2)
-    bot.send_message('220428984', 'Сообщения без никнейма отправлены')
+
+
+    # bot.send_message('220428984', 'Начинаю отправку пользователям без ссылки')
+    # for user in get_no_link_users():
+    #     try:
+    #         bot.send_message('220428984', f'отправляю сообщение юзеру {user.telegram_id}')
+    #         bot.send_message(user.telegram_id, msg_for_no_link, parse_mode='Markdown')
+    #         bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} успешно отправлено')
+    #     except Exception:
+    #         bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
+    #     sleep(2)
+    # bot.send_message('220428984', 'Сообщения без ссылки отправлены')
+
+
+    # bot.send_message('220428984', 'Начинаю отправку пользователям без никнейма')
+    # for user in get_no_nickname_users():
+    #     try:
+    #         bot.send_message('220428984', f'отправляю сообщение юзеру {user.telegram_id}')
+    #         bot.send_message(user.telegram_id, msg_for_no_nickname, parse_mode='Markdown')
+    #         bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} успешно отправлено')
+    #     except Exception:
+    #         bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
+    #     sleep(2)
+    # bot.send_message('220428984', 'Сообщения без никнейма отправлены')
+
+
     bot.send_message('220428984', 'Сообщения отправлены')
 
 def help(message):
@@ -521,15 +539,20 @@ def show_profile_callback(call):
 
 def send_invites():
     for pair in get_pairs():
-        if pair.user_b:
-            bot.send_message(
-                pair.user_a, f'Твоя пара!\n\n{get_user(pair.user_b)}', parse_mode='Markdown')
-            bot.send_message(
-                pair.user_b, f'Твоя пара!\n\n{get_user(pair.user_a)}', parse_mode='Markdown')
-        else:
-            bot.send_message(
-                pair.user_a, f'Привет!\n\nНа этой неделе пары не нашлось😞 Такое случается если количество участников не чётное.', parse_mode='Markdown')
-
+        try:
+            if pair.user_b:
+                bot.send_message(
+                    pair.user_a, f'Твоя пара!\n\n{get_user(pair.user_b)}', parse_mode='Markdown')
+                bot.send_message(
+                    pair.user_b, f'Твоя пара!\n\n{get_user(pair.user_a)}', parse_mode='Markdown')
+            else:
+                bot.send_message(
+                    pair.user_a, f'Привет!\n\nНа этой неделе пары не нашлось😞 Такое случается если количество участников не чётное.', parse_mode='Markdown')
+            bot.send_message('220428984',
+                             f' сообщения паре {pair.id} успешно отправлено')
+        except Exception:
+            bot.send_message('220428984',
+                                 f' сообщения паре {pair.id} не отправлено: {traceback.format_exc()}')
 
 @bot.callback_query_handler(func=lambda call: call.data == 'send_admins')
 def send_admins_callback(call):
