@@ -46,6 +46,17 @@ def get_users():
     )
     return users if users else []
 
+def get_blocked_users():
+    users = (
+        session.query(
+            User
+        )
+        .filter(
+            User.is_verified == False
+        )
+        .all()
+    )
+    return users if users else []
 
 def get_active_users():
     users = (

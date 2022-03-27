@@ -7,7 +7,7 @@ from telebot import types, custom_filters
 
 from settings import ADMINS, TELEGRAM_TOKEN, SMTP
 from messages import generate_password
-from orm import get_user, get_no_link_users, get_no_nickname_users, set_field, create_user, get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs
+from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_users, set_field, create_user, get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 
@@ -42,6 +42,9 @@ class States:
 # general functions
 def send_admins():
     bot.send_message('220428984', 'test')
+    for user in get_admins():
+        bot.send_message(user.telegram_id, 'test2')
+
     for user in get_admins():
         bot.send_message(user.telegram_id, 'test2')
 
@@ -300,6 +303,7 @@ def show_profile_callback(call):
     message_id = call.message.message_id
     users = get_users()
     active_users = get_active_users()
+    blocked_users = get_blocked_users()
     no_link_users = get_no_link_users()
     no_nickname_users = get_no_nickname_users()
     answer = (f'👉 Участники: {len(users)}')
@@ -329,7 +333,7 @@ def show_profile_callback(call):
     bot.send_chat_action(user_id, 'typing')
 
     bot.send_message(user_id, answer, parse_mode='MarkdownV2')
-    bot.send_message(user_id, f'активных {len(active_users)}, без соц сети {len(no_link_users)}, без ника {len(no_nickname_users)}',
+    bot.send_message(user_id, f'активных {len(active_users)}, блокированых {len(blocked_users )} без соц сети {len(no_link_users)}, без ника {len(no_nickname_users)}',
                      reply_markup=keyboard)
 
 
