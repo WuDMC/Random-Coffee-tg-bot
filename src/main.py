@@ -299,8 +299,12 @@ def show_profile_callback(call):
 
     set_field(target_user_id, 'is_verified', False)
     set_field(target_user_id, 'password', generate_password())
-    bot.send_message(
-        target_user_id, 'Ваш аккаунт заблокирован!\nДля повторной регистрации напишите /start')
+    try:
+        bot.send_message(
+            target_user_id, 'Ваш аккаунт заблокирован!\nДля повторной регистрации напишите /start')
+    except Exception:
+        bot.send_message('220428984',
+                         f' сообщения юзеру {target_user_id.id} не отправлено: {traceback.format_exc()}')
 
     answer = ('Пользователь заблокирован')
 
