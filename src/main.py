@@ -305,7 +305,6 @@ def show_profile_callback(call):
     except Exception:
         bot.send_message('220428984',
                          f' сообщения юзеру {target_user_id.id} не отправлено: {traceback.format_exc()}')
-
     answer = ('Пользователь заблокирован')
 
     keyboard = types.InlineKeyboardMarkup()
