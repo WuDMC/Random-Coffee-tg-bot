@@ -333,7 +333,7 @@ def show_profile_callback(call):
     bot.send_chat_action(user_id, 'typing')
 
     bot.send_message(user_id, answer, parse_mode='MarkdownV2')
-    bot.send_message(user_id, f'активных {len(active_users)}, блокированых {len(blocked_users )} без соц сети {len(no_link_users)}, без ника {len(no_nickname_users)}',
+    bot.send_message(user_id, f'активных {len(active_users)}, блокированых {len(blocked_users )}, без соц сети {len(no_link_users)}, без ника {len(no_nickname_users)}',
                      reply_markup=keyboard)
 
 
