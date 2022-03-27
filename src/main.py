@@ -41,8 +41,7 @@ class States:
 
 # general functions
 def send_admins():
-    for user in get_admins():
-        bot.send_message(user.id, 'test')
+    bot.send_message('220428984', 'test')
 
 def help(message):
     user_id = message.from_user.id
