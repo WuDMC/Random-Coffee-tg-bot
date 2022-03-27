@@ -80,17 +80,17 @@ def send_admins():
         bot.send_message(user.telegram_id, msg_for_no_link, parse_mode='Markdown')
         bot.send_message(user.telegram_id, msg_for_no_nickname, parse_mode='Markdown')
 
-    # for user in get_active_users():
-    #     bot.send_message(user.telegram_id, msg_for_active, parse_mode='Markdown')
-    #
-    # for user in get_blocked_users():
-    #     bot.send_message(user.telegram_id, msg_for_blocked, parse_mode='Markdown')
-    #
-    # for user in get_no_link_users():
-    #     bot.send_message(user.telegram_id, msg_for_no_link, parse_mode='Markdown')
-    #
-    # for user in get_no_nickname_users():
-    #     bot.send_message(user.telegram_id, msg_for_no_nickname, parse_mode='Markdown')
+    for user in get_active_users():
+        bot.send_message(user.telegram_id, msg_for_active, parse_mode='Markdown')
+
+    for user in get_blocked_users():
+        bot.send_message(user.telegram_id, msg_for_blocked, parse_mode='Markdown')
+
+    for user in get_no_link_users():
+        bot.send_message(user.telegram_id, msg_for_no_link, parse_mode='Markdown')
+
+    for user in get_no_nickname_users():
+        bot.send_message(user.telegram_id, msg_for_no_nickname, parse_mode='Markdown')
     bot.send_message('220428984', 'Сообщения отправлены')
 
 def help(message):
