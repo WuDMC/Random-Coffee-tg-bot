@@ -8,15 +8,16 @@ from telebot import types, custom_filters
 
 from settings import ADMINS, TELEGRAM_TOKEN, SMTP
 from messages import generate_password
-from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_users, set_field, create_user, get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs
+from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_users, set_field, create_user, \
+    get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
-
+wudmc_tg = '220428984'
 forward_users = []
 # проблема с маркдаун только решает никнеймы
 __escape_markdown_map = {
 
-    "_"  : "\\_" ,    # underscore
+    "_": "\\_",  # underscore
 
 }
 
@@ -26,6 +27,7 @@ def __escape_markdown(raw_string):
     for k in __escape_markdown_map:
         s = s.replace(k, __escape_markdown_map[k])
     return s
+
 
 # states
 
@@ -43,7 +45,9 @@ class States:
     send_message_to_user_id = 11
     send_message_to_all_users = 12
     forward_message = 13
-#заготовки сообщения
+
+
+# заготовки сообщения
 
 msg_for_active = (
     'Привет уже завтра будут известны первые пары\n'
@@ -58,7 +62,7 @@ msg_for_admins = (
     'Инвайт-код: Batumi \n\n'
     'Обсуждение и вопросы по боту @BatumiRandomCoffee \n\n'
 )
-msg_for_blocked =(
+msg_for_blocked = (
     'Привет уже завтра будут известны первые пары\n'
     'random coffe в Батуми, продолжи регистрацию:\n'
     'нажми /start \n\n'
@@ -76,9 +80,10 @@ msg_for_no_nickname = (
     'Без нее не получится тебе написать =(\n\n'
     'Для того, чтобы добавить имя пользователя нажми /help \n\n'
 )
-# general functions
-def send_admins():
 
+
+# функции рассылки
+def send_admins():
     for user in get_admins():
         try:
             bot.send_message(user.telegram_id, msg_for_active, parse_mode='Markdown')
@@ -92,73 +97,65 @@ def send_admins():
             bot.send_message(user.telegram_id, msg_for_no_nickname, parse_mode='Markdown')
             sleep(1)
         except Exception:
-            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
+            bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
         sleep(2)
-    bot.send_message('220428984', 'Сообщения админам отправлены')
-
+    bot.send_message(wudmc_tg, 'Сообщения админам отправлены')
 
 
 def send_no_contacts():
-
-    bot.send_message('220428984', 'Начинаю отправку пользователям без ссылки')
+    bot.send_message(wudmc_tg, 'Начинаю отправку пользователям без ссылки')
     for user in get_no_link_users():
         try:
-            bot.send_message('220428984', f'отправляю сообщение юзеру {user.telegram_id}')
+            bot.send_message(wudmc_tg, f'отправляю сообщение юзеру {user.telegram_id}')
             bot.send_message(user.telegram_id, msg_for_no_link, parse_mode='Markdown')
-            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} успешно отправлено')
+            bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} успешно отправлено')
         except Exception:
-            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
+            bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
         sleep(2)
-    bot.send_message('220428984', 'Сообщения без ссылки отправлены')
-
-
-    bot.send_message('220428984', 'Начинаю отправку пользователям без никнейма')
+    bot.send_message(wudmc_tg, 'Сообщения без ссылки отправлены')
+    bot.send_message(wudmc_tg, 'Начинаю отправку пользователям без никнейма')
     for user in get_no_nickname_users():
         try:
-            bot.send_message('220428984', f'отправляю сообщение юзеру {user.telegram_id}')
+            bot.send_message(wudmc_tg, f'отправляю сообщение юзеру {user.telegram_id}')
             bot.send_message(user.telegram_id, msg_for_no_nickname, parse_mode='Markdown')
-            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} успешно отправлено')
+            bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} успешно отправлено')
         except Exception:
-            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
+            bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
         sleep(2)
-    bot.send_message('220428984', 'Сообщения без никнейма отправлены')
+    bot.send_message(wudmc_tg, 'Сообщения без никнейма отправлены')
 
 
 def send_blocked_users():
-    bot.send_message('220428984', 'Начинаю отправку блокированным пользователям по заготовке')
+    bot.send_message(wudmc_tg, 'Начинаю отправку блокированным пользователям по заготовке')
     for user in get_blocked_users():
         try:
-            bot.send_message('220428984', f'отправляю сообщение юзеру {user.telegram_id}')
+            bot.send_message(wudmc_tg, f'отправляю сообщение юзеру {user.telegram_id}')
             bot.send_message(user.telegram_id, msg_for_blocked, parse_mode='Markdown')
-            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} успешно отправлено')
+            bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} успешно отправлено')
         except Exception:
-            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
+            bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
         sleep(2)
-
-    bot.send_message('220428984', 'Сообщения блокированным отправлены')
+    bot.send_message(wudmc_tg, 'Сообщения блокированным отправлены')
 
 
 def send_active_users():
-    bot.send_message('220428984', 'Начинаю отправку активным пользователям по заготовке')
+    bot.send_message(wudmc_tg, 'Начинаю отправку активным пользователям по заготовке')
     for user in get_active_users():
         try:
-            bot.send_message('220428984', f'отправляю сообщение юзеру {user.telegram_id}')
+            bot.send_message(wudmc_tg, f'отправляю сообщение юзеру {user.telegram_id}')
             bot.send_message(user.telegram_id, msg_for_active, parse_mode='Markdown')
-            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} успешно отправлено')
+            bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} успешно отправлено')
         except Exception:
-            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
+            bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
         sleep(2)
-
-    bot.send_message('220428984', 'Сообщения активным отправлены')
+    bot.send_message(wudmc_tg, 'Сообщения активным отправлены')
 
 
 def help(message):
     user_id = message.from_user.id
     next_state = States.complete
-
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 1
-
     keyboard.add(
         types.InlineKeyboardButton(
             text='Посмотреть свой профиль',
@@ -235,7 +232,6 @@ def ask_mail_handler(message):
             )
         )
 
-
     keyboard.add(
         types.InlineKeyboardButton(
             text='Назад',
@@ -252,18 +248,14 @@ def ask_mail_handler(message):
 def show_profile_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-
     target_user_id = call.data[len('show_profile_for_admin_'):]
-
     answer = ('👉 Посмотреть профиль')
-
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
         message_id=message_id,
         text=answer
     )
-
     user = get_user(target_user_id)
     answer = (
         'Вот так будет выглядеть твой профиль для собеседника:\n\n'
@@ -271,7 +263,6 @@ def show_profile_callback(call):
     )
 
     keyboard = types.InlineKeyboardMarkup()
-
     keyboard.add(
         types.InlineKeyboardButton(
             text='Назад',
@@ -287,11 +278,8 @@ def show_profile_callback(call):
 def show_profile_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-
     target_user_id = call.data[len('refuse_'):]
-
     answer = ('👉 Убрать подтверждение')
-
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
@@ -305,12 +293,11 @@ def show_profile_callback(call):
         bot.send_message(
             target_user_id, 'Ваш аккаунт заблокирован!\nДля повторной регистрации напишите /start')
     except Exception:
-        bot.send_message('220428984',
+        bot.send_message(wudmc_tg,
                          f' сообщения юзеру {target_user_id} не отправлено: {traceback.format_exc()}')
     answer = ('Пользователь заблокирован')
 
     keyboard = types.InlineKeyboardMarkup()
-
     keyboard.add(
         types.InlineKeyboardButton(
             text='Назад',
@@ -326,24 +313,18 @@ def show_profile_callback(call):
 def show_profile_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-
     target_user_id = call.data[len('set_pause_for_admin_'):]
-
     answer = ('👉 Поставить на паузу')
-
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
         message_id=message_id,
         text=answer
     )
-
     set_field(target_user_id, 'is_active', False)
     bot.send_message(target_user_id, 'Админ поставил тебя на паузу')
     answer = ('Пользователь на паузе')
-
     keyboard = types.InlineKeyboardMarkup()
-
     keyboard.add(
         types.InlineKeyboardButton(
             text='Назад',
@@ -359,11 +340,8 @@ def show_profile_callback(call):
 def show_profile_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-
     target_user_id = call.data[len('set_run_for_admin_'):]
-
     answer = ('👉 Снять c паузы')
-
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
@@ -374,9 +352,7 @@ def show_profile_callback(call):
     set_field(target_user_id, 'is_active', True)
     answer = ('Пользователь запущен')
     bot.send_message(target_user_id, 'Админ включил тебя во встречи')
-
     keyboard = types.InlineKeyboardMarkup()
-
     keyboard.add(
         types.InlineKeyboardButton(
             text='Назад',
@@ -405,16 +381,14 @@ def show_profile_callback(call):
         message_id=message_id,
         text=answer
     )
-
-
     answer = (
         '\n'.join(
-            [f'[{user.name}](tg://user?id={user.telegram_id}) \- {user.telegram_id} \- {__escape_markdown(user.mail)} \- {"Verified" if user.is_verified else "Blocked"} \- {"Run" if user.is_active else "Pause"} ' for user in users])
+            [
+                f'[{user.name}](tg://user?id={user.telegram_id}) \- {user.telegram_id} \- {__escape_markdown(user.mail)} \- {"Verified" if user.is_verified else "Blocked"} \- {"Run" if user.is_active else "Pause"} '
+                for user in users])
     )
 
-
     keyboard = types.InlineKeyboardMarkup()
-
     keyboard.add(
         types.InlineKeyboardButton(
             text='Назад',
@@ -422,9 +396,9 @@ def show_profile_callback(call):
         )
     )
     bot.send_chat_action(user_id, 'typing')
-
     bot.send_message(user_id, answer, parse_mode='MarkdownV2')
-    bot.send_message(user_id, f'активных {len(active_users)}, блокированых {len(blocked_users )}, без соц сети {len(no_link_users)}, без ника {len(no_nickname_users)}',
+    bot.send_message(user_id,
+                     f'активных {len(active_users)}, блокированых {len(blocked_users)}, без соц сети {len(no_link_users)}, без ника {len(no_nickname_users)}',
                      reply_markup=keyboard)
 
 
@@ -433,9 +407,7 @@ def show_profile_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
     next_state = States.change_user_for_ask_id_admin
-
     answer = ('👉 Настройки пользователя')
-
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
@@ -444,9 +416,7 @@ def show_profile_callback(call):
     )
 
     answer = 'Введи номер пользователя'
-
     keyboard = types.InlineKeyboardMarkup()
-
     keyboard.add(
         types.InlineKeyboardButton(
             text='Назад',
@@ -462,29 +432,26 @@ def show_profile_callback(call):
 def show_profile_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-
     answer = ('👉 Пары')
-
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
         message_id=message_id,
         text=answer
     )
-
     pairs = get_pairs()
     if pairs:
         answer = (
             '\n'.join(
-                [f'[{get_user(pair.user_a).name}](tg://user?id={get_user(pair.user_a).telegram_id}) - [{get_user(pair.user_b).name}](tg://user?id={get_user(pair.user_b).telegram_id})' if pair.user_b !=
-                 '' else f'[{get_user(pair.user_a).name}](tg://user?id={get_user(pair.user_a).telegram_id}) - None' for pair in pairs]
+                [
+                    f'[{get_user(pair.user_a).name}](tg://user?id={get_user(pair.user_a).telegram_id}) - [{get_user(pair.user_b).name}](tg://user?id={get_user(pair.user_b).telegram_id})' if pair.user_b !=
+                                                                                                                                                                                              '' else f'[{get_user(pair.user_a).name}](tg://user?id={get_user(pair.user_a).telegram_id}) - None'
+                    for pair in pairs]
             )
         )
     else:
         answer = 'Пар нету'
-
     keyboard = types.InlineKeyboardMarkup()
-
     keyboard.add(
         types.InlineKeyboardButton(
             text='Назад',
@@ -513,24 +480,18 @@ def generate_pairs():
 def show_profile_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-
     answer = ('👉 Сгенерировать пары')
-
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
         message_id=message_id,
         text=answer
     )
-
     generate_pairs()
-
     answer = (
         'Сгенерировал пары'
     )
-
     keyboard = types.InlineKeyboardMarkup()
-
     keyboard.add(
         types.InlineKeyboardButton(
             text='Назад',
@@ -552,38 +513,32 @@ def send_invites():
                     pair.user_b, f'Твоя пара!\n\n{get_user(pair.user_a)}', parse_mode='Markdown')
             else:
                 bot.send_message(
-                    pair.user_a, f'Привет!\n\nНа этой неделе пары не нашлось😞 Такое случается если количество участников не чётное.', parse_mode='Markdown')
-            bot.send_message('220428984',
+                    pair.user_a,
+                    f'Привет!\n\nНа этой неделе пары не нашлось😞 Такое случается если количество участников не чётное.',
+                    parse_mode='Markdown')
+            bot.send_message(wudmc_tg,
                              f' сообщения паре {pair.id} успешно отправлено')
         except Exception:
-            bot.send_message('220428984',
-                                 f' сообщения паре {pair.id} не отправлено: {traceback.format_exc()}')
-
-
+            bot.send_message(wudmc_tg,
+                             f' сообщения паре {pair.id} не отправлено: {traceback.format_exc()}')
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'send_to_nocontact')
 def send_to_nocontact_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-
     send_no_contacts()
-
     answer = ('👉 Отправить заготовку  без контактов')
-
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
         message_id=message_id,
         text=answer
     )
-
     answer = (
         'Напоминание пользователям без контактов прошло успешно'
     )
-
     keyboard = types.InlineKeyboardMarkup()
-
     keyboard.add(
         types.InlineKeyboardButton(
             text='Назад',
@@ -593,32 +548,24 @@ def send_to_nocontact_callback(call):
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, parse_mode='Markdown',
                      reply_markup=keyboard)
-
-
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'send_to_blocked')
 def send_to_blocked_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-
     send_blocked_users()
-
     answer = ('👉 Отправить заготовку  не верифицированным')
-
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
         message_id=message_id,
         text=answer
     )
-
     answer = (
         'Напоминание пользователям без верификации прошло успешно'
     )
-
     keyboard = types.InlineKeyboardMarkup()
-
     keyboard.add(
         types.InlineKeyboardButton(
             text='Назад',
@@ -629,28 +576,23 @@ def send_to_blocked_callback(call):
     bot.send_message(user_id, answer, parse_mode='Markdown',
                      reply_markup=keyboard)
 
+
 @bot.callback_query_handler(func=lambda call: call.data == 'send_to_active')
 def send_to_active_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-
     send_active_users()
-
     answer = ('👉 Отправить заготовку  активным юзерам')
-
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
         message_id=message_id,
         text=answer
     )
-
     answer = (
         'Напоминание активным пользователям прошло успешно'
     )
-
     keyboard = types.InlineKeyboardMarkup()
-
     keyboard.add(
         types.InlineKeyboardButton(
             text='Назад',
@@ -666,24 +608,18 @@ def send_to_active_callback(call):
 def send_to_admins_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-
     send_admins()
-
     answer = ('👉 Отправить test админам')
-
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
         message_id=message_id,
         text=answer
     )
-
     answer = (
         'Отправил test'
     )
-
     keyboard = types.InlineKeyboardMarkup()
-
     keyboard.add(
         types.InlineKeyboardButton(
             text='Назад',
@@ -699,24 +635,18 @@ def send_to_admins_callback(call):
 def show_profile_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-
     send_invites()
-
     answer = ('👉 Отправить приглашения')
-
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
         message_id=message_id,
         text=answer
     )
-
     answer = (
         'Отправил приглашения'
     )
-
     keyboard = types.InlineKeyboardMarkup()
-
     keyboard.add(
         types.InlineKeyboardButton(
             text='Назад',
@@ -726,6 +656,7 @@ def show_profile_callback(call):
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, parse_mode='Markdown',
                      reply_markup=keyboard)
+
 
 # user commands
 
@@ -737,7 +668,6 @@ def start_handler(message):
     nickname = str(message.from_user.username or 'Не указан')
     if nickname != 'Не указан':
         nickname = '@' + nickname
-
     user = get_user(user_id)
     if (not user or not user.is_verified) and message.from_user.username not in ADMINS:
         create_user(user_id)
@@ -769,36 +699,31 @@ def start_handler(message):
                   'Обсуждение и вопросы по боту @BatumiRandomCoffee')
         next_state = States.complete
 
-
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer)
     bot.set_state(user_id, next_state)
-
-
 
 
 @bot.message_handler(state=States.ask_password)
 def ask_password_handler(message):
     user_id = message.from_user.id
     next_state = States.ask_name
-# тут закостылил админа  можно использовать get_admins() с циклом потом
-    admin = '220428984'
+    # тут закостылил админа  можно использовать get_admins() с циклом потом
+    admin = wudmc_tg
     user = get_user(user_id)
     password = message.text
 
     if user.password == password:
 
-
         answer_to_admin = (
-                'Новый пользователь!\n'
-                f'[{message.from_user.first_name}](tg://user?id={user.telegram_id})\n'
-                f'{user.password}')
+            'Новый пользователь!\n'
+            f'[{message.from_user.first_name}](tg://user?id={user.telegram_id})\n'
+            f'{user.password}')
         bot.send_message(admin,
                          answer_to_admin, parse_mode='Markdown')
 
         answer = ('Ты в системе🌐\n\n'
                   'Как тебя зовут?☕️')
-
 
         set_field(user_id, 'is_verified', True)
 
@@ -807,10 +732,8 @@ def ask_password_handler(message):
         answer = ('Попробуй еще раз\n')
         next_state = States.ask_password
 
-
     bot.send_message(user_id, answer)
     bot.set_state(user_id, next_state)
-
 
 
 @bot.message_handler(state=States.ask_name)
@@ -829,12 +752,12 @@ def ask_name_handler(message):
     if nickname == 'Не указан':
         answer = ('Рад познакомиться!)\n\n'
 
-              'Пришли ссылку (или никнейм) на свой профиль '
-              'в любой социальной сети. '
-              'Так вы в паре сможете лучше узнать '
-              'друг о друге до встречи🔎\n\n'
-              'ВАЖНО: У тебя не указан nickname в Telegram\n'
-              'Обязательно укажи актуальную ссылку, иначе с тобой не получиться связаться'
+                  'Пришли ссылку (или никнейм) на свой профиль '
+                  'в любой социальной сети. '
+                  'Так вы в паре сможете лучше узнать '
+                  'друг о друге до встречи🔎\n\n'
+                  'ВАЖНО: У тебя не указан nickname в Telegram\n'
+                  'Обязательно укажи актуальную ссылку, иначе с тобой не получиться связаться'
                   )
 
     set_field(user_id, 'name', name)
@@ -972,6 +895,7 @@ def change_about_handler(message):
     bot.send_message(user_id, answer, reply_markup=keyboard)
     bot.set_state(user_id, next_state)
 
+
 @bot.message_handler(state=States.update_nickname)
 def update_nickname_handler(message):
     user_id = message.from_user.id
@@ -995,6 +919,263 @@ def update_nickname_handler(message):
     )
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
+    bot.set_state(user_id, next_state)
+
+
+
+@bot.callback_query_handler(func=lambda call: call.data == 'manage_users')
+def manage_users_callback(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+    next_state = States.complete
+
+    answer = ('👉 Меню управления')
+
+    bot.send_chat_action(user_id, 'typing')
+    bot.edit_message_text(
+        chat_id=user_id,
+        message_id=message_id,
+        text=answer
+    )
+
+    answer = ('Выбери пункт меню')
+
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.row_width = 1
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Участники',
+            callback_data='show_users'
+        ),
+        types.InlineKeyboardButton(
+            text='Настройки пользователя',
+            callback_data='change_user'
+        ),
+        types.InlineKeyboardButton(
+            text='Пары',
+            callback_data='show_pairs'
+        ),
+        types.InlineKeyboardButton(
+            text='Сгенерировать пары',
+            callback_data='generate_pairs'
+        ),
+        types.InlineKeyboardButton(
+            text='Отправить приглашения',
+            callback_data='send_invites'
+        ),
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, reply_markup=keyboard)
+    bot.set_state(user_id, next_state)
+
+
+@bot.callback_query_handler(func=lambda call: call.data == 'sender')
+def sender_callback(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+    next_state = States.complete
+
+    answer = ('👉 Отправить рассылку')
+
+    bot.send_chat_action(user_id, 'typing')
+    bot.edit_message_text(
+        chat_id=user_id,
+        message_id=message_id,
+        text=answer
+    )
+
+    answer = ('Что хочешь отправить?')
+
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.row_width = 1
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Отправить админам заготовку',
+            callback_data='send_to_admins'
+        ),
+        types.InlineKeyboardButton(
+            text='Отправить безконтактным заготовку',
+            callback_data='send_to_nocontact'
+        ),
+        types.InlineKeyboardButton(
+            text='Отправить не подтверждённым заготовку',
+            callback_data='send_to_blocked'
+        ),
+        types.InlineKeyboardButton(
+            text='Отправить активным заготовку',
+            callback_data='send_to_active'
+        ),
+        types.InlineKeyboardButton(
+            text='Отправить свое сообщение всем ',
+            callback_data='send_to_all'
+        ),
+        types.InlineKeyboardButton(
+            text='Отправить свое сообщение юзеру по айди',
+            callback_data='send_to_user_id'
+        ),
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, reply_markup=keyboard)
+    bot.set_state(user_id, next_state)
+
+@bot.callback_query_handler(func=lambda call: call.data == 'send_to_all')
+def send_to_all_handler(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+    next_state = States.send_message_to_all_users
+
+    answer = ('👉 Отправка сообщения всем юзерам')
+
+    bot.send_chat_action(user_id, 'typing')
+    bot.edit_message_text(
+        chat_id=user_id,
+        message_id=message_id,
+        text=answer
+    )
+
+    answer = 'Напиши GO, чтобы продолжить'
+
+    keyboard = types.InlineKeyboardMarkup()
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, reply_markup=keyboard)
+    bot.set_state(user_id, next_state)
+
+
+@bot.callback_query_handler(func=lambda call: call.data == 'send_to_user_id')
+def send_to_user_handler(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+    next_state = States.send_message_to_user_id
+
+    answer = ('👉 Отправка сообщения юзеру по айди')
+
+    bot.send_chat_action(user_id, 'typing')
+    bot.edit_message_text(
+        chat_id=user_id,
+        message_id=message_id,
+        text=answer
+    )
+
+    answer = 'Введи номер пользователя'
+
+    keyboard = types.InlineKeyboardMarkup()
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, reply_markup=keyboard)
+    bot.set_state(user_id, next_state)
+
+
+@bot.message_handler(state=States.send_message_to_user_id)
+def send_message_to_user_id_handler(message):
+    user_id = message.from_user.id
+    next_state = States.forward_message
+    telegram_id = message.text
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.row_width = 1
+    user = get_user(telegram_id)
+    global forward_users
+    forward_users = []
+    forward_users.append(user)
+    if not user:
+        answer = ('Не знаю такого пользователя')
+    else:
+        answer = (
+            f'Отправить сообщение [{user.name}](tg://user?id={user.telegram_id})')
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, parse_mode='Markdown',
+                     reply_markup=keyboard)
+    bot.set_state(user_id, next_state)
+
+
+@bot.message_handler(state=States.send_message_to_all_users)
+def send_message_to_all_users(message):
+    user_id = message.from_user.id
+    next_state = States.forward_message
+
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.row_width = 1
+    global forward_users
+    forward_users = get_admins()
+
+    answer = (
+        f'Введи сообщение которое отправится всем пользователям')
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, parse_mode='Markdown',
+                     reply_markup=keyboard)
+    bot.set_state(user_id, next_state)
+
+
+@bot.message_handler(state=States.forward_message)
+def send_to_user_msg_callback(message):
+    user_id = message.from_user.id
+    message = message.text
+    # photo = message.photo[-1]
+    next_state = States.complete
+
+    for target_user in forward_users:
+        target_user_id = target_user.telegram_id
+        answer = (f'👉 Отправляю сообщение пользователю {target_user_id}')
+        bot.send_message(wudmc_tg, answer)
+
+        try:
+            bot.send_message(
+                target_user_id, message)
+            # bot.send_photo(
+            #     target_user_id, photo, caption=message)
+        except Exception:
+            bot.send_message(wudmc_tg,
+                             f' сообщения юзеру {target_user_id} не отправлено: {traceback.format_exc()}')
+
+    answer = ('Done')
+
+    keyboard = types.InlineKeyboardMarkup()
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, parse_mode='Markdown',
+                     reply_markup=keyboard)
     bot.set_state(user_id, next_state)
 
 # user callbacks
@@ -1030,18 +1211,13 @@ def change_profile_callback(call):
 def show_profile_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-
     answer = ('👉 Хочу посмотреть свой профиль')
-
-    # bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
         message_id=message_id,
         text=answer
     )
-
     user = get_user(user_id)
-
     answer = (
         'Вот так будет выглядеть твой профиль для собеседника:\n\n'
         f'{user}'
@@ -1181,6 +1357,7 @@ def change_about_callback(call):
     bot.send_message(user_id, answer, reply_markup=keyboard)
     bot.set_state(user_id, next_state)
 
+
 @bot.callback_query_handler(func=lambda call: call.data == 'update_nickname')
 def update_nickname_callback(call):
     user_id = call.message.chat.id
@@ -1203,111 +1380,6 @@ def update_nickname_callback(call):
     keyboard = types.InlineKeyboardMarkup()
 
     keyboard.add(
-        types.InlineKeyboardButton(
-            text='Назад',
-            callback_data='help'
-        )
-    )
-    bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, reply_markup=keyboard)
-    bot.set_state(user_id, next_state)
-
-
-@bot.callback_query_handler(func=lambda call: call.data == 'manage_users')
-def manage_users_callback(call):
-    user_id = call.message.chat.id
-    message_id = call.message.message_id
-    next_state = States.complete
-
-    answer = ('👉 Меню управления')
-
-    bot.send_chat_action(user_id, 'typing')
-    bot.edit_message_text(
-        chat_id=user_id,
-        message_id=message_id,
-        text=answer
-    )
-
-    answer = ('Выбери пункт меню')
-
-    keyboard = types.InlineKeyboardMarkup()
-    keyboard.row_width = 1
-
-    keyboard.add(
-        types.InlineKeyboardButton(
-            text='Участники',
-            callback_data='show_users'
-        ),
-        types.InlineKeyboardButton(
-            text='Настройки пользователя',
-            callback_data='change_user'
-        ),
-        types.InlineKeyboardButton(
-            text='Пары',
-            callback_data='show_pairs'
-        ),
-        types.InlineKeyboardButton(
-            text='Сгенерировать пары',
-            callback_data='generate_pairs'
-        ),
-        types.InlineKeyboardButton(
-            text='Отправить приглашения',
-            callback_data='send_invites'
-        ),
-        types.InlineKeyboardButton(
-            text='Назад',
-            callback_data='help'
-        )
-    )
-    bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, reply_markup=keyboard)
-    bot.set_state(user_id, next_state)
-
-@bot.callback_query_handler(func=lambda call: call.data == 'sender')
-def sender_callback(call):
-    user_id = call.message.chat.id
-    message_id = call.message.message_id
-    next_state = States.complete
-
-    answer = ('👉 Отправить рассылку')
-
-    bot.send_chat_action(user_id, 'typing')
-    bot.edit_message_text(
-        chat_id=user_id,
-        message_id=message_id,
-        text=answer
-    )
-
-    answer = ('Что хочешь отправить?')
-
-    keyboard = types.InlineKeyboardMarkup()
-    keyboard.row_width = 1
-
-    keyboard.add(
-        types.InlineKeyboardButton(
-            text='Отправить админам заготовку',
-            callback_data='send_to_admins'
-        ),
-        types.InlineKeyboardButton(
-            text='Отправить безконтактным заготовку',
-            callback_data='send_to_nocontact'
-        ),
-        types.InlineKeyboardButton(
-            text='Отправить не подтверждённым заготовку',
-            callback_data='send_to_blocked'
-        ),
-        types.InlineKeyboardButton(
-            text='Отправить активным заготовку',
-            callback_data='send_to_active'
-        ),
-        types.InlineKeyboardButton(
-            text='Отправить свое сообщение всем ',
-            callback_data='send_to_all'
-        ),
-        types.InlineKeyboardButton(
-            text='Отправить свое сообщение юзеру по айди',
-            callback_data='send_to_user_id'
-        ),
         types.InlineKeyboardButton(
             text='Назад',
             callback_data='help'
@@ -1427,155 +1499,8 @@ def set_run_callback(call):
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
 
-@bot.callback_query_handler(func=lambda call: call.data == 'send_to_all')
-def send_to_all_handler(call):
-    user_id = call.message.chat.id
-    message_id = call.message.message_id
-    next_state = States.send_message_to_all_users
+# хрен знает что это
 
-    answer = ('👉 Отправка сообщения всем юзерам')
-
-    bot.send_chat_action(user_id, 'typing')
-    bot.edit_message_text(
-        chat_id=user_id,
-        message_id=message_id,
-        text=answer
-    )
-
-    answer = 'Напиши GO, чтобы продолжить'
-
-    keyboard = types.InlineKeyboardMarkup()
-
-    keyboard.add(
-        types.InlineKeyboardButton(
-            text='Назад',
-            callback_data='help'
-        )
-    )
-    bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, reply_markup=keyboard)
-    bot.set_state(user_id, next_state)
-
-@bot.callback_query_handler(func=lambda call: call.data == 'send_to_user_id')
-def send_to_user_handler(call):
-    user_id = call.message.chat.id
-    message_id = call.message.message_id
-    next_state = States.send_message_to_user_id
-
-    answer = ('👉 Отправка сообщения юзеру по айди')
-
-    bot.send_chat_action(user_id, 'typing')
-    bot.edit_message_text(
-        chat_id=user_id,
-        message_id=message_id,
-        text=answer
-    )
-
-    answer = 'Введи номер пользователя'
-
-    keyboard = types.InlineKeyboardMarkup()
-
-    keyboard.add(
-        types.InlineKeyboardButton(
-            text='Назад',
-            callback_data='help'
-        )
-    )
-    bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, reply_markup=keyboard)
-    bot.set_state(user_id, next_state)
-
-
-
-
-@bot.message_handler(state=States.send_message_to_user_id)
-def send_message_to_user_id_handler(message):
-    user_id = message.from_user.id
-    next_state = States.forward_message
-    telegram_id = message.text
-    keyboard = types.InlineKeyboardMarkup()
-    keyboard.row_width = 1
-    user = get_user(telegram_id)
-    global forward_users
-    forward_users = []
-    forward_users.append(user)
-    if not user:
-        answer = ('Не знаю такого пользователя')
-    else:
-        answer = (
-            f'Отправить сообщение [{user.name}](tg://user?id={user.telegram_id})')
-
-
-    keyboard.add(
-        types.InlineKeyboardButton(
-            text='Назад',
-            callback_data='help'
-        )
-    )
-    bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, parse_mode='Markdown',
-                     reply_markup=keyboard)
-    bot.set_state(user_id, next_state)
-
-@bot.message_handler(state=States.send_message_to_all_users)
-def send_message_to_all_users(message):
-    user_id = message.from_user.id
-    next_state = States.forward_message
-
-    keyboard = types.InlineKeyboardMarkup()
-    keyboard.row_width = 1
-    global forward_users
-    forward_users = get_admins()
-
-    answer = (
-            f'Введи сообщение которое отправится всем пользователям')
-
-    keyboard.add(
-        types.InlineKeyboardButton(
-            text='Назад',
-            callback_data='help'
-        )
-    )
-    bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, parse_mode='Markdown',
-                     reply_markup=keyboard)
-    bot.set_state(user_id, next_state)
-
-@bot.message_handler(state=States.forward_message)
-def send_to_user_msg_callback(message):
-        user_id = message.from_user.id
-        message = message.text
-        # photo = message.photo[-1]
-        next_state = States.complete
-
-        for target_user in forward_users:
-            target_user_id = target_user.telegram_id
-            answer = (f'👉 Отправляю сообщение пользователю {target_user_id}')
-            bot.send_message('220428984', answer)
-
-            try:
-                bot.send_message(
-                    target_user_id, message)
-                # bot.send_photo(
-                #     target_user_id, photo, caption=message)
-            except Exception:
-                bot.send_message('220428984',
-                                 f' сообщения юзеру {target_user_id} не отправлено: {traceback.format_exc()}')
-
-        answer = ('Done')
-
-        keyboard = types.InlineKeyboardMarkup()
-
-        keyboard.add(
-            types.InlineKeyboardButton(
-                text='Назад',
-                callback_data='help'
-            )
-        )
-        bot.send_chat_action(user_id, 'typing')
-        bot.send_message(user_id, answer, parse_mode='Markdown',
-                         reply_markup=keyboard)
-        bot.set_state(user_id, next_state)
 
 bot.add_custom_filter(custom_filters.StateFilter(bot))
 bot.add_custom_filter(custom_filters.IsDigitFilter())
@@ -1585,7 +1510,7 @@ def schedule_checker():
     try:
         while True:
             schedule.run_pending()
-            sleep(1) 
+            sleep(1)
     except Exception as e:
         print(e)
 
