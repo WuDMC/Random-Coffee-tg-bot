@@ -1514,7 +1514,6 @@ def schedule_checker():
     except Exception as e:
         print(e)
 
-
 if __name__ == "__main__":
     schedule.every().monday.at('10:00').do(generate_pairs)
     schedule.every().monday.at('11:00').do(send_invites)
