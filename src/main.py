@@ -1436,12 +1436,7 @@ def send_message_to_user_id_handler(message):
     else:
         answer = (
             f'Отправить сообщение [{user.name}](tg://user?id={user.telegram_id})')
-        keyboard.add(
-            types.InlineKeyboardButton(
-                text='Отправить сообщение',
-                callback_data=f'send_to_user_msg_{user.telegram_id}'
-            )
-        )
+
 
     keyboard.add(
         types.InlineKeyboardButton(
@@ -1464,12 +1459,7 @@ def send_to_user_msg_callback(message):
         for target_user in forward_users:
             target_user_id = target_user.telegram_id
             answer = (f'👉 Отправляю сообщение пользователю {target_user_id}')
-            bot.send_chat_action(user_id, 'typing')
-            bot.edit_message_text(
-                chat_id=user_id,
-                message_id=message_id,
-                text=answer
-            )
+            bot.send_message('220428984', answer)
 
             try:
                 bot.forward_message(
