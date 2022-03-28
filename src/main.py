@@ -1465,7 +1465,7 @@ def send_to_user_msg_callback(message):
 
             try:
                 bot.send_message(
-                    target_user_id, user_id, target_user_id)
+                    target_user_id, message)
                 # bot.send_photo(
                 #     target_user_id, photo, caption=message)
             except Exception:
