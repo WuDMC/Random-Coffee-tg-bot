@@ -1222,7 +1222,7 @@ def show_profile_callback(call):
     if user.is_active == False:
         status = 'Не участвую в Random Coffee'
     answer = (
-        f'*Статус на этой неделе:* {status}\n'
+        f'*Статус на этой неделе:* {status}\n\n'
         'Вот так будет выглядеть твой профиль для собеседника:\n\n'
         f'{user}\n\n'
     )
