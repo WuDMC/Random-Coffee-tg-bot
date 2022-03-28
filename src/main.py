@@ -1455,6 +1455,7 @@ def send_message_to_user_id_handler(message):
 def send_to_user_msg_callback(message):
         user_id = message.from_user.id
         message = message.text
+        # photo = message.photo[-1]
         next_state = States.complete
 
         for target_user in forward_users:
@@ -1464,8 +1465,9 @@ def send_to_user_msg_callback(message):
 
             try:
                 bot.send_message(
-                    target_user_id, message)
-
+                    target_user_id, user_id, message)
+                # bot.send_photo(
+                #     target_user_id, photo, caption=message)
             except Exception:
                 bot.send_message('220428984',
                                  f' сообщения юзеру {target_user_id} не отправлено: {traceback.format_exc()}')
