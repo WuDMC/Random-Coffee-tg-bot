@@ -41,7 +41,8 @@ class States:
     change_user_for_ask_id_admin = 9
     update_nickname = 10
     send_message_to_user_id = 11
-    forward_message = 12
+    send_message_to_all_users = 12
+    forward_message = 13
 #заготовки сообщения
 
 msg_for_active = (
@@ -1390,6 +1391,36 @@ def set_run_callback(call):
     )
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
+
+@bot.callback_query_handler(func=lambda call: call.data == 'send_to_all')
+def send_to_all_handler(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+    next_state = States.send_message_to_all_users
+
+    answer = ('👉 Отправка сообщения всем юзерам')
+
+    bot.send_chat_action(user_id, 'typing')
+    bot.edit_message_text(
+        chat_id=user_id,
+        message_id=message_id,
+        text=answer
+    )
+
+    answer = 'Напиши GO, чтобы продолжить'
+
+    keyboard = types.InlineKeyboardMarkup()
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, reply_markup=keyboard)
+    bot.set_state(user_id, next_state)
+
 @bot.callback_query_handler(func=lambda call: call.data == 'send_to_user_id')
 def send_to_user_handler(call):
     user_id = call.message.chat.id
@@ -1418,6 +1449,7 @@ def send_to_user_handler(call):
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
     bot.set_state(user_id, next_state)
+
 
 
 
@@ -1450,6 +1482,29 @@ def send_message_to_user_id_handler(message):
                      reply_markup=keyboard)
     bot.set_state(user_id, next_state)
 
+@bot.message_handler(state=States.send_message_to_all_users)
+def send_message_to_all_users(message):
+    user_id = message.from_user.id
+    next_state = States.forward_message
+
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.row_width = 1
+    global forward_users
+    forward_users = get_admins()
+
+    answer = (
+            f'Введи сообщение которое отправится всем пользователям')
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, parse_mode='Markdown',
+                     reply_markup=keyboard)
+    bot.set_state(user_id, next_state)
 
 @bot.message_handler(state=States.forward_message)
 def send_to_user_msg_callback(message):
