@@ -1454,7 +1454,7 @@ def send_message_to_user_id_handler(message):
 @bot.message_handler(state=States.forward_message)
 def send_to_user_msg_callback(message):
         user_id = message.from_user.id
-        message_id = message.message_id
+        message = message.text
         next_state = States.complete
 
         for target_user in forward_users:
@@ -1463,8 +1463,8 @@ def send_to_user_msg_callback(message):
             bot.send_message('220428984', answer)
 
             try:
-                bot.forward_message(
-                    target_user_id, user_id, message_id)
+                bot.send_message(
+                    target_user_id, user_id, message)
             except Exception:
                 bot.send_message('220428984',
                                  f' сообщения юзеру {target_user_id} не отправлено: {traceback.format_exc()}')
