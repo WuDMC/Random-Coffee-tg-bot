@@ -10,8 +10,9 @@ from settings import ADMINS, TELEGRAM_TOKEN, SMTP
 from messages import generate_password
 from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_users, set_field, create_user, get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs
 
-bot = telebot.TeleBot(TELEGRAM_TOKEN)
+bot = telebot.TeleBot(TELEGRAM_TOKEN
 
+forward_users = ['220428984']
 # проблема с маркдаун только решает никнеймы
 __escape_markdown_map = {
 
@@ -40,6 +41,7 @@ class States:
     change_user_for_ask_id_admin = 9
     update_nickname = 10
     send_message_to_user_id = 11
+    forward_message = 12
 #заготовки сообщения
 
 msg_for_active = (
@@ -1388,7 +1390,6 @@ def set_run_callback(call):
     )
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
-
 @bot.callback_query_handler(func=lambda call: call.data == 'send_to_user_id')
 def send_to_user_handler(call):
     user_id = call.message.chat.id
@@ -1423,13 +1424,13 @@ def send_to_user_handler(call):
 @bot.message_handler(state=States.send_message_to_user_id)
 def send_message_to_user_id_handler(message):
     user_id = message.from_user.id
-    next_state = States.complete
+    next_state = States.forward_message
     telegram_id = message.text
-
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 1
-
     user = get_user(telegram_id)
+    global forward_users
+    forward_users = user
     if not user:
         answer = ('Не знаю такого пользователя')
     else:
@@ -1442,7 +1443,6 @@ def send_message_to_user_id_handler(message):
             )
         )
 
-
     keyboard.add(
         types.InlineKeyboardButton(
             text='Назад',
@@ -1454,6 +1454,44 @@ def send_message_to_user_id_handler(message):
                      reply_markup=keyboard)
     bot.set_state(user_id, next_state)
 
+
+@bot.message_handler(state=States.forward_message)
+def send_to_user_msg_callback(message):
+        user_id = message.from_user.id
+        message_id = message.message_id
+        next_state = States.complete
+
+        for target_user in forward_users:
+            target_user_id = target_user.telegram_id
+            answer = (f'👉 Отправляю сообщение пользователю {target_user_id}')
+            bot.send_chat_action(user_id, 'typing')
+            bot.edit_message_text(
+                chat_id=user_id,
+                message_id=message_id,
+                text=answer
+            )
+
+            try:
+                bot.forward_message(
+                    target_user_id, user_id, message_id)
+            except Exception:
+                bot.send_message('220428984',
+                                 f' сообщения юзеру {target_user_id} не отправлено: {traceback.format_exc()}')
+
+        answer = ('Done')
+
+        keyboard = types.InlineKeyboardMarkup()
+
+        keyboard.add(
+            types.InlineKeyboardButton(
+                text='Назад',
+                callback_data='help'
+            )
+        )
+        bot.send_chat_action(user_id, 'typing')
+        bot.send_message(user_id, answer, parse_mode='Markdown',
+                         reply_markup=keyboard)
+        bot.set_state(user_id, next_state)
 
 bot.add_custom_filter(custom_filters.StateFilter(bot))
 bot.add_custom_filter(custom_filters.IsDigitFilter())
