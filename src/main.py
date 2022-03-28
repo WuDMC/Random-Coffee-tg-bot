@@ -1224,7 +1224,7 @@ def show_profile_callback(call):
     answer = (
         'Вот так будет выглядеть твой профиль для собеседника:\n\n'
         f'{user}\n\n'
-        f'Статус профиля: {status}'
+        f'*Статус профиля:* {status}'
     )
 
     keyboard = types.InlineKeyboardMarkup()
