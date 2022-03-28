@@ -1218,13 +1218,13 @@ def show_profile_callback(call):
         text=answer
     )
     user = get_user(user_id)
-    status = 'Участвую в Random Coffee на этой неделе'
+    status = 'Участвую в Random Coffee'
     if user.is_active == False:
-        status = 'Не участвую в Random Coffee на этой неделе'
+        status = 'Не участвую в Random Coffee'
     answer = (
+        f'*Статус на этой неделе:* {status}\n'
         'Вот так будет выглядеть твой профиль для собеседника:\n\n'
         f'{user}\n\n'
-        f'*Статус профиля:* {status}'
     )
 
     keyboard = types.InlineKeyboardMarkup()
