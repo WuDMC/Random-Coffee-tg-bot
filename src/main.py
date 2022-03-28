@@ -39,40 +39,41 @@ class States:
     change_about = 8
     change_user_for_ask_id_admin = 9
     update_nickname = 10
+#заготовки сообщения
 
+msg_for_active = (
+    'Привет уже завтра будут известны первые пары\n'
+    'random coffe в Батуми, поделись ботом с друзьями! \n\n'
+    'Инвайт-код: Batumi \n\n'
+    'Обсуждение и вопросы по боту @BatumiRandomCoffee \n\n'
+)
+msg_for_admins = (
+    'Привет уже завтра будут известны первые пары\n'
+    'random coffe в Батуми, поделись ботом\n'
+    'с друзьями! \n\n'
+    'Инвайт-код: Batumi \n\n'
+    'Обсуждение и вопросы по боту @BatumiRandomCoffee \n\n'
+)
+msg_for_blocked =(
+    'Привет уже завтра будут известны первые пары\n'
+    'random coffe в Батуми, продолжи регистрацию:\n'
+    'нажми /start \n\n'
+    'И введи инвайт-код: Batumi \n\n'
+    'Обсуждение и вопросы по боту @BatumiRandomCoffee \n\n'
+)
+msg_for_no_link = (
+    'У тебя не указана ссылка на соц. сеть\n'
+    'Пожалуйста добавь ее, так твоему собеседнику \n'
+    'будет проще начать разговор\n\n'
+    'Для того, чтобы добавить ссылку нажми /help \n\n'
+)
+msg_for_no_nickname = (
+    'У тебя не указано имя пользователя в Telegram\n'
+    'Без нее не получится тебе написать =(\n\n'
+    'Для того, чтобы добавить имя пользователя нажми /help \n\n'
+)
 # general functions
 def send_admins():
-    msg_for_active = (
-        'Привет уже завтра будут известны первые пары\n'
-        'random coffe в Батуми, поделись ботом с друзьями! \n\n'
-        'Инвайт-код: Batumi \n\n'
-        'Обсуждение и вопросы по боту @BatumiRandomCoffee \n\n'
-    )
-    msg_for_admins = (
-        'Привет уже завтра будут известны первые пары\n'
-        'random coffe в Батуми, поделись ботом\n'
-        'с друзьями! \n\n'
-        'Инвайт-код: Batumi \n\n'
-        'Обсуждение и вопросы по боту @BatumiRandomCoffee \n\n'
-    )
-    msg_for_blocked =(
-        'Привет уже завтра будут известны первые пары\n'
-        'random coffe в Батуми, продолжи регистрацию:\n'
-        'нажми /start \n\n'
-        'И введи инвайт-код: Batumi \n\n'
-        'Обсуждение и вопросы по боту @BatumiRandomCoffee \n\n'
-    )
-    msg_for_no_link = (
-        'У тебя не указана ссылка на соц. сеть\n'
-        'Пожалуйста добавь ее, так твоему собеседнику \n'
-        'будет проще начать разговор\n\n'
-        'Для того, чтобы добавить ссылку нажми /help \n\n'
-    )
-    msg_for_no_nickname = (
-        'У тебя не указано имя пользователя в Telegram\n'
-        'Без нее не получится тебе написать =(\n\n'
-        'Для того, чтобы добавить имя пользователя нажми /help \n\n'
-    )
 
     for user in get_admins():
         try:
@@ -92,31 +93,8 @@ def send_admins():
     bot.send_message('220428984', 'Сообщения админам отправлены')
 
 
+
 def send_no_contacts():
-
-    msg_for_no_link = (
-        'У тебя не указана ссылка на соц. сеть\n'
-        'Пожалуйста добавь ее, так твоему собеседнику \n'
-        'будет проще начать разговор\n\n'
-        'Для того, чтобы добавить ссылку нажми /help \n\n'
-    )
-    msg_for_no_nickname = (
-        'У тебя не указано имя пользователя в Telegram\n'
-        'Без нее не получится тебе написать =(\n\n'
-        'Для того, чтобы добавить имя пользователя нажми /help \n\n'
-    )
-    bot.send_message('220428984', 'Получат такое сообщение')
-    for user in get_admins():
-        try:
-            bot.send_message(user.telegram_id, msg_for_no_link, parse_mode='Markdown')
-            sleep(1)
-            bot.send_message(user.telegram_id, msg_for_no_nickname, parse_mode='Markdown')
-            sleep(1)
-        except Exception:
-            bot.send_message('220428984', f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
-        sleep(2)
-    bot.send_message('220428984', 'Сообщения админам отправлены')
-
 
     bot.send_message('220428984', 'Начинаю отправку пользователям без ссылки')
     for user in get_no_link_users():
@@ -143,14 +121,6 @@ def send_no_contacts():
 
 
 def send_blocked_users():
-    msg_for_blocked =(
-        'Привет уже завтра будут известны первые пары\n'
-        'random coffe в Батуми, продолжи регистрацию:\n'
-        'нажми /start \n\n'
-        'И введи инвайт-код: Batumi \n\n'
-        'Обсуждение и вопросы по боту @BatumiRandomCoffee \n\n'
-    )
-    bot.send_message('220428984', msg_for_blocked, parse_mode='Markdown')
     bot.send_message('220428984', 'Начинаю отправку блокированным пользователям по заготовке')
     for user in get_blocked_users():
         try:
@@ -165,13 +135,6 @@ def send_blocked_users():
 
 
 def send_active_users():
-    msg_for_active = (
-        'Привет уже завтра будут известны первые пары\n'
-        'random coffe в Батуми, поделись ботом с друзьями! \n\n'
-        'Инвайт-код: Batumi \n\n'
-        'Обсуждение и вопросы по боту @BatumiRandomCoffee \n\n'
-    )
-    bot.send_message('220428984', msg_for_active, parse_mode='Markdown')
     bot.send_message('220428984', 'Начинаю отправку активным пользователям по заготовке')
     for user in get_active_users():
         try:
@@ -607,6 +570,109 @@ def send_invites():
         except Exception:
             bot.send_message('220428984',
                                  f' сообщения паре {pair.id} не отправлено: {traceback.format_exc()}')
+
+
+
+
+@bot.callback_query_handler(func=lambda call: call.data == 'send_to_nocontact')
+def send_to_nocontact_callback(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+
+    send_no_contacts()
+
+    answer = ('👉 Отправить заготовку  без контактов')
+
+    bot.send_chat_action(user_id, 'typing')
+    bot.edit_message_text(
+        chat_id=user_id,
+        message_id=message_id,
+        text=answer
+    )
+
+    answer = (
+        'Напоминание пользователям без контактов прошло успешно'
+    )
+
+    keyboard = types.InlineKeyboardMarkup()
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, parse_mode='Markdown',
+                     reply_markup=keyboard)
+
+
+
+
+@bot.callback_query_handler(func=lambda call: call.data == 'send_to_blocked')
+def send_to_blocked_callback(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+
+    send_blocked_users()
+
+    answer = ('👉 Отправить заготовку  не верифицированным')
+
+    bot.send_chat_action(user_id, 'typing')
+    bot.edit_message_text(
+        chat_id=user_id,
+        message_id=message_id,
+        text=answer
+    )
+
+    answer = (
+        'Напоминание пользователям без верификации прошло успешно'
+    )
+
+    keyboard = types.InlineKeyboardMarkup()
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, parse_mode='Markdown',
+                     reply_markup=keyboard)
+
+@bot.callback_query_handler(func=lambda call: call.data == 'send_to_active')
+def send_to_active_callback(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+
+    send_active_users()
+
+    answer = ('👉 Отправить заготовку  активным юзерам')
+
+    bot.send_chat_action(user_id, 'typing')
+    bot.edit_message_text(
+        chat_id=user_id,
+        message_id=message_id,
+        text=answer
+    )
+
+    answer = (
+        'Напоминание активным пользователям прошло успешно'
+    )
+
+    keyboard = types.InlineKeyboardMarkup()
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, parse_mode='Markdown',
+                     reply_markup=keyboard)
+
 
 @bot.callback_query_handler(func=lambda call: call.data == 'send_to_admins')
 def send_to_admins_callback(call):
@@ -1321,6 +1387,39 @@ def set_run_callback(call):
     )
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
+
+@bot.callback_query_handler(func=lambda call: call.data == 'send_to_user_id')
+def send_to_user_handler(message):
+    user_id = message.from_user.id
+
+    telegram_id = message.text
+
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.row_width = 1
+
+    user = get_user(telegram_id)
+    if not user:
+        answer = ('Не знаю такого пользователя')
+    else:
+        answer = (
+            f'Отправить сообщение [{user.name}](tg://user?id={user.telegram_id})')
+        keyboard.add(
+            types.InlineKeyboardButton(
+                text='Отправить сообщение',
+                callback_data=f'send_to_user_msg_{user.telegram_id}'
+            )
+        )
+
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, parse_mode='Markdown',
+                     reply_markup=keyboard)
 
 
 bot.add_custom_filter(custom_filters.StateFilter(bot))
