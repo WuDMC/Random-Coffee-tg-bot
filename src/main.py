@@ -10,9 +10,9 @@ from settings import ADMINS, TELEGRAM_TOKEN, SMTP
 from messages import generate_password
 from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_users, set_field, create_user, get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs
 
-bot = telebot.TeleBot(TELEGRAM_TOKEN
+bot = telebot.TeleBot(TELEGRAM_TOKEN)
 
-forward_users = ['220428984']
+forward_users = []
 # проблема с маркдаун только решает никнеймы
 __escape_markdown_map = {
 
