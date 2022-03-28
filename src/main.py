@@ -1430,7 +1430,7 @@ def send_message_to_user_id_handler(message):
     keyboard.row_width = 1
     user = get_user(telegram_id)
     global forward_users
-    forward_users = user
+    forward_users.append(user)
     if not user:
         answer = ('Не знаю такого пользователя')
     else:
