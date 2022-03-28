@@ -1392,7 +1392,7 @@ def set_run_callback(call):
 def send_to_user_handler(message):
     user_id = message.from_user.id
 
-    telegram_id = message.text
+    telegram_id = '220428984'
 
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 1
