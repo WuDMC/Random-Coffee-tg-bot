@@ -182,24 +182,8 @@ def help(message):
     if user.is_admin:
         keyboard.add(
             types.InlineKeyboardButton(
-                text='Участники',
-                callback_data='show_users'
-            ),
-            types.InlineKeyboardButton(
-                text='Настройки пользователя',
-                callback_data='change_user'
-            ),
-            types.InlineKeyboardButton(
-                text='Пары',
-                callback_data='show_pairs'
-            ),
-            types.InlineKeyboardButton(
-                text='Сгенерировать пары',
-                callback_data='generate_pairs'
-            ),
-            types.InlineKeyboardButton(
-                text='Отправить приглашения',
-                callback_data='send_invites'
+                text='Управление',
+                callback_data='manage_users'
             ),
             types.InlineKeyboardButton(
                 text='Рассылки',
@@ -1219,6 +1203,57 @@ def update_nickname_callback(call):
     keyboard = types.InlineKeyboardMarkup()
 
     keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, reply_markup=keyboard)
+    bot.set_state(user_id, next_state)
+
+
+@bot.callback_query_handler(func=lambda call: call.data == 'manage_users')
+def manage_users_callback(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+    next_state = States.complete
+
+    answer = ('👉 Меню управления')
+
+    bot.send_chat_action(user_id, 'typing')
+    bot.edit_message_text(
+        chat_id=user_id,
+        message_id=message_id,
+        text=answer
+    )
+
+    answer = ('Выбери пункт меню')
+
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.row_width = 1
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Участники',
+            callback_data='show_users'
+        ),
+        types.InlineKeyboardButton(
+            text='Настройки пользователя',
+            callback_data='change_user'
+        ),
+        types.InlineKeyboardButton(
+            text='Пары',
+            callback_data='show_pairs'
+        ),
+        types.InlineKeyboardButton(
+            text='Сгенерировать пары',
+            callback_data='generate_pairs'
+        ),
+        types.InlineKeyboardButton(
+            text='Отправить приглашения',
+            callback_data='send_invites'
+        ),
         types.InlineKeyboardButton(
             text='Назад',
             callback_data='help'
