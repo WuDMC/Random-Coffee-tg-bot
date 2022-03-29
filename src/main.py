@@ -571,6 +571,37 @@ def ask_random_coffee():
             bot.send_message(wudmc_tg,
                              f' сообщения паре {user.telegram_id} не отправлено: {traceback.format_exc()}')
 
+def ask_about_next_week():
+    for user in get_admins():
+        try:
+            keyboard = types.InlineKeyboardMarkup()
+            keyboard.row_width = 1
+            keyboard.add(
+            types.InlineKeyboardButton(
+                text='Буду участвовать',
+                callback_data='set_pause'
+                ),
+            types.InlineKeyboardButton(
+                text='Возьму перерыв',
+                callback_data='set_run'
+                )
+            )
+            bot.send_message(wudmc_tg,
+                     f' отправля запрос участия  юзеру {user.telegram_id} ')
+            set_field(user.telegram_id, 'is_active', False)
+            bot.send_message(
+                user.telegram_id, poll_txt, parse_mode='Markdown',
+                 reply_markup=keyboard)
+            bot.send_message(wudmc_tg,
+                         f' запрос участия  юзеру {user.telegram_id} успешно отправлен')
+        except Exception:
+            bot.send_message(wudmc_tg,
+                         f' запрос участия юзеру {user.telegram_id} не отправлен: {traceback.format_exc()}')
+        sleep(1)
+    bot.send_message(wudmc_tg,
+                     f' запрос участия успешно отправлены')
+
+
 def ask_about_last_week():
     for pair in get_pairs():
         try:
@@ -1637,9 +1668,9 @@ if __name__ == "__main__":
 
     schedule.every().monday.at('10:20').do(generate_pairs)
     schedule.every().monday.at('12:00').do(send_invites)
-    # schedule.every().wednesday.at('13:00').do(send_adv) тут полезная инфа о чате -
+    # schedule.every().wednesday.at('17:30').do(send_adv) тут полезная инфа о чате -
     schedule.every().sunday.at('12:42').do(ask_about_last_week)
-    # schedule.every().sunday.at('16:42').do(ask_about_next_week) - опрос об участии на след неделе
+    schedule.every().tuesday.at('13:42').do(ask_about_next_week)
     Thread(target=schedule_checker).start()
 
     bot.infinity_polling()
