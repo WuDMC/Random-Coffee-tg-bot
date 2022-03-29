@@ -9,7 +9,7 @@ from telebot import types, custom_filters
 from settings import ADMINS, TELEGRAM_TOKEN, SMTP
 from messages import generate_password
 from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_users, set_field, create_user, \
-    get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs
+    get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 wudmc_tg = '220428984'
@@ -49,11 +49,35 @@ class States:
 
 # заготовки сообщения
 
+how_txt = (
+    'Как все будет происходить???\n\n'
+    '1) Раз в неделю по вторникам я буду заочно \n'
+    'знакомить тебя с другим человеком в Батуми\n\n'
+    '2) Где и когда встретиться вы решаете \n'
+    'по договоренности\n\n'
+    '3) В воскресенье я спрошу как все прошло,  \n'
+    'а в понедельник "Пойдешь ли\n'
+    'на новую встречу на этой неделе?\n'
+)
+
+reminder_for_inactive_1 = (
+    'Завтра у тебя есть шанс познакомиться \n'
+    'с новым человеком в Батуми\n'
+    'но твой профиль неактивен.\n\n'
+    'Чтобы не потерять новое знакомство \n'
+    'сними свой профиль с паузы в меню /help\n\n'
+)
+
+reminder_for_inactive_2 = (
+    'Через 2 часа я сгенерирую пары,  \n'
+    'это последний шанс принять участие на этой неделе\n\n'
+    'Сними свой профиль с паузы в меню /help\n'
+)
+
 poll_txt = (
     'Привет, как прошла твоя встреча на этой неделе?'
     'Оставь отзыв тут @BatumiRandomCoffee \n\n'
     'Твой отзыв поможет мне стать лучше\n'
-
 )
 msg_for_active = (
     'Привет уже завтра будут известны первые пары\n'
@@ -155,6 +179,27 @@ def send_active_users():
             bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
         sleep(2)
     bot.send_message(wudmc_tg, 'Сообщения активным отправлены')
+
+
+def send_stats():
+    users_len = len(get_users())
+    pairs_len = len(get_pairs())
+    stats = (
+        'Немного статистики: \n'
+        f'Всего участников {users_len}\n'
+        f'Пар не прошлой  {pairs_len}\n'
+             )
+
+    bot.send_message(wudmc_tg, 'Отправляю статистики')
+    for user in get_admins():
+        try:
+            bot.send_message(wudmc_tg, f'отправляю стату юзеру {user.telegram_id}')
+            bot.send_message(user.telegram_id, stats, parse_mode='Markdown')
+            bot.send_message(wudmc_tg, f' стата юзеру {user.telegram_id} успешно отправлена')
+        except Exception:
+            bot.send_message(wudmc_tg, f' стату юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
+        sleep(2)
+    bot.send_message(wudmc_tg, 'Статистика отправлена')
 
 
 def help(message):
@@ -1550,6 +1595,7 @@ def schedule_checker():
 if __name__ == "__main__":
     schedule.every().monday.at('10:00').do(generate_pairs)
     schedule.every().monday.at('11:00').do(send_invites)
+    schedule.every().tuesday.at('11:22').do(send_stats)
     Thread(target=schedule_checker).start()
 
     bot.infinity_polling()
@@ -1559,6 +1605,6 @@ if __name__ == "__main__":
 #           2) во вторник напоминать что в среду жеребьевка последний шанс все дела, поделись с друзьями
 #           3) среда в 10 - через час генерация пар , в 11-генерация пар, в 12 - сенд инвайтс
 #           4) Вчера я сгенерировал Х пар, рассказывайте обо мне друзьям =)
-#           5) Немного статистики, всего в боте Х человек, из них за последние 7 дней У человек
+#           5) Немного статистики, всего в боте Х человек, из них за последние 7 дней У человек send_stats()
 #           6) Как все работает? каждый понедельника я спршиваю будешь ли ты участвовать? в среду генерация пар, в воскресенье спршиваю  отзывы.
 #           7) Как все прошло? поделись отзывом в чате = ask_about_last_week():
