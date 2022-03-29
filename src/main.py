@@ -311,7 +311,11 @@ def show_profile_callback(call):
         text=answer
     )
     user = get_user(target_user_id)
+    status = 'Участвую в Random Coffee'
+    if user.is_active == False:
+        status = 'Не участвую в Random Coffee'
     answer = (
+        f'*Статус на этой неделе:* {status}\n\n'
         'Вот так будет выглядеть твой профиль для собеседника:\n\n'
         f'{user}'
     )
@@ -1270,7 +1274,11 @@ def change_profile_callback(call):
 
     if call.data == 'help_from_show_profile':
         user = get_user(user_id)
+        status = 'Участвую в Random Coffee'
+        if user.is_active == False:
+            status = 'Не участвую в Random Coffee'
         answer = (
+            f'*Статус на этой неделе:* {status}\n\n'
             'Вот так будет выглядеть твой профиль для собеседника:\n\n'
             f'{user}'
         )
