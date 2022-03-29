@@ -1637,7 +1637,7 @@ if __name__ == "__main__":
     schedule.every().monday.at('10:20').do(generate_pairs)
     schedule.every().monday.at('11:00').do(send_invites)
 
-    schedule.every().sunday.at('16:42').do(ask_about_last_week)
+    schedule.every().sunday.at('12:42').do(ask_about_last_week)
     Thread(target=schedule_checker).start()
 
     bot.infinity_polling()
