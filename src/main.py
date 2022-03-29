@@ -1637,15 +1637,10 @@ if __name__ == "__main__":
 
     schedule.every().monday.at('10:20').do(generate_pairs)
     schedule.every().monday.at('12:00').do(send_invites)
-
+    # schedule.every().wednesday.at('13:00').do(send_adv) тут полезная инфа о чате -
     schedule.every().sunday.at('12:42').do(ask_about_last_week)
+    # schedule.every().sunday.at('16:42').do(ask_about_next_week) - опрос об участии на след неделе
     Thread(target=schedule_checker).start()
 
     bot.infinity_polling()
     # bot.polling()
-#
-# надо так: 1) в понедельник спрашивать будешь ли участвовать. Твой профиль сейчас поставлен на паузу
-#           2) во вторник прислать статистику и  напоминать что в среду жеребьевка последний шанс все дела, поделись с друзьями
-#           3) среда в 10 - через час генерация пар , в 11-генерация пар, в 12 - сенд инвайтс
-#
-#           6) Как все работает? каждый понедельника я спршиваю будешь ли ты участвовать? в среду генерация пар, в воскресенье спршиваю  отзывы.
