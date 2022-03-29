@@ -51,10 +51,10 @@ class States:
 next_week_txt = (
     'Привет, скоро понедельник, а это значит \n'
     'тебя ждут новые знакомства в Батуми\n\n'
-    'Я пишу уточнить: Будешь ли ты участвовать \n'
-    'в Random Coffee на следюущей неделе? \n\n'
+    'Я пишу уточнить: *Будешь ли ты участвовать* \n'
+    '*в Random Coffee на следюущей неделе?* \n\n'
     'Сейчас я поставил твой профиль на паузу. Для участия \n'
-    'В жеребьевке просто кликни по кнопке "Буду участвовать".\n\n'
+    'в Random Coffe просто *кликни по кнопке "Буду участвовать".*\n\n'
     'Также можно менять свой статус самостоятельно тут - /help\n'
 )
 
@@ -1680,7 +1680,7 @@ if __name__ == "__main__":
     schedule.every().monday.at('12:00').do(send_invites)
     # schedule.every().wednesday.at('17:30').do(send_adv) тут полезная инфа о чате -
     schedule.every().sunday.at('12:42').do(ask_about_last_week)
-    schedule.every().tuesday.at('14:01').do(ask_about_next_week)
+    schedule.every().tuesday.at('14:05').do(ask_about_next_week)
     Thread(target=schedule_checker).start()
 
     bot.infinity_polling()
