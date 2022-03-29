@@ -1312,7 +1312,7 @@ def how_it_works_callback(call):
     keyboard.add(
         types.InlineKeyboardButton(
             text='Назад',
-            callback_data='help_from_show_profile'
+            callback_data='help'
         )
     )
     bot.send_chat_action(user_id, 'typing')
