@@ -48,6 +48,16 @@ class States:
 
 
 # заготовки сообщения
+next_week_txt = (
+    'Привет, скоро понедельник, а это значит \n'
+    'тебя ждут новые знакомства в Батуми\n\n'
+    'Я пишу уточнить: Будешь ли ты участвовать \n'
+    'в Random Coffee на следюущей неделе? \n\n'
+    'Сейчас я поставил твой профиль на паузу. Для участия \n'
+    'В жеребьевке просто кликни по кнопке "Буду участвовать".\n\n'
+    'Также можно менять свой статус самостоятельно тут - /help\n'
+)
+
 
 how_txt = (
     'Как все будет происходить???\n\n'
@@ -590,7 +600,7 @@ def ask_about_next_week():
                      f' отправля запрос участия  юзеру {user.telegram_id} ')
             set_field(user.telegram_id, 'is_active', False)
             bot.send_message(
-                user.telegram_id, poll_txt, parse_mode='Markdown',
+                user.telegram_id, next_week_txt, parse_mode='Markdown',
                  reply_markup=keyboard)
             bot.send_message(wudmc_tg,
                          f' запрос участия  юзеру {user.telegram_id} успешно отправлен')
