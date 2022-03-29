@@ -9,7 +9,7 @@ from telebot import types, custom_filters
 from settings import ADMINS, TELEGRAM_TOKEN, SMTP
 from messages import generate_password
 from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_users, set_field, create_user, \
-    get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users
+    get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users, get_verified_users
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 wudmc_tg = '220428984'
@@ -70,19 +70,14 @@ how_txt = (
     'новую встречу на будущей неделе?"\n'
 )
 
-reminder_for_inactive_1 = (
+reminder_for_inactive = (
     'Завтра у тебя есть шанс познакомиться \n'
     'с новым человеком в Батуми\n'
-    'но твой профиль неактивен.\n\n'
-    'Чтобы не потерять новое знакомство \n'
+    'но *твой профиль неактивен.*\n\n'
+    'Чтобы не упустить новое знакомство \n'
     'сними свой профиль с паузы в меню /help\n\n'
 )
 
-reminder_for_inactive_2 = (
-    'Йо-йо , уже среди и через 2 часа я сгенерирую  новые пары,  \n'
-    'это последний шанс принять участие на этой неделе\n\n'
-    'Сними свой профиль с паузы в меню /help\n'
-)
 
 poll_txt = (
     'Привет, как прошла твоя встреча на этой неделе?'
@@ -179,8 +174,8 @@ def send_blocked_users():
 
 
 def send_active_users():
-    bot.send_message(wudmc_tg, 'Начинаю отправку активным пользователям по заготовке')
-    for user in get_active_users():
+    bot.send_message(wudmc_tg, 'Начинаю отправку авторизованным пользователям по заготовке')
+    for user in get_verified_users():
         try:
             bot.send_message(wudmc_tg, f'отправляю сообщение юзеру {user.telegram_id}')
             bot.send_message(user.telegram_id, msg_for_active, parse_mode='Markdown')
@@ -188,7 +183,7 @@ def send_active_users():
         except Exception:
             bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
         sleep(2)
-    bot.send_message(wudmc_tg, 'Сообщения активным отправлены')
+    bot.send_message(wudmc_tg, 'Сообщения авторизованным отправлены')
 
 
 def send_stats():
@@ -582,7 +577,7 @@ def ask_random_coffee():
                              f' сообщения паре {user.telegram_id} не отправлено: {traceback.format_exc()}')
 
 def ask_about_next_week():
-    for user in get_admins():
+    for user in get_verified_users():
         try:
             keyboard = types.InlineKeyboardMarkup()
             keyboard.row_width = 1
@@ -708,7 +703,7 @@ def send_to_active_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
     send_active_users()
-    answer = ('👉 Отправить заготовку  активным юзерам')
+    answer = ('👉 Отправить заготовку верифицированным юзерам')
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
@@ -716,7 +711,7 @@ def send_to_active_callback(call):
         text=answer
     )
     answer = (
-        'Напоминание активным пользователям прошло успешно'
+        'сообщение верифицированным пользователям прошло успешно'
     )
     keyboard = types.InlineKeyboardMarkup()
     keyboard.add(
@@ -1134,7 +1129,7 @@ def sender_callback(call):
             callback_data='send_to_blocked'
         ),
         types.InlineKeyboardButton(
-            text='Отправить активным заготовку',
+            text='Отправить верифицированным заготовку',
             callback_data='send_to_active'
         ),
         types.InlineKeyboardButton(
@@ -1251,7 +1246,7 @@ def send_message_to_all_users(message):
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 1
     global forward_users
-    forward_users = get_active_users()
+    forward_users = get_verified_users()
 
     answer = (
         f'Введи сообщение которое отправится всем пользователям')
@@ -1675,12 +1670,12 @@ def schedule_checker():
 
 if __name__ == "__main__":
     schedule.every().monday.at('10:00').do(send_stats)
-
     schedule.every().monday.at('10:20').do(generate_pairs)
     schedule.every().monday.at('12:00').do(send_invites)
     # schedule.every().wednesday.at('17:30').do(send_adv) тут полезная инфа о чате -
+    schedule.every().saturday.at('14:05').do(ask_about_next_week)
     schedule.every().sunday.at('12:42').do(ask_about_last_week)
-    schedule.every().tuesday.at('14:05').do(ask_about_next_week)
+
     Thread(target=schedule_checker).start()
 
     bot.infinity_polling()
