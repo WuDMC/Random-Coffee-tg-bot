@@ -49,6 +49,12 @@ class States:
 
 # заготовки сообщения
 
+poll_txt = (
+    'Привет, как прошла твоя встреча на этой неделе?'
+    'Оставь отзыв тут @BatumiRandomCoffee \n\n'
+    'Твой отзыв поможет мне стать лучше\n'
+
+)
 msg_for_active = (
     'Привет уже завтра будут известны первые пары\n'
     'random coffe в Батуми, поделись ботом с друзьями! \n\n'
@@ -510,6 +516,21 @@ def ask_random_coffee():
         except Exception:
             bot.send_message(wudmc_tg,
                              f' сообщения паре {user.telegram_id} не отправлено: {traceback.format_exc()}')
+
+def ask_about_last_week():
+    for pair in get_pairs():
+        try:
+            if pair.user_b:
+                bot.send_message(
+                    pair.user_a, poll_txt, parse_mode='Markdown')
+                bot.send_message(
+                    pair.user_b, poll_txt, parse_mode='Markdown')
+            bot.send_message(wudmc_tg,
+                             f' запрос фидбека паре {pair.id} успешно отправлено')
+        except Exception:
+            bot.send_message(wudmc_tg,
+                             f' запрос фидбека паре {pair.id} не отправлен: {traceback.format_exc()}')
+
 
 def send_invites():
     for pair in get_pairs():
@@ -1540,4 +1561,4 @@ if __name__ == "__main__":
 #           4) Вчера я сгенерировал Х пар, рассказывайте обо мне друзьям =)
 #           5) Немного статистики, всего в боте Х человек, из них за последние 7 дней У человек
 #           6) Как все работает? каждый понедельника я спршиваю будешь ли ты участвовать? в среду генерация пар, в воскресенье спршиваю  отзывы.
-#           7) Как все прошло? поделись отзывом в чате
+#           7) Как все прошло? поделись отзывом в чате = ask_about_last_week():
