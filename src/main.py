@@ -51,7 +51,7 @@ class States:
 
 how_txt = (
     'Как все будет происходить???\n\n'
-    '1) Раз в неделю по вторникам я буду заочно \n'
+    '1) Раз в неделю по средам я буду заочно \n'
     'знакомить тебя с другим человеком в Батуми\n\n'
     '2) Где и когда встретиться вы решаете \n'
     'по договоренности\n\n'
@@ -69,7 +69,7 @@ reminder_for_inactive_1 = (
 )
 
 reminder_for_inactive_2 = (
-    'Через 2 часа я сгенерирую пары,  \n'
+    'Йо-йо , уже среди и через 2 часа я сгенерирую  новые пары,  \n'
     'это последний шанс принять участие на этой неделе\n\n'
     'Сними свой профиль с паузы в меню /help\n'
 )
@@ -208,6 +208,10 @@ def help(message):
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 1
     keyboard.add(
+        types.InlineKeyboardButton(
+            text='Как все работает',
+            callback_data='how_it_works'
+        ),
         types.InlineKeyboardButton(
             text='Посмотреть свой профиль',
             callback_data='show_profile'
@@ -1282,6 +1286,31 @@ def change_profile_callback(call):
 
     help(call)
 
+@bot.callback_query_handler(func=lambda call: call.data == 'how_it_works')
+def how_it_works_callback(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+    answer = ('👉 Все очень просто')
+    bot.edit_message_text(
+        chat_id=user_id,
+        message_id=message_id,
+        text=answer
+    )
+
+
+    answer = how_txt
+
+    keyboard = types.InlineKeyboardMarkup()
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help_from_show_profile'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, parse_mode='Markdown',
+                     reply_markup=keyboard)
 
 @bot.callback_query_handler(func=lambda call: call.data == 'show_profile')
 def show_profile_callback(call):
