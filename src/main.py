@@ -201,7 +201,6 @@ def send_stats():
         sleep(2)
     bot.send_message(wudmc_tg, 'Статистика отправлена')
 
-
 def help(message):
     user_id = message.from_user.id
     next_state = States.complete
