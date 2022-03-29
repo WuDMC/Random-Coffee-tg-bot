@@ -188,7 +188,8 @@ def send_stats():
         'Йо,йо , уже понедельник и вот немного статистики: \n'
         f'Всего участников: {users_len}\n'
         f'Пар не прошлой неделе:  {pairs_len}\n\n'
-        f'а всего через час будут новые пары!\n'
+        f'а всего через 2 часа будут новые пары!\n'
+        f'Проверь свой статус в профиле /help!\n'
              )
 
     bot.send_message(wudmc_tg, 'Отправляю статистики')
@@ -1635,7 +1636,7 @@ if __name__ == "__main__":
     schedule.every().monday.at('10:00').do(send_stats)
 
     schedule.every().monday.at('10:20').do(generate_pairs)
-    schedule.every().monday.at('11:00').do(send_invites)
+    schedule.every().monday.at('12:00').do(send_invites)
 
     schedule.every().sunday.at('12:42').do(ask_about_last_week)
     Thread(target=schedule_checker).start()
