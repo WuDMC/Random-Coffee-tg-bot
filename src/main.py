@@ -186,12 +186,12 @@ def send_stats():
     pairs_len = len(get_pairs())
     stats = (
         'Немного статистики: \n'
-        f'Всего участников {users_len}\n'
-        f'Пар не прошлой  {pairs_len}\n'
+        f'Всего участников: {users_len}\n'
+        f'Пар не прошлой неделе:  {pairs_len}\n'
              )
 
     bot.send_message(wudmc_tg, 'Отправляю статистики')
-    for user in get_admins():
+    for user in get_users():
         try:
             bot.send_message(wudmc_tg, f'отправляю стату юзеру {user.telegram_id}')
             bot.send_message(user.telegram_id, stats, parse_mode='Markdown')
@@ -578,13 +578,15 @@ def ask_about_last_week():
 
 
 def send_invites():
+    len_pairs = len(get_pairs())
     for pair in get_pairs():
         try:
             if pair.user_b:
                 bot.send_message(
-                    pair.user_a, f'Твоя пара!\n\n{get_user(pair.user_b)}', parse_mode='Markdown')
+
+                    pair.user_a, f'На этой неделе я познакомил {len_pairs} пар\n\nТвоя пара!\n\n{get_user(pair.user_b)}', parse_mode='Markdown')
                 bot.send_message(
-                    pair.user_b, f'Твоя пара!\n\n{get_user(pair.user_a)}', parse_mode='Markdown')
+                    pair.user_b, f'На этой неделе я познакомил {len_pairs} пар\n\nТвоя пара!\n\n{get_user(pair.user_a)}', parse_mode='Markdown')
             else:
                 bot.send_message(
                     pair.user_a,
@@ -1596,15 +1598,14 @@ if __name__ == "__main__":
     schedule.every().monday.at('10:00').do(generate_pairs)
     schedule.every().monday.at('11:00').do(send_invites)
     schedule.every().tuesday.at('11:22').do(send_stats)
+    schedule.every().sunday.at('16:42').do(ask_about_last_week)
     Thread(target=schedule_checker).start()
 
     bot.infinity_polling()
     # bot.polling()
 #
 # надо так: 1) в понедельник спрашивать будешь ли участвовать. Твой профиль сейчас поставлен на паузу
-#           2) во вторник напоминать что в среду жеребьевка последний шанс все дела, поделись с друзьями
+#           2) во вторник прислать статистику и  напоминать что в среду жеребьевка последний шанс все дела, поделись с друзьями
 #           3) среда в 10 - через час генерация пар , в 11-генерация пар, в 12 - сенд инвайтс
-#           4) Вчера я сгенерировал Х пар, рассказывайте обо мне друзьям =)
-#           5) Немного статистики, всего в боте Х человек, из них за последние 7 дней У человек send_stats()
+#
 #           6) Как все работает? каждый понедельника я спршиваю будешь ли ты участвовать? в среду генерация пар, в воскресенье спршиваю  отзывы.
-#           7) Как все прошло? поделись отзывом в чате = ask_about_last_week():
