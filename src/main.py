@@ -589,11 +589,11 @@ def ask_about_next_week():
             keyboard.add(
             types.InlineKeyboardButton(
                 text='Буду участвовать',
-                callback_data='set_pause'
+                callback_data='set_run'
                 ),
             types.InlineKeyboardButton(
                 text='Возьму перерыв',
-                callback_data='set_run'
+                callback_data='set_pause'
                 )
             )
             bot.send_message(wudmc_tg,
@@ -1680,7 +1680,7 @@ if __name__ == "__main__":
     schedule.every().monday.at('12:00').do(send_invites)
     # schedule.every().wednesday.at('17:30').do(send_adv) тут полезная инфа о чате -
     schedule.every().sunday.at('12:42').do(ask_about_last_week)
-    schedule.every().tuesday.at('13:58').do(ask_about_next_week)
+    schedule.every().tuesday.at('13:59').do(ask_about_next_week)
     Thread(target=schedule_checker).start()
 
     bot.infinity_polling()
