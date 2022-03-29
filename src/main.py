@@ -75,7 +75,7 @@ reminder_for_inactive = (
     'с новым человеком в Батуми\n'
     'но *твой профиль неактивен.*\n\n'
     'Чтобы не упустить новое знакомство \n'
-    'сними свой профиль с паузы в меню /help\n\n'
+    'кликни по кнопке ниже =)\n\n'
 )
 
 
@@ -539,6 +539,25 @@ def generate_pairs():
             create_pair(pair[0].telegram_id, pair[1].telegram_id)
         else:
             create_pair(pair[0].telegram_id, '')
+    for user in get_verified_users():
+        if user.is_active:
+            try:
+                bot.send_message(wudmc_tg,
+                                 f'Отправляю сообщение юзеру {user.telegram_id} о назначении пары ')
+                bot.send_message(user.telegram_id, 'Ура! Пары назначены, скоро тебе придет сообщение с твоей парой на эту неделю')
+            except Exception:
+                bot.send_message(wudmc_tg,
+                                 f' Сообщение юзеру о назначении пары {user.telegram_id} не отправлено: {traceback.format_exc()}')
+        else:
+            try:
+                bot.send_message(wudmc_tg,
+                                 f'Отправляю сообщение юзеру {user.telegram_id} о назначении пары ')
+                bot.send_message(user.telegram_id,
+                             'Пары назначены, но твой профил был на паузе. Не упусти свой шанс на будущей неделе.')
+            except Exception:
+                bot.send_message(wudmc_tg,
+                                 f'Сообщение юзеру о назначении пары {user.telegram_id} не отправлено: {traceback.format_exc()}')
+        sleep(1)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'generate_pairs')
@@ -567,14 +586,7 @@ def show_profile_callback(call):
     bot.send_message(user_id, answer, parse_mode='Markdown',
                      reply_markup=keyboard)
 
-def ask_random_coffee():
-    for user in get_users():
-        try:
-            set_field(user.telegram_id, 'is_active', False)
-            bot.send_message(user.telegram_id,f'хочешь ли ты участвовать на этой неделе? /help')
-        except Exception:
-            bot.send_message(wudmc_tg,
-                             f' сообщения паре {user.telegram_id} не отправлено: {traceback.format_exc()}')
+
 
 def ask_about_next_week():
     for user in get_verified_users():
@@ -605,6 +617,32 @@ def ask_about_next_week():
         sleep(1)
     bot.send_message(wudmc_tg,
                      f' запрос участия успешно отправлены')
+
+def remind_inactive():
+    for user in get_inactive_users():
+        try:
+            keyboard = types.InlineKeyboardMarkup()
+            keyboard.row_width = 1
+            keyboard.add(
+                types.InlineKeyboardButton(
+                    text='Конечно, ни слова больше!',
+                    callback_data='set_run'
+                )
+            )
+            bot.send_message(wudmc_tg,
+                             f' отправляю напоминание  юзеру {user.telegram_id} ')
+            bot.send_message(
+                user.telegram_id, reminder_for_inactive, parse_mode='Markdown',
+                reply_markup=keyboard)
+            bot.send_message(wudmc_tg,
+                             f' напоминание юзеру {user.telegram_id} успешно отправлен')
+
+        except Exception:
+            bot.send_message(wudmc_tg,
+                             f' напоминания неактивному юзеру {user.telegram_id} не отправлен: {traceback.format_exc()}')
+        sleep(1)
+    bot.send_message(wudmc_tg,
+                     f' напоминания неактивным юзерам успешно отправлены')
 
 
 def ask_about_last_week():
@@ -1675,6 +1713,7 @@ if __name__ == "__main__":
     # schedule.every().wednesday.at('17:30').do(send_adv) тут полезная инфа о чате -
     schedule.every().saturday.at('14:05').do(ask_about_next_week)
     schedule.every().sunday.at('12:42').do(ask_about_last_week)
+    schedule.every().sunday.at('19:42').do(remind_inactive)
 
     Thread(target=schedule_checker).start()
 
