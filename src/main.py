@@ -51,13 +51,13 @@ class States:
 
 how_txt = (
     'Как все будет происходить???\n\n'
-    '1) Раз в неделю по средам я буду заочно \n'
+    '1) Раз в неделю по понедельникам я буду заочно \n'
     'знакомить тебя с другим человеком в Батуми\n\n'
     '2) Где и когда встретиться вы решаете \n'
     'по договоренности\n\n'
     '3) В воскресенье я спрошу "Как все прошло?" \n\n'
-    '4) А в понедельник узнаю\n'
-    '"Пойдешь ли на новую встречу на этой неделе?"\n'
+    '4) И узнаю "Пойдешь ли ты на \n'
+    'новую встречу на этой неделе?"\n'
 )
 
 reminder_for_inactive_1 = (
@@ -185,9 +185,10 @@ def send_stats():
     users_len = len(get_users())
     pairs_len = len(get_pairs())
     stats = (
-        'Немного статистики: \n'
+        'Йо,йо , уже понедельник и вот немного статистики: \n'
         f'Всего участников: {users_len}\n'
-        f'Пар не прошлой неделе:  {pairs_len}\n'
+        f'Пар не прошлой неделе:  {pairs_len}\n\n'
+        f'а всего через час будут новые пары!\n'
              )
 
     bot.send_message(wudmc_tg, 'Отправляю статистики')
@@ -1631,10 +1632,10 @@ def schedule_checker():
         print(e)
 
 if __name__ == "__main__":
-    schedule.every().tuesday.at('11:22').do(send_stats)
+    schedule.every().monday.at('10:00').do(send_stats)
 
-    # schedule.every().wednesday.at('10:00').do(generate_pairs)
-    # schedule.every().wednesday.at('11:00').do(send_invites)
+    schedule.every().monday.at('10:20').do(generate_pairs)
+    schedule.every().monday.at('11:00').do(send_invites)
 
     schedule.every().sunday.at('16:42').do(ask_about_last_week)
     Thread(target=schedule_checker).start()
