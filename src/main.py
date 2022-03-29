@@ -1595,9 +1595,11 @@ def schedule_checker():
         print(e)
 
 if __name__ == "__main__":
-    schedule.every().monday.at('10:00').do(generate_pairs)
-    schedule.every().monday.at('11:00').do(send_invites)
     schedule.every().tuesday.at('11:22').do(send_stats)
+
+    # schedule.every().wednesday.at('10:00').do(generate_pairs)
+    # schedule.every().wednesday.at('11:00').do(send_invites)
+
     schedule.every().sunday.at('16:42').do(ask_about_last_week)
     Thread(target=schedule_checker).start()
 
