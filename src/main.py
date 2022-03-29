@@ -1680,7 +1680,7 @@ if __name__ == "__main__":
     schedule.every().monday.at('12:00').do(send_invites)
     # schedule.every().wednesday.at('17:30').do(send_adv) тут полезная инфа о чате -
     schedule.every().sunday.at('12:42').do(ask_about_last_week)
-    schedule.every().tuesday.at('13:59').do(ask_about_next_week)
+    schedule.every().tuesday.at('14:01').do(ask_about_next_week)
     Thread(target=schedule_checker).start()
 
     bot.infinity_polling()
