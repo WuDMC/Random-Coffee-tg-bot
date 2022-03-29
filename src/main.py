@@ -502,6 +502,14 @@ def show_profile_callback(call):
     bot.send_message(user_id, answer, parse_mode='Markdown',
                      reply_markup=keyboard)
 
+def ask_random_coffee():
+    for user in get_users():
+        try:
+            set_field(user.telegram_id, 'is_active', False)
+            bot.send_message(user.telegram_id,f'хочешь ли ты участвовать на этой неделе? /help')
+        except Exception:
+            bot.send_message(wudmc_tg,
+                             f' сообщения паре {user.telegram_id} не отправлено: {traceback.format_exc()}')
 
 def send_invites():
     for pair in get_pairs():
@@ -1523,7 +1531,8 @@ if __name__ == "__main__":
     schedule.every().monday.at('11:00').do(send_invites)
     Thread(target=schedule_checker).start()
 
-    bot.polling()
+    bot.infinity_polling()
+    # bot.polling()
 #
 # надо так: 1) в понедельник спрашивать будешь ли участвовать. Твой профиль сейчас поставлен на паузу
 #           2) во вторник напоминать что в среду жеребьевка последний шанс все дела, поделись с друзьями
