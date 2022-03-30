@@ -449,7 +449,7 @@ def show_profile_callback(call):
     answer = (
         '\n'.join(
             [
-                f'[{user.name}](tg://user?id={user.telegram_id}) \- {user.telegram_id} \- {__escape_markdown(user.mail)} \- {"Verified" if user.is_verified else "Blocked"} \- {"Run" if user.is_active else "Pause"} '
+                f'[{user.telegram_id}](tg://user?id={user.telegram_id}) \- {__escape_markdown(user.mail)} \- {"Verified" if user.is_verified else "Blocked"} \- {"Run" if user.is_active else "Pause"} '
                 for user in users])
     )
 
@@ -461,7 +461,11 @@ def show_profile_callback(call):
         )
     )
     bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, parse_mode='MarkdownV2')
+    try:
+        bot.send_message(user_id, answer, parse_mode='MarkdownV2')
+    except Exception:
+        bot.send_message(wudmc_tg,
+                         f' Список пользователенй не сформирован: {traceback.format_exc()}')
     bot.send_message(user_id,
                      f'активных {len(active_users)}, блокированых {len(blocked_users)}, без соц сети {len(no_link_users)}, без ника {len(no_nickname_users)}',
                      reply_markup=keyboard)
@@ -876,7 +880,7 @@ def ask_password_handler(message):
 
         answer_to_admin = (
             'Новый пользователь!\n'
-            f'[{message.from_user.first_name}](tg://user?id={user.telegram_id})\n'
+            f'[{message.from_user.telegram_id}](tg://user?id={user.telegram_id})\n'
             f'{user.password}')
         bot.send_message(admin,
                          answer_to_admin, parse_mode='Markdown')
