@@ -890,7 +890,7 @@ def ask_password_handler(message):
 
             set_field(user_id, 'is_verified', True)
         except Exception:
-        bot.send_message(wudmc_tg,
+            bot.send_message(wudmc_tg,
                          f' сообщения юзеру {target_user_id} не отправлено: {traceback.format_exc()}')
 
     else:
