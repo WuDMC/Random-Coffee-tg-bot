@@ -461,8 +461,11 @@ def show_profile_callback(call):
         )
     )
     bot.send_chat_action(user_id, 'typing')
+    answer_res = []
+    for c in range(0, len(answer.splitlines()) + 50, 50):
+        answer_res.append('\n'.join(answer.splitlines()[c: c + 50]))
     try:
-        for user_txt in answer.splitlines():
+        for user_txt in answer_res:
             bot.send_message(user_id, user_txt, parse_mode='MarkdownV2')
     except Exception:
         bot.send_message(wudmc_tg,
