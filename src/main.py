@@ -899,7 +899,7 @@ def ask_password_handler(message):
 
         answer = ('Попробуй еще раз\n')
         next_state = States.ask_password
-
+    bot.send_message(wudmc_tg, 'test4')
     bot.send_message(user_id, answer)
     bot.set_state(user_id, next_state)
 
