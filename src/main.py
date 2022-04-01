@@ -873,17 +873,13 @@ def ask_password_handler(message):
     next_state = States.ask_name
     # тут закостылил админа  можно использовать get_admins() с циклом потом
     admin = wudmc_tg
-    bot.send_message(wudmc_tg, 'test1')
     user = get_user(user_id)
     password = message.text
-    bot.send_message(wudmc_tg, 'test2')
     if user.password == password:
         try:
-            bot.send_message(wudmc_tg, 'test3')
             answer_to_admin = (
                 'Новый пользователь!\n'
-                f'[{user.telegram_id}](tg://user?id={user.telegram_id})\n'
-                f'{user.password}')
+                f'[{user.telegram_id}](tg://user?id={user.telegram_id})\n')
             bot.send_message(admin,
                              answer_to_admin, parse_mode='Markdown')
 
@@ -899,7 +895,6 @@ def ask_password_handler(message):
 
         answer = ('Попробуй еще раз\n')
         next_state = States.ask_password
-    bot.send_message(wudmc_tg, 'test4')
     bot.send_message(user_id, answer)
     bot.set_state(user_id, next_state)
 
