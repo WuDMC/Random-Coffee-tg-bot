@@ -462,7 +462,7 @@ def show_profile_callback(call):
     )
     bot.send_chat_action(user_id, 'typing')
     answer_res = []
-    for c in range(0, len(answer.splitlines()) + 50, 50):
+    for c in range(0, len(answer.splitlines()), 50):
         answer_res.append('\n'.join(answer.splitlines()[c: c + 50]))
     try:
         for user_txt in answer_res:
