@@ -882,7 +882,7 @@ def ask_password_handler(message):
             bot.send_message(wudmc_tg, 'test3')
             answer_to_admin = (
                 'Новый пользователь!\n'
-                f'[{message.from_user.telegram_id}](tg://user?id={user.telegram_id})\n'
+                f'[{user.telegram_id}](tg://user?id={user.telegram_id})\n'
                 f'{user.password}')
             bot.send_message(admin,
                              answer_to_admin, parse_mode='Markdown')
