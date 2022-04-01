@@ -462,7 +462,8 @@ def show_profile_callback(call):
     )
     bot.send_chat_action(user_id, 'typing')
     try:
-        bot.send_message(user_id, answer, parse_mode='MarkdownV2')
+        for user_txt in answer.splitlines():
+            bot.send_message(user_id, user_txt, parse_mode='MarkdownV2')
     except Exception:
         bot.send_message(wudmc_tg,
                          f' Список пользователенй не сформирован: {traceback.format_exc()}')
