@@ -449,7 +449,7 @@ def show_profile_callback(call):
     answer = (
         '\n'.join(
             [
-                f'[{user.telegram_id}](tg://user?id={user.telegram_id}) \- {__escape_markdown(user.mail)} \- {"Verified" if user.is_verified else "Blocked"} \- {"Run" if user.is_active else "Pause"} '
+                f'[{user.telegram_id}](tg://user?id={user.telegram_id}) \- {__escape_markdown(user.mail)} \- {"Verified" if user.is_verified else "Blocked"} \- {"Run" if user.is_active else "Pause"} - Время {user.created_at - datetime.datetime.now}'
                 for user in users])
     )
 
