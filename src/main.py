@@ -455,7 +455,7 @@ def show_profile_callback(call):
         )
     except Exception:
         bot.send_message(wudmc_tg,
-                         f' Список пользователенй не сформирован: {traceback.format_exc()}'
+                         f' Список пользователенй не сформирован: {traceback.format_exc()}')
     keyboard = types.InlineKeyboardMarkup()
     keyboard.add(
         types.InlineKeyboardButton(
