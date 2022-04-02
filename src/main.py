@@ -471,7 +471,9 @@ def show_profile_callback(call):
         answer_res.append('\n'.join(answer.splitlines()[c: c + 50]))
     try:
         for user_txt in answer_res:
-            bot.send_message(user_id, user_txt, parse_mode='MarkdownV2')
+            # bot.send_message(user_id, user_txt, parse_mode='MarkdownV2')
+            bot.send_message(user_id, user_txt)
+
     except Exception:
         bot.send_message(wudmc_tg,
                          f' Список пользователенй не сформирован: {traceback.format_exc()}')
