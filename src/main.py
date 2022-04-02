@@ -619,7 +619,7 @@ def ask_about_next_week():
             )
             bot.send_message(wudmc_tg,
                      f' отправля запрос участия  юзеру {user.telegram_id} ')
-            if (datetime.now() - user.created_at).days > 7:
+            if (datetime.now() - user.created_at).days > 6:
                 set_field(user.telegram_id, 'is_active', False)
                 try:
                     bot.send_message(user.telegram_id,
