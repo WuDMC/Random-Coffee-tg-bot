@@ -20,6 +20,7 @@ forward_users = []
 __escape_markdown_map = {
 
     "_": "\\_",  # underscore
+    "-": "\\_",  # underscore
 
 }
 
@@ -451,7 +452,7 @@ def show_profile_callback(call):
         answer = (
             '\n'.join(
                 [
-                    f'[{user.telegram_id}](tg://user?id={user.telegram_id}) \- {__escape_markdown(user.mail)} \- {"Verified" if user.is_verified else "Blocked"} \- {"Run" if user.is_active else "Pause"} -  {(datetime.now() - user.created_at).days} days  - '
+                    f'[{user.telegram_id}](tg://user?id={user.telegram_id}) \- {__escape_markdown(user.mail)} \- {"Verified" if user.is_verified else "Blocked"} \- {"Run" if user.is_active else "Pause"} \-  {(datetime.now() - user.created_at).days} days  \- '
                     for user in users])
         )
     except Exception:
@@ -618,7 +619,7 @@ def ask_about_next_week():
             )
             bot.send_message(wudmc_tg,
                      f' отправля запрос участия  юзеру {user.telegram_id} ')
-            if (datetime.now() - user.created_at).days > 1:
+            if (datetime.now() - user.created_at).days > 7:
                 set_field(user.telegram_id, 'is_active', False)
                 try:
                     bot.send_message(user.telegram_id,
@@ -1732,7 +1733,7 @@ if __name__ == "__main__":
     schedule.every().monday.at('10:20').do(generate_pairs)
     schedule.every().monday.at('12:00').do(send_invites)
     # schedule.every().wednesday.at('17:30').do(send_adv) тут полезная инфа о чате -
-    schedule.every().saturday.at('09:05').do(ask_about_next_week)
+    schedule.every().saturday.at('14:05').do(ask_about_next_week)
     schedule.every().sunday.at('12:42').do(ask_about_last_week)
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
