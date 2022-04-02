@@ -55,8 +55,7 @@ next_week_txt = (
     'тебя ждут новые знакомства в Батуми\n\n'
     'Я пишу уточнить: *Будешь ли ты участвовать* \n'
     '*в Random Coffee на следюущей неделе?* \n\n'
-    'Сейчас я поставил твой профиль на паузу. Для участия \n'
-    'в Random Coffe просто *кликни по кнопке "Буду участвовать".*\n\n'
+    'Просто *кликни по кнопке "Буду участвовать".*\n\n'
     'Также можно менять свой статус самостоятельно тут - /help\n'
 )
 
@@ -471,8 +470,7 @@ def show_profile_callback(call):
         answer_res.append('\n'.join(answer.splitlines()[c: c + 50]))
     try:
         for user_txt in answer_res:
-            # bot.send_message(user_id, user_txt, parse_mode='MarkdownV2')
-            bot.send_message(user_id, user_txt)
+            bot.send_message(user_id, user_txt, parse_mode='MarkdownV2')
 
     except Exception:
         bot.send_message(wudmc_tg,
@@ -620,7 +618,15 @@ def ask_about_next_week():
             )
             bot.send_message(wudmc_tg,
                      f' отправля запрос участия  юзеру {user.telegram_id} ')
-            set_field(user.telegram_id, 'is_active', False)
+            if (datetime.now() - user.created_at).days > 1:
+                set_field(user.telegram_id, 'is_active', False)
+                try:
+                    bot.send_message(user.telegram_id,
+                                 '[Ты со мной уже больше недели, поэтому я поставил твой профиль на паузу]')
+                    sleep(1)
+                except Exception:
+                    bot.send_message(wudmc_tg,
+                                     f' запрос участия юзеру {user.telegram_id} не отправлен: {traceback.format_exc()}')
             bot.send_message(
                 user.telegram_id, next_week_txt, parse_mode='Markdown',
                  reply_markup=keyboard)
@@ -1726,7 +1732,7 @@ if __name__ == "__main__":
     schedule.every().monday.at('10:20').do(generate_pairs)
     schedule.every().monday.at('12:00').do(send_invites)
     # schedule.every().wednesday.at('17:30').do(send_adv) тут полезная инфа о чате -
-    schedule.every().saturday.at('14:05').do(ask_about_next_week)
+    schedule.every().saturday.at('09:05').do(ask_about_next_week)
     schedule.every().sunday.at('12:42').do(ask_about_last_week)
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
