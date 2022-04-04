@@ -207,6 +207,8 @@ def send_stats():
             bot.send_message(wudmc_tg, f' стата юзеру {user.telegram_id} успешно отправлена')
         except Exception:
             bot.send_message(wudmc_tg, f' стату юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
+            set_field(user.telegram_id, 'is_active', False)
+            bot.send_message(wudmc_tg, f' юзер {user.telegram_id} отключен')
         sleep(2)
     bot.send_message(wudmc_tg, 'Статистика отправлена')
 
