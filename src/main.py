@@ -70,7 +70,7 @@ how_txt = (
     '3) В конце недели я узнаю "Как все прошло?" \n\n'
     '4) А в субботу уточню "Пойдешь ли ты на \n'
     'новую встречу на будущей неделе?"\n\n'
-    'А еще Мы проводим еженедельные встречи в @it\_batumi\_offlain'
+    'А еще мы проводим еженедельные встречи в @it_batumi_offlain'
 )
 
 reminder_for_inactive = (
@@ -1436,7 +1436,7 @@ def how_it_works_callback(call):
         )
     )
     bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, parse_mode='Markdown',
+    bot.send_message(user_id, answer,
                      reply_markup=keyboard)
 
 @bot.callback_query_handler(func=lambda call: call.data == 'show_profile')
