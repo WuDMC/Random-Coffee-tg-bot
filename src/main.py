@@ -14,7 +14,7 @@ from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_
     get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users, get_verified_users
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
-wudmc_tg = '220428984'
+wudmc_tg = '5113771543'
 forward_users = []
 # проблема с маркдаун только решает никнеймы
 __escape_markdown_map = {
@@ -86,7 +86,7 @@ poll_txt = (
     'Привет, как прошла твоя встреча на этой неделе?\n'
     'Оставь отзыв тут @BatumiRandomCoffee\n'
     'Твой отзыв поможет мне стать лучше\n\n'
-    'Приходи на наши еженедельные встречи в @it\_batumi\_offlain'
+    'Приходи на наши еженедельные встречи в @it\_batumi\_offlain\n\n'
 )
 msg_for_active = (
     'Привет уже завтра будут известны первые пары\n'
@@ -196,7 +196,7 @@ def send_stats():
     stats = (
         'Йо,йо , уже понедельник и вот немного статистики: \n'
         f'Всего участников: {users_len}\n'
-        f'Пар не прошлой неделе:  {pairs_len}\n\n'
+        f'Пар на прошлой неделе:  {pairs_len}\n\n'
         f'а всего через 2 часа будут новые пары!\n'
         f'Проверь свой статус в профиле /help!\n'
              )
@@ -364,6 +364,7 @@ def show_profile_callback(call):
         bot.send_message(
             target_user_id, 'Ваш аккаунт заблокирован!\nДля повторной регистрации напишите /start')
     except Exception:
+        set_field(user.telegram_id, 'is_active', False)
         bot.send_message(wudmc_tg,
                          f' сообщения юзеру {target_user_id} не отправлено: {traceback.format_exc()}')
     answer = ('Пользователь заблокирован')
@@ -564,6 +565,7 @@ def generate_pairs():
                                  f'Отправляю сообщение юзеру {user.telegram_id} о назначении пары ')
                 bot.send_message(user.telegram_id, 'Ура! Пары назначены, скоро тебе придет сообщение с твоей парой на эту неделю')
             except Exception:
+                set_field(user.telegram_id, 'is_active', False)
                 bot.send_message(wudmc_tg,
                                  f' Сообщение юзеру о назначении пары {user.telegram_id} не отправлено: {traceback.format_exc()}')
         else:
@@ -571,7 +573,7 @@ def generate_pairs():
                 bot.send_message(wudmc_tg,
                                  f'Отправляю сообщение юзеру {user.telegram_id} о назначении пары ')
                 bot.send_message(user.telegram_id,
-                             'Пары назначены, но твой профил был на паузе. Не упусти свой шанс на будущей неделе.')
+                             'Пары назначены, но твой профиль был на паузе. Не упусти свой шанс на будущей неделе.')
             except Exception:
                 bot.send_message(wudmc_tg,
                                  f'Сообщение юзеру о назначении пары {user.telegram_id} не отправлено: {traceback.format_exc()}')
@@ -630,6 +632,7 @@ def ask_about_next_week():
                                  '[Ты со мной уже больше недели, поэтому я поставил твой профиль на паузу]')
                     sleep(1)
                 except Exception:
+                    set_field(user.telegram_id, 'is_active', False)
                     bot.send_message(wudmc_tg,
                                      f' запрос участия юзеру {user.telegram_id} не отправлен: {traceback.format_exc()}')
             bot.send_message(
@@ -638,6 +641,7 @@ def ask_about_next_week():
             bot.send_message(wudmc_tg,
                          f' запрос участия  юзеру {user.telegram_id} успешно отправлен')
         except Exception:
+            set_field(user.telegram_id, 'is_active', False)
             bot.send_message(wudmc_tg,
                          f' запрос участия юзеру {user.telegram_id} не отправлен: {traceback.format_exc()}')
         sleep(1)
@@ -675,13 +679,22 @@ def ask_about_last_week():
     for pair in get_pairs():
         try:
             if pair.user_b:
-                bot.send_message(
+                try:
+                    bot.send_message(
                     pair.user_a, poll_txt, parse_mode='Markdown')
-                bot.send_message(
+                except Exception:
+                    set_field(pair.user_a, 'is_active', False)
+
+                try:
+                    bot.send_message(
                     pair.user_b, poll_txt, parse_mode='Markdown')
+                except Exception:
+                    set_field(pair.user_b, 'is_active', False)
+
             bot.send_message(wudmc_tg,
                              f' запрос фидбека паре {pair.id} успешно отправлено')
         except Exception:
+
             bot.send_message(wudmc_tg,
                              f' запрос фидбека паре {pair.id} не отправлен: {traceback.format_exc()}')
 
@@ -694,6 +707,7 @@ def send_invites():
                 bot.send_message(
 
                     pair.user_a, f'На этой неделе я познакомил {len_pairs} пар\n\nТвоя пара!\n\n{get_user(pair.user_b)}', parse_mode='Markdown')
+
                 bot.send_message(
                     pair.user_b, f'На этой неделе я познакомил {len_pairs} пар\n\nТвоя пара!\n\n{get_user(pair.user_a)}', parse_mode='Markdown')
             else:
