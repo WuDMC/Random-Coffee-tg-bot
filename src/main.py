@@ -1420,6 +1420,7 @@ def how_it_works_callback(call):
     bot.edit_message_text(
         chat_id=user_id,
         message_id=message_id,
+        parse_mode='Markdown',
         text=answer
     )
 
