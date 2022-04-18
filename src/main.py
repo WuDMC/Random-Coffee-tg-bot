@@ -1389,7 +1389,7 @@ def change_profile_callback(call):
     message_id = call.message.message_id
 
     answer = call.message.text
-    print(answer)
+    # print(answer)
 
     if call.data == 'help_from_show_profile':
         user = get_user(user_id)
