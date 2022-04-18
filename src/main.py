@@ -1415,9 +1415,7 @@ def change_profile_callback(call):
 @bot.callback_query_handler(func=lambda call: call.data == 'how_it_works')
 def how_it_works_callback(call):
     user_id = call.message.chat.id
-    bot.send_message(wudmc_tg, '1', parse_mode='Markdown')
     message_id = call.message.message_id
-    bot.send_message(wudmc_tg, '2', parse_mode='Markdown')
     answer = ('👉 Все очень просто')
     bot.edit_message_text(
         chat_id=user_id,
@@ -1425,7 +1423,6 @@ def how_it_works_callback(call):
         text=answer,
         parse_mode='Markdown'
     )
-    bot.send_message(wudmc_tg, '3', parse_mode='Markdown')
 
     answer = how_txt
 
@@ -1438,10 +1435,8 @@ def how_it_works_callback(call):
         )
     )
     bot.send_chat_action(user_id, 'typing')
-    bot.send_message(wudmc_tg, '4', parse_mode='Markdown')
     bot.send_message(user_id, answer, parse_mode='Markdown',
                      reply_markup=keyboard)
-    bot.send_message(wudmc_tg, '5', parse_mode='Markdown')
 
 @bot.callback_query_handler(func=lambda call: call.data == 'show_profile')
 def show_profile_callback(call):
