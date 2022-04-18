@@ -14,7 +14,7 @@ from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_
     get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users, get_verified_users
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
-wudmc_tg = '5113771543'
+wudmc_tg = '1205912479'
 forward_users = []
 # проблема с маркдаун только решает никнеймы
 __escape_markdown_map = {
