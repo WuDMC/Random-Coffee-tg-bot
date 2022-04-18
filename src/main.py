@@ -1417,12 +1417,12 @@ def how_it_works_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
     answer = ('👉 Все очень просто')
-    bot.edit_message_text(
-        chat_id=user_id,
-        message_id=message_id,
-        parse_mode='None',
-        text=answer
-    )
+    # bot.edit_message_text(
+    #     chat_id=user_id,
+    #     message_id=message_id,
+    #     parse_mode='None',
+    #     text=answer
+    # )
 
 
     answer = how_txt
