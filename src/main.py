@@ -70,7 +70,7 @@ how_txt = (
     '3) В конце недели я узнаю "Как все прошло?" \n\n'
     '4) А в субботу уточню "Пойдешь ли ты на \n'
     'новую встречу на будущей неделе?"\n\n'
-    'А еще мы проводим еженедельные встречи в @it\_batumi\_offlain'
+    'А еще Мы проводим еженедельные встречи в @it\_batumi\_offlain'
 )
 
 reminder_for_inactive = (
@@ -1420,7 +1420,7 @@ def how_it_works_callback(call):
     bot.edit_message_text(
         chat_id=user_id,
         message_id=message_id,
-        parse_mode='Markdown',
+        parse_mode='None',
         text=answer
     )
 
