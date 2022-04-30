@@ -1410,8 +1410,9 @@ def change_profile_callback(call):
     bot.edit_message_text(
         chat_id=user_id,
         message_id=message_id,
-        text=answer,
-        parse_mode='Markdown'
+        text=answer
+        # ,
+        # parse_mode='Markdown'
     )
 
     help(call)
