@@ -1435,7 +1435,6 @@ def how_it_works_callback(call):
         text=answer,
         parse_mode='Markdown'
     )
-
     answer = how_txt
 
     keyboard = types.InlineKeyboardMarkup()
