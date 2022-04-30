@@ -663,7 +663,6 @@ def remind_inactive():
                     callback_data='set_pause'
                     )
                 )
-            )
             bot.send_message(wudmc_tg,
                              f' отправляю напоминание  юзеру {user.telegram_id} ')
             bot.send_message(
