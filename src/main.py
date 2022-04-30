@@ -1387,7 +1387,7 @@ def send_to_user_msg_callback(message):
 # user callbacks
 
 
-@bot.callback_query_handler(func=lambda call: call.data in ['help', 'help_from_show_profile'])
+@bot.callback_query_handler(func=lambda call: call.data in ['help', 'help_from_show_profile', 'help_from_how_txt'])
 def change_profile_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
@@ -1407,13 +1407,20 @@ def change_profile_callback(call):
         )
 
     bot.send_chat_action(user_id, 'typing')
-    bot.edit_message_text(
-        chat_id=user_id,
-        message_id=message_id,
-        text=answer
-        # ,
-        # parse_mode='Markdown'
-    )
+    if call.data == 'help_from_how_txt':
+        bot.edit_message_text(
+            chat_id=user_id,
+            message_id=message_id,
+            text=answer
+        )
+    else:
+        bot.edit_message_text(
+            chat_id=user_id,
+            message_id=message_id,
+            text=answer,
+            parse_mode='Markdown'
+        )
+
 
     help(call)
 
@@ -1436,7 +1443,7 @@ def how_it_works_callback(call):
     keyboard.add(
         types.InlineKeyboardButton(
             text='Назад',
-            callback_data='help'
+            callback_data='help_from_how_txt'
         )
     )
     bot.send_chat_action(user_id, 'typing')
