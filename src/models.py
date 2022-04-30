@@ -24,6 +24,7 @@ class User(Base):
     is_admin = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.now)
     updated_at = Column(DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    ban = Column(Boolean, default=False, nullable=False)
 
     def __repr__(self):
         # проблема с маркдаун только решает никнеймы
@@ -60,6 +61,20 @@ class Pair(Base):
 
     def __repr__(self):
         return f'<Pair {self.id}; User A {self.user_a} - User B {self.user_b}>'
+
+
+class Pair_History(Base):
+    __tablename__ = 'pair'
+
+    id = Column(Integer, primary_key=True)
+    user_a = Column(String, nullable=False)
+    user_b = Column(String, nullable=False)
+    date = Column(DateTime, default=datetime.datetime.now)
+    feedback_user_a = Column(String, nullable=True)
+    feedback_user_b = Column(String, nullable=True)
+    success_user_a = Column(Boolean, nullable=True)
+    success_user_b = Column(Boolean, nullable=True)
+
 
 
 Base.metadata.create_all(engine)
