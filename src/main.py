@@ -655,8 +655,13 @@ def remind_inactive():
             keyboard.row_width = 1
             keyboard.add(
                 types.InlineKeyboardButton(
-                    text='Конечно, ни слова больше!',
+                    text='Конечно, участвую!',
                     callback_data='set_run'
+                ),
+                types.InlineKeyboardButton(
+                    text='Не хочу участвовать',
+                    callback_data='set_pause'
+                    )
                 )
             )
             bot.send_message(wudmc_tg,
@@ -1402,13 +1407,13 @@ def change_profile_callback(call):
             f'{user}'
         )
 
-    # bot.send_chat_action(user_id, 'typing')
-    # bot.edit_message_text(
-    #     chat_id=user_id,
-    #     message_id=message_id,
-    #     text=answer,
-    #     parse_mode='Markdown'
-    # )
+    bot.send_chat_action(user_id, 'typing')
+    bot.edit_message_text(
+        chat_id=user_id,
+        message_id=message_id,
+        text=answer,
+        parse_mode='Markdown'
+    )
 
     help(call)
 
