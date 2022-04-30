@@ -1421,7 +1421,6 @@ def change_profile_callback(call):
             parse_mode='Markdown'
         )
 
-
     help(call)
 
 @bot.callback_query_handler(func=lambda call: call.data == 'how_it_works')
