@@ -64,7 +64,7 @@ class Pair(Base):
 
 
 class Pair_History(Base):
-    __tablename__ = 'pair'
+    __tablename__ = 'Pair_History'
 
     id = Column(Integer, primary_key=True)
     user_a = Column(String, nullable=False)
