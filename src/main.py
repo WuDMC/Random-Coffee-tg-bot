@@ -621,8 +621,10 @@ def generate_pairs():
     sleep(1)
     pairs_db = get_pairs()
     for pair in pairs_db:
-        create_pair_history(pair.id,pair.user_a,pair.user_b)
+        test = create_pair_history(pair.id,pair.user_a,pair.user_b)
         set_pair_field(pair.id, 'pair_history_id', get_pair_history(pair.id,pair.user_a,pair.user_b)[-1].id )
+        bot.send_message(wudmc_tg,test)
+
     sleep(1)
     for user in get_verified_users():
         if user.is_active:

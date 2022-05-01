@@ -233,12 +233,15 @@ def create_pair(user_id_a, user_id_b):
 
 
 def create_pair_history(id, user_id_a, user_id_b):
-    session.add(Pair_History(
+    pair = Pair_History(
         pair_id=id,
         user_a=user_id_a,
         user_b=user_id_b,
-    ))
+    )
+    session.add(pair)
     session.commit()
+    session.flush()
+    return pair if pair else 'test'
 
 def delete_pairs():
     session.query(Pair).delete()
