@@ -179,6 +179,51 @@ def set_field(user_id, key, value):
     session.commit()
 
 
+def set_pair_field(pair_id, key, value):
+    (
+        session.query(
+            Pair
+        )
+        .filter(
+            Pair.id == pair_id,
+        )
+        .update(
+            {key: value}
+        )
+    )
+    session.commit()
+
+def get_pair_history(pair_id,user_a,user_b):
+    ID = (
+        session.query(
+            Pair_History
+        )
+        .filter(
+            pair_id=pair_id,
+            user_a=user_a,
+            user_b=user_b
+        )
+        .all()
+    )
+    return ID if ID else []
+
+
+
+def set_pair_history_field(pair_history_id, key, value):
+    (
+        session.query(
+            Pair_History
+        )
+        .filter(
+            Pair_History.id == pair_history_id,
+        )
+        .update(
+            {key: value}
+        )
+    )
+    session.commit()
+
+
 def create_pair(user_id_a, user_id_b):
     session.add(Pair(
         user_a=user_id_a,

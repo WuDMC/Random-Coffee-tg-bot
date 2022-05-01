@@ -11,7 +11,7 @@ from datetime import datetime
 from settings import ADMINS, TELEGRAM_TOKEN, SMTP
 from messages import generate_password
 from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_users, set_field, create_user, \
-    get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users, get_verified_users, get_ban_users, create_pair_history
+    get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users, get_verified_users, get_ban_users, create_pair_history, set_pair_field, set_pair_history_field, get_pair_history
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 wudmc_tg = '1205912479'
@@ -622,6 +622,8 @@ def generate_pairs():
     pairs_db = get_pairs()
     for pair in pairs_db:
         create_pair_history(pair.id,pair.user_a,pair.user_b)
+        set_pair_field(pair.id, 'pair_history_id', get_pair_history(pair.id,pair.user_a,pair.user_b).id )
+    sleep(1)
     for user in get_verified_users():
         if user.is_active:
             try:
