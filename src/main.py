@@ -767,6 +767,8 @@ def ask_about_last_week():
             if pair.user_b:
                 try:
                     keyboard = types.InlineKeyboardMarkup()
+                    keyboard.row_width = 1
+                    keyboard = types.InlineKeyboardMarkup()
                     keyboard.add(
                         types.InlineKeyboardButton(
                             text='FEEDBACK',
@@ -778,7 +780,7 @@ def ask_about_last_week():
                         )
                     )
                     bot.send_message(
-                    pair.user_a, poll_txt, parse_mode='Markdown')
+                    pair.user_a, poll_txt, parse_mode='Markdown',reply_markup=keyboard)
                     # TODO: добавить кнопку в клавиатуре (дать фидбек)
                 except Exception:
                     set_field(pair.user_a, 'is_active', False)
