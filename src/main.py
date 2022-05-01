@@ -301,6 +301,10 @@ def ask_mail_handler(message):
                 callback_data=f'refuse_{user.telegram_id}'
             ),
             types.InlineKeyboardButton(
+                text='ЗАБАНИТЬ',
+                callback_data=f'ban_{user.telegram_id}'
+            ),
+            types.InlineKeyboardButton(
                 text='Поставить на паузу',
                 callback_data=f'set_pause_for_admin_{user.telegram_id}'
             ),
@@ -378,6 +382,42 @@ def show_profile_callback(call):
         bot.send_message(wudmc_tg,
                          f' сообщения юзеру {target_user_id} не отправлено: {traceback.format_exc()}')
     answer = ('Пользователь заблокирован')
+
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, parse_mode='Markdown',
+                     reply_markup=keyboard)
+
+
+
+@bot.callback_query_handler(func=lambda call: call.data.startswith('ban_'))
+def show_profile_callback(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+    target_user_id = call.data[len('ban_'):]
+    answer = ('👉 ЗАБАНИТЬ НАВСЕГДА')
+    bot.send_chat_action(user_id, 'typing')
+    bot.edit_message_text(
+        chat_id=user_id,
+        message_id=message_id,
+        text=answer
+    )
+    set_field(target_user_id, 'is_active', False)
+    set_field(target_user_id, 'is_verified', False)
+    set_field(target_user_id, 'ban', True)
+    try:
+        bot.send_message(
+            target_user_id, 'Ауч! Вы забанены за нарушения правил!\nЕсли вы не согласны, напишите в чат поддержки')
+    except Exception:
+        bot.send_message(wudmc_tg,
+                         f' сообщения юзеру {target_user_id} не отправлено: {traceback.format_exc()}')
+    answer = ('Пользователь ЗАБАНЕН')
 
     keyboard = types.InlineKeyboardMarkup()
     keyboard.add(
