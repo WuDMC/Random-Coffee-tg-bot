@@ -766,7 +766,6 @@ def ask_about_last_week():
         try:
             if pair.user_b:
                 try:
-                    keyboard = types.InlineKeyboardMarkup()
                     keyboard.row_width = 1
                     keyboard = types.InlineKeyboardMarkup()
                     keyboard.add(
@@ -1874,7 +1873,7 @@ if __name__ == "__main__":
     schedule.every().saturday.at('14:05').do(ask_about_next_week)
     # schedule.every().sunday.at('12:42').do(ask_about_last_week)
     schedule.every().sunday.at('19:42').do(remind_inactive)
-    schedule.every().sunday.at('22:08').do(ask_about_last_week)
+    schedule.every().sunday.at('22:16').do(ask_about_last_week)
 
 
 
