@@ -1870,8 +1870,11 @@ if __name__ == "__main__":
     schedule.every().monday.at('12:00').do(send_invites)
     schedule.every().wednesday.at('17:30').do(send_blocked_users)
     schedule.every().saturday.at('14:05').do(ask_about_next_week)
-    schedule.every().sunday.at('12:42').do(ask_about_last_week)
+    # schedule.every().sunday.at('12:42').do(ask_about_last_week)
     schedule.every().sunday.at('19:42').do(remind_inactive)
+    schedule.every().sunday.at('22:08').do(ask_about_last_week)
+
+
 
     Thread(target=schedule_checker).start()
 
