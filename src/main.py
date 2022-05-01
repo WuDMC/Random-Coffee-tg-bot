@@ -1885,7 +1885,7 @@ if __name__ == "__main__":
     schedule.every().saturday.at('14:05').do(ask_about_next_week)
     # schedule.every().sunday.at('12:42').do(ask_about_last_week)
     schedule.every().sunday.at('19:42').do(remind_inactive)
-    schedule.every().sunday.at('22:20').do(ask_about_last_week)
+    schedule.every().sunday.at('22:40').do(ask_about_last_week)
 
 
 
