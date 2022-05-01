@@ -953,7 +953,10 @@ def start_handler(message):
     if nickname != 'Не указан':
         nickname = '@' + nickname
     user = get_user(user_id)
-    if (not user or not user.is_verified) and message.from_user.username not in ADMINS:
+    if user and user.ban:
+        answer = ('BANNED')
+
+    elif (not user or not user.is_verified) and message.from_user.username not in ADMINS:
         create_user(user_id)
         set_field(user_id, 'link', 'Не указана')
         set_field(user_id, 'mail', nickname)
@@ -1016,7 +1019,6 @@ def ask_password_handler(message):
                          f' сообщения юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
 
     else:
-
         answer = ('Попробуй еще раз\n')
         next_state = States.ask_password
     bot.send_message(user_id, answer)
