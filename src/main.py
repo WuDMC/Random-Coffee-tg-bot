@@ -11,7 +11,7 @@ from datetime import datetime
 from settings import ADMINS, TELEGRAM_TOKEN, SMTP
 from messages import generate_password
 from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_users, set_field, create_user, \
-    get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users, get_verified_users, get_ban_users
+    get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users, get_verified_users, get_ban_users, create_pair_history
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 wudmc_tg = '1205912479'
@@ -575,11 +575,19 @@ def show_profile_callback(call):
     )
     pairs = get_pairs()
     if pairs:
-        answer = (
+        answer_original = (
             '\n'.join(
                 [
                     f'[{get_user(pair.user_a).name}](tg://user?id={get_user(pair.user_a).telegram_id}) - [{get_user(pair.user_b).name}](tg://user?id={get_user(pair.user_b).telegram_id})' if pair.user_b !=
                                                                                                                                                                                               '' else f'[{get_user(pair.user_a).name}](tg://user?id={get_user(pair.user_a).telegram_id}) - None'
+                    for pair in pairs]
+            )
+        )
+        answer = (
+            '\n'.join(
+                [
+                    f'{pair.id} -- {get_user(pair.user_a).telegram_id} - {get_user(pair.user_b).telegram_id}' if pair.user_b !=
+                                                                                                                        '' else f'{pair.id} -- {get_user(pair.user_a).telegram_id} -None'
                     for pair in pairs]
             )
         )
@@ -606,8 +614,14 @@ def generate_pairs():
     for pair in pairs:
         if len(pair) == 2:
             create_pair(pair[0].telegram_id, pair[1].telegram_id)
+            #todo: create_pair_history(id ,pair[0].telegram_id, pair[1].telegram_id)
+            # как получить айди пары во время создания
         else:
             create_pair(pair[0].telegram_id, '')
+    sleep(1)
+    pairs_db = get_pairs()
+    for pair in pairs_db:
+        create_pair_history(pair.id,pair.user_a,pair.user_b)
     for user in get_verified_users():
         if user.is_active:
             try:
