@@ -575,22 +575,14 @@ def show_profile_callback(call):
     )
     pairs = get_pairs()
     if pairs:
-        answer_original = (
-            '\n'.join(
-                [
-                    f'[{get_user(pair.user_a).name}](tg://user?id={get_user(pair.user_a).telegram_id}) - [{get_user(pair.user_b).name}](tg://user?id={get_user(pair.user_b).telegram_id})' if pair.user_b !=
-                                                                                                                                                                                              '' else f'[{get_user(pair.user_a).name}](tg://user?id={get_user(pair.user_a).telegram_id}) - None'
-                    for pair in pairs]
-            )
-        )
         answer = (
             '\n'.join(
                 [
-                    f'{pair.id} -- {get_user(pair.user_a).telegram_id} - {get_user(pair.user_b).telegram_id}' if pair.user_b !=
-                                                                                                                        '' else f'{pair.id} -- {get_user(pair.user_a).telegram_id} -None'
+                    f'[{get_user(pair.user_a).name}](tg://user?id={get_user(pair.user_a).telegram_id}) - [{get_user(pair.user_b).name}](tg://user?id={get_user(pair.user_b).telegram_id})' if pair.user_b != '' else f'[{get_user(pair.user_a).name}](tg://user?id={get_user(pair.user_a).telegram_id}) - None'
                     for pair in pairs]
             )
         )
+
     else:
         answer = 'Пар нету'
     keyboard = types.InlineKeyboardMarkup()
@@ -614,8 +606,6 @@ def generate_pairs():
     for pair in pairs:
         if len(pair) == 2:
             create_pair(pair[0].telegram_id, pair[1].telegram_id)
-            #todo: create_pair_history(id ,pair[0].telegram_id, pair[1].telegram_id)
-            # как получить айди пары во время создания
         else:
             create_pair(pair[0].telegram_id, '')
     sleep(1)
@@ -818,6 +808,7 @@ def send_invites():
                     parse_mode='Markdown')
             bot.send_message(wudmc_tg,
                              f' сообщения паре {pair.id} успешно отправлено')
+            set_pair_history_field(pair.pair_history_id,'invited', True)
         except Exception:
             set_field(pair.user_a, 'is_active', False)
             set_field(pair.user_a, 'is_verified', False)
