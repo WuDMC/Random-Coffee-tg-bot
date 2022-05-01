@@ -622,7 +622,7 @@ def generate_pairs():
     pairs_db = get_pairs()
     for pair in pairs_db:
         create_pair_history(pair.id,pair.user_a,pair.user_b)
-        set_pair_field(pair.id, 'pair_history_id', get_pair_history(pair.id,pair.user_a,pair.user_b).id )
+        set_pair_field(pair.id, 'pair_history_id', get_pair_history(pair.id,pair.user_a,pair.user_b)[0].id )
     sleep(1)
     for user in get_verified_users():
         if user.is_active:
