@@ -11,7 +11,7 @@ from datetime import datetime
 from settings import ADMINS, TELEGRAM_TOKEN, SMTP
 from messages import generate_password
 from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_users, set_field, create_user, \
-    get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users, get_verified_users
+    get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users, get_verified_users, get_ban_users
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 wudmc_tg = '1205912479'
@@ -136,6 +136,8 @@ def send_admins():
             bot.send_message(user.telegram_id, msg_for_no_nickname, parse_mode='Markdown')
             sleep(1)
         except Exception:
+            set_field(user.telegram_id, 'is_active', False)
+            set_field(user.telegram_id, 'is_verified', False)
             bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
         sleep(2)
     bot.send_message(wudmc_tg, 'Сообщения админам отправлены')
@@ -149,6 +151,8 @@ def send_no_contacts():
             bot.send_message(user.telegram_id, msg_for_no_link, parse_mode='Markdown')
             bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} успешно отправлено')
         except Exception:
+            set_field(user.telegram_id, 'is_active', False)
+            set_field(user.telegram_id, 'is_verified', False)
             bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
         sleep(2)
     bot.send_message(wudmc_tg, 'Сообщения без ссылки отправлены')
@@ -159,6 +163,8 @@ def send_no_contacts():
             bot.send_message(user.telegram_id, msg_for_no_nickname, parse_mode='Markdown')
             bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} успешно отправлено')
         except Exception:
+            set_field(user.telegram_id, 'is_active', False)
+            set_field(user.telegram_id, 'is_verified', False)
             bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
         sleep(2)
     bot.send_message(wudmc_tg, 'Сообщения без никнейма отправлены')
@@ -172,6 +178,8 @@ def send_blocked_users():
             bot.send_message(user.telegram_id, msg_for_blocked, parse_mode='Markdown')
             bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} успешно отправлено')
         except Exception:
+            set_field(user.telegram_id, 'is_active', False)
+            set_field(user.telegram_id, 'is_verified', False)
             bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
         sleep(2)
     bot.send_message(wudmc_tg, 'Сообщения блокированным отправлены')
@@ -185,6 +193,8 @@ def send_active_users():
             bot.send_message(user.telegram_id, msg_for_active, parse_mode='Markdown')
             bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} успешно отправлено')
         except Exception:
+            set_field(user.telegram_id, 'is_active', False)
+            set_field(user.telegram_id, 'is_verified', False)
             bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
         sleep(2)
     bot.send_message(wudmc_tg, 'Сообщения авторизованным отправлены')
@@ -210,6 +220,7 @@ def send_stats():
         except Exception:
             bot.send_message(wudmc_tg, f' стату юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
             set_field(user.telegram_id, 'is_active', False)
+            set_field(user.telegram_id, 'is_verified', False)
             bot.send_message(wudmc_tg, f' юзер {user.telegram_id} отключен')
         sleep(2)
     bot.send_message(wudmc_tg, 'Статистика отправлена')
@@ -357,14 +368,13 @@ def show_profile_callback(call):
         message_id=message_id,
         text=answer
     )
-
+    set_field(target_user_id, 'is_active', False)
     set_field(target_user_id, 'is_verified', False)
     set_field(target_user_id, 'password', generate_password())
     try:
         bot.send_message(
             target_user_id, 'Ваш аккаунт заблокирован!\nДля повторной регистрации напишите /start')
     except Exception:
-        set_field(user.telegram_id, 'is_active', False)
         bot.send_message(wudmc_tg,
                          f' сообщения юзеру {target_user_id} не отправлено: {traceback.format_exc()}')
     answer = ('Пользователь заблокирован')
@@ -566,6 +576,7 @@ def generate_pairs():
                 bot.send_message(user.telegram_id, 'Ура! Пары назначены, скоро тебе придет сообщение с твоей парой на эту неделю')
             except Exception:
                 set_field(user.telegram_id, 'is_active', False)
+                set_field(user.telegram_id, 'is_verified', False)
                 bot.send_message(wudmc_tg,
                                  f' Сообщение юзеру о назначении пары {user.telegram_id} не отправлено: {traceback.format_exc()}')
         else:
@@ -575,6 +586,8 @@ def generate_pairs():
                 bot.send_message(user.telegram_id,
                              'Пары назначены, но твой профиль был на паузе. Не упусти свой шанс на будущей неделе.')
             except Exception:
+                set_field(user.telegram_id, 'is_active', False)
+                set_field(user.telegram_id, 'is_verified', False)
                 bot.send_message(wudmc_tg,
                                  f'Сообщение юзеру о назначении пары {user.telegram_id} не отправлено: {traceback.format_exc()}')
         sleep(1)
@@ -606,7 +619,18 @@ def show_profile_callback(call):
     bot.send_message(user_id, answer, parse_mode='Markdown',
                      reply_markup=keyboard)
 
+def feedback():
+    # TODO: создать метод feedback
+#  который спросит, была ли встреча? если да то попросит оставить комментарий
+# если нет то :отвечал ли собеседник? да/нет - потом коммент
+# при неответе - собеседнику ставится 1 штрафной балл, 3 балла - бан
+# писать сообщение юзеру о повышении баллов
 
+def check_balls(user_id):
+    # TODO: проверять этой функцией кол-во баллов у юзера и если >3 то бан
+
+def no_info_users():
+    # TODO: добавить напоминание пользователям заполнять профили.
 
 def ask_about_next_week():
     for user in get_verified_users():
@@ -633,6 +657,7 @@ def ask_about_next_week():
                     sleep(1)
                 except Exception:
                     set_field(user.telegram_id, 'is_active', False)
+                    set_field(user.telegram_id, 'is_verified', False)
                     bot.send_message(wudmc_tg,
                                      f' запрос участия юзеру {user.telegram_id} не отправлен: {traceback.format_exc()}')
             bot.send_message(
@@ -642,6 +667,7 @@ def ask_about_next_week():
                          f' запрос участия  юзеру {user.telegram_id} успешно отправлен')
         except Exception:
             set_field(user.telegram_id, 'is_active', False)
+            set_field(user.telegram_id, 'is_verified', False)
             bot.send_message(wudmc_tg,
                          f' запрос участия юзеру {user.telegram_id} не отправлен: {traceback.format_exc()}')
         sleep(1)
@@ -672,6 +698,8 @@ def remind_inactive():
                              f' напоминание юзеру {user.telegram_id} успешно отправлен')
 
         except Exception:
+            set_field(user.telegram_id, 'is_active', False)
+            set_field(user.telegram_id, 'is_verified', False)
             bot.send_message(wudmc_tg,
                              f' напоминания неактивному юзеру {user.telegram_id} не отправлен: {traceback.format_exc()}')
         sleep(1)
@@ -686,14 +714,19 @@ def ask_about_last_week():
                 try:
                     bot.send_message(
                     pair.user_a, poll_txt, parse_mode='Markdown')
+                    # TODO: добавить кнопку в клавиатуре (дать фидбек)
                 except Exception:
                     set_field(pair.user_a, 'is_active', False)
+                    set_field(pair.user_a, 'is_verified', False)
 
                 try:
                     bot.send_message(
                     pair.user_b, poll_txt, parse_mode='Markdown')
+                    # TODO: добавить кнопку в клавиатуре (дать фидбек)
+
                 except Exception:
                     set_field(pair.user_b, 'is_active', False)
+                    set_field(pair.user_b, 'is_verified', False)
 
             bot.send_message(wudmc_tg,
                              f' запрос фидбека паре {pair.id} успешно отправлено')
@@ -722,6 +755,8 @@ def send_invites():
             bot.send_message(wudmc_tg,
                              f' сообщения паре {pair.id} успешно отправлено')
         except Exception:
+            set_field(pair.user_a, 'is_active', False)
+            set_field(pair.user_a, 'is_verified', False)
             bot.send_message(wudmc_tg,
                              f' сообщения паре {pair.id} не отправлено: {traceback.format_exc()}')
 
@@ -1366,6 +1401,8 @@ def send_to_user_msg_callback(message):
             # bot.send_photo(
             #     target_user_id, photo, caption=message)
         except Exception:
+            set_field(target_user_id, 'is_active', False)
+            set_field(target_user_id, 'is_verified', False)
             bot.send_message(wudmc_tg,
                              f' сообщения юзеру {target_user_id} не отправлено: {traceback.format_exc()}')
 
@@ -1763,7 +1800,7 @@ if __name__ == "__main__":
     schedule.every().monday.at('10:00').do(send_stats)
     schedule.every().monday.at('10:20').do(generate_pairs)
     schedule.every().monday.at('12:00').do(send_invites)
-    # schedule.every().wednesday.at('17:30').do(send_adv) тут полезная инфа о чате -
+    schedule.every().wednesday.at('17:30').do(send_blocked_users)
     schedule.every().saturday.at('14:05').do(ask_about_next_week)
     schedule.every().sunday.at('12:42').do(ask_about_last_week)
     schedule.every().sunday.at('19:42').do(remind_inactive)

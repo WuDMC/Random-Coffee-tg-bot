@@ -25,6 +25,7 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.datetime.now)
     updated_at = Column(DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     ban = Column(Boolean, default=False, nullable=False)
+    balls = Column(Integer, default=0, nullable=False)
 
     def __repr__(self):
         # проблема с маркдаун только решает никнеймы
@@ -67,9 +68,11 @@ class Pair_History(Base):
     __tablename__ = 'Pair_History'
 
     id = Column(Integer, primary_key=True)
+    pair_id =Column(Integer, nullable=False)
     user_a = Column(String, nullable=False)
     user_b = Column(String, nullable=False)
     date = Column(DateTime, default=datetime.datetime.now)
+    invited = Column(Boolean, nullable=True)
     feedback_user_a = Column(String, nullable=True)
     feedback_user_b = Column(String, nullable=True)
     success_user_a = Column(Boolean, nullable=True)

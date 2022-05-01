@@ -2,7 +2,7 @@ import logging
 from re import L
 from sqlalchemy.orm import sessionmaker
 
-from models import User, Pair, engine
+from models import User, Pair, Pair_History, engine
 from messages import generate_password
 
 logging.basicConfig()
@@ -42,9 +42,28 @@ def get_users():
         session.query(
             User
         )
+        .filter(
+            User.ban == False
+
+        )
         .all()
     )
     return users if users else []
+
+def get_ban_users():
+    users = (
+        session.query(
+            User
+        )
+        .filter(
+            User.ban == True
+
+        )
+        .all()
+    )
+    return users if users else []
+
+# TODO: написать проверку для пользователей без описания профилей
 
 def get_blocked_users():
     users = (
@@ -52,7 +71,9 @@ def get_blocked_users():
             User
         )
         .filter(
-            User.is_verified == False
+            User.is_verified == False,
+            User.ban == False
+
         )
         .all()
     )
@@ -64,7 +85,8 @@ def get_verified_users():
             User
         )
         .filter(
-            User.is_verified == True
+            User.is_verified == True,
+            User.ban == False
         )
         .all()
     )
@@ -77,7 +99,8 @@ def get_active_users():
         )
         .filter(
             User.is_active == True,
-            User.is_verified == True
+            User.is_verified == True,
+            User.ban == False
         )
         .all()
     )
@@ -90,7 +113,8 @@ def get_inactive_users():
         )
         .filter(
             User.is_active == False,
-            User.is_verified == True
+            User.is_verified == True,
+            User.ban == False
         )
         .all()
     )
@@ -104,6 +128,7 @@ def get_no_nickname_users():
         .filter(
             User.is_active == True,
             User.is_verified == True,
+            User.ban == False,
             User.mail == 'Не указан'
         )
         .all()
@@ -120,6 +145,7 @@ def get_no_link_users():
         .filter(
             User.is_active == True,
             User.is_verified == True,
+            User.ban == False,
             User.link == 'Не указана'
         )
         .all()
@@ -160,6 +186,14 @@ def create_pair(user_id_a, user_id_b):
     ))
     session.commit()
 
+
+def create_pair_history(id, user_id_a, user_id_b):
+    session.add(Pair_History(
+        pair_id=id,
+        user_a=user_id_a,
+        user_b=user_id_b,
+    ))
+    session.commit()
 
 def delete_pairs():
     session.query(Pair).delete()
