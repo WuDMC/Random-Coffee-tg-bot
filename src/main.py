@@ -623,7 +623,7 @@ def generate_pairs():
     for pair in pairs_db:
         test = create_pair_history(pair.id,pair.user_a,pair.user_b)
         set_pair_field(pair.id, 'pair_history_id', get_pair_history(pair.id,pair.user_a,pair.user_b)[-1].id )
-        bot.send_message(wudmc_tg,test)
+        bot.send_message(wudmc_tg,test.id)
 
     sleep(1)
     for user in get_verified_users():
