@@ -625,12 +625,18 @@ def feedback():
 # если нет то :отвечал ли собеседник? да/нет - потом коммент
 # при неответе - собеседнику ставится 1 штрафной балл, 3 балла - бан
 # писать сообщение юзеру о повышении баллов
+    bot.send_message(wudmc_tg,
+                     f'feedback')
 
 def check_balls(user_id):
     # TODO: проверять этой функцией кол-во баллов у юзера и если >3 то бан
+    bot.send_message(wudmc_tg,
+                     f'check_balls')
 
 def no_info_users():
     # TODO: добавить напоминание пользователям заполнять профили.
+    bot.send_message(wudmc_tg,
+                     f'no_info_users')
 
 def ask_about_next_week():
     for user in get_verified_users():
