@@ -766,20 +766,32 @@ def ask_about_last_week():
         try:
             if pair.user_b:
                 try:
-                    keyboard.row_width = 1
                     keyboard = types.InlineKeyboardMarkup()
+                    keyboard.row_width = 1
                     keyboard.add(
                         types.InlineKeyboardButton(
-                            text='FEEDBACK',
-                            callback_data='help'
+                            text='Буду участвовать',
+                            callback_data='set_run'
                         ),
                         types.InlineKeyboardButton(
-                            text='Назад',
-                            callback_data='help'
+                            text='Возьму перерыв',
+                            callback_data='set_pause'
                         )
                     )
+
+
                     bot.send_message(
-                    pair.user_a, poll_txt, parse_mode='Markdown',reply_markup=keyboard)
+                    pair.user_a, poll_txt, parse_mode='Markdown', reply_markup=keyboard)
+                    bot.send_message(wudmc_tg,
+                                     f' запрос фидбека юзеру А {pair.user_a} успешно отправлено')
+
+                    bot.send_message(
+                    pair.user_b, poll_txt, parse_mode='Markdown', reply_markup=keyboard)
+
+                    bot.send_message(wudmc_tg,
+                                     f' запрос фидбека юзеру Б {pair.user_b} успешно отправлено')
+
+
                     # TODO: добавить кнопку в клавиатуре (дать фидбек)
                 except Exception:
                     set_field(pair.user_a, 'is_active', False)
