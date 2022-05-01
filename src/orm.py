@@ -199,9 +199,9 @@ def get_pair_history(id,usera,userb):
             Pair_History
         )
         .filter(
-            pair_id=id,
-            user_a=usera,
-            user_b=userb
+            Pair_History.pair_id == id,
+            Pair_History.user_a == usera,
+            Pair_History.user_b == userb
         )
         .all()
     )
