@@ -193,15 +193,15 @@ def set_pair_field(pair_id, key, value):
     )
     session.commit()
 
-def get_pair_history(pair_id,user_a,user_b):
+def get_pair_history(id,usera,userb):
     ID = (
         session.query(
             Pair_History
         )
         .filter(
-            pair_id=pair_id,
-            user_a=user_a,
-            user_b=user_b
+            pair_id=id,
+            user_a=usera,
+            user_b=userb
         )
         .all()
     )
