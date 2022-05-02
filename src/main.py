@@ -81,8 +81,13 @@ reminder_for_inactive = (
     'кликни по кнопке ниже =)\n\n'
 )
 
+poll_txt_1 = (
+    'Привет, как прошла твоя встреча на этой неделе?\n'
+    'Твой отзыв поможет мне стать лучше'
+)
 
-poll_txt = (
+
+poll_txt_old = (
     'Привет, как прошла твоя встреча на этой неделе?\n'
     'Оставь отзыв тут @BatumiRandomCoffee\n'
     'Твой отзыв поможет мне стать лучше\n\n'
@@ -486,6 +491,37 @@ def show_profile_callback(call):
                      reply_markup=keyboard)
 
 
+@bot.callback_query_handler(func=lambda call: call.data.startswith('feedback_'))
+def show_profile_callback(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+    feedback_status = call.data[len('feedback_'):]
+    answer = ('👉 Твой фидбек')
+    bot.send_chat_action(user_id, 'typing')
+    bot.edit_message_text(
+        chat_id=user_id,
+        message_id=message_id,
+        text=answer
+    )
+    if feedback_status == 'yes':
+        answer = ('👉 Твой фидбек YES')
+    elif feedback_status == 'no':
+        answer = ('👉 Твой фидбек NO')
+    elif feedback_status == 'cancel':
+        answer = ('👉 Твой фидбек CANCEL')
+
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, parse_mode='Markdown',
+                     reply_markup=keyboard)
+
+
 @bot.callback_query_handler(func=lambda call: call.data == 'show_users')
 def show_profile_callback(call):
     user_id = call.message.chat.id
@@ -779,19 +815,19 @@ def ask_about_last_week():
                         ),
                         types.InlineKeyboardButton(
                             text='Не хочу отвечать',
-                            callback_data='help'
+                            callback_data='feedback_cancel'
                         )
 
                     )
 
 
                     bot.send_message(
-                    pair.user_a, poll_txt, parse_mode='Markdown', reply_markup=keyboard)
+                    pair.user_a, poll_txt_1, parse_mode='Markdown', reply_markup=keyboard)
                     bot.send_message(wudmc_tg,
                                      f' запрос фидбека юзеру А {pair.user_a} успешно отправлено')
 
                     bot.send_message(
-                    pair.user_b, poll_txt, parse_mode='Markdown', reply_markup=keyboard)
+                    pair.user_b, poll_txt_1, parse_mode='Markdown', reply_markup=keyboard)
 
                     bot.send_message(wudmc_tg,
                                      f' запрос фидбека юзеру Б {pair.user_b} успешно отправлено')
@@ -1890,7 +1926,11 @@ if __name__ == "__main__":
     schedule.every().saturday.at('14:05').do(ask_about_next_week)
     schedule.every().sunday.at('12:42').do(ask_about_last_week)
     schedule.every().sunday.at('19:42').do(remind_inactive)
-    # schedule.every().sunday.at('22:40').do(ask_about_last_week)
+
+
+    schedule.every().monday.at('10:10').do(ask_about_last_week)
+    schedule.every().monday.at('10:12').do(ask_about_last_week)
+    schedule.every().monday.at('10:15').do(ask_about_last_week)
 
 
 
