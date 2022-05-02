@@ -520,10 +520,10 @@ def show_profile_callback(call):
     if user_id == pair_history[0].user_b:
         field = 'success_user_b'
     if feedback_status == 'yes':
-        answer = ('Отлично, встреча состоялась, теперь напиши текстовый отзыв и мне надо его в ДБ закинуть ')
+        answer = (f'Отлично, встреча состоялась, теперь напиши текстовый отзыв и мне надо его в ДБ закинуть . field {field}')
         set_pair_history_field(pair_history_id, field, 1)
     elif feedback_status == 'no':
-        answer = ('Очень жаль, а собеседник отвечал? если да - скажи почему встреча не состоялась, если нет - +1 балл партнеру')
+        answer = (f'Очень жаль, а собеседник отвечал? если да - скажи почему встреча не состоялась, если нет - +1 балл партнеру field {field}')
         set_pair_history_field(pair_history_id, field, 0)
     elif feedback_status == 'cancel':
         answer = ('в следующий раз')
@@ -1961,7 +1961,7 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().monday.at('11:53').do(ask_about_last_week)
+    schedule.every().monday.at('17:03').do(ask_about_last_week)
 
 
 
