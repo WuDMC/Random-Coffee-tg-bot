@@ -770,13 +770,18 @@ def ask_about_last_week():
                     keyboard.row_width = 1
                     keyboard.add(
                         types.InlineKeyboardButton(
-                            text='Буду участвовать',
-                            callback_data='set_run'
+                            text='Встреча состоялась',
+                            callback_data='feedback_yes'
                         ),
                         types.InlineKeyboardButton(
-                            text='Возьму перерыв',
-                            callback_data='set_pause'
+                            text='Не состоялась',
+                            callback_data='feedback_no'
+                        ),
+                        types.InlineKeyboardButton(
+                            text='Не хочу отвечать',
+                            callback_data='help'
                         )
+
                     )
 
 
@@ -1883,9 +1888,9 @@ if __name__ == "__main__":
     schedule.every().monday.at('12:00').do(send_invites)
     schedule.every().wednesday.at('17:30').do(send_blocked_users)
     schedule.every().saturday.at('14:05').do(ask_about_next_week)
-    # schedule.every().sunday.at('12:42').do(ask_about_last_week)
+    schedule.every().sunday.at('12:42').do(ask_about_last_week)
     schedule.every().sunday.at('19:42').do(remind_inactive)
-    schedule.every().sunday.at('22:40').do(ask_about_last_week)
+    # schedule.every().sunday.at('22:40').do(ask_about_last_week)
 
 
 
