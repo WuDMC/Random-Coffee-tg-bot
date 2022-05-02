@@ -517,9 +517,9 @@ def show_profile_callback(call):
     bot.send_message(wudmc_tg,
                      f' история пары: {pair_history[0].user_b}')
     field = 'test'
-    if user_id == pair_history[0].user_b:
+    if str(user_id) == str(pair_history[0].user_b):
         field = 'success_user_b'
-    elif user_id == pair_history[0].user_a:
+    elif str(user_id) == str(pair_history[0].user_a):
         field = 'success_user_a'
     bot.send_message(user_id, f'user = {user_id}, field = {field} user_a:{pair_history[0].user_a} user_b:{pair_history[0].user_b} test_a {str(user_id) == str(pair_history[0].user_a)} test_b {str(user_id) == str(pair_history[0].user_b)}')
     if feedback_status == 'yes':
@@ -1964,7 +1964,7 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().monday.at('18:44').do(ask_about_last_week)
+    schedule.every().monday.at('18:59').do(ask_about_last_week)
 
 
 
