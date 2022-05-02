@@ -519,28 +519,30 @@ def show_profile_callback(call):
         answer = (f'Отлично, встреча состоялась, теперь напиши текстовый отзыв и мне надо его в ДБ закинуть . field {field}')
         set_pair_history_field(pair_history_id, field, 1)
         keyboard = types.InlineKeyboardMarkup()
+        keyboard.row_width = 1
         keyboard.add(
             types.InlineKeyboardButton(
                 text='Оставить отзыв',
-                callback_data='help'
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'userfeedback'
             ),
             types.InlineKeyboardButton(
                 text='Не хочу оставлять отзыв',
-                callback_data='help'
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'dontwant'
             )
         )
     elif feedback_status == 'no':
         answer = (f'Очень жаль, а собеседник отвечал? если да - скажи почему встреча не состоялась, если нет - +1 балл партнеру field {field}')
         set_pair_history_field(pair_history_id, field, 0)
         keyboard = types.InlineKeyboardMarkup()
+        keyboard.row_width = 1
         keyboard.add(
             types.InlineKeyboardButton(
                 text='Отвечал, просто не срослось',
-                callback_data='help'
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'nesroslos'
             ),
             types.InlineKeyboardButton(
                 text='Не отвечал',
-                callback_data='help'
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_'  + 'reportuser_' + str(reported_user)
             )
         )
         bot.send_message(wudmc_tg,
@@ -551,16 +553,57 @@ def show_profile_callback(call):
     elif feedback_status == 'cancel':
         answer = ('в следующий раз')
 
-    # keyboard = types.InlineKeyboardMarkup()
-    # keyboard.add(
-    #     types.InlineKeyboardButton(
-    #         text='Назад',
-    #         callback_data='help'
-    #     )
-    # )
+
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, parse_mode='Markdown',
                      reply_markup=keyboard)
+
+
+@bot.callback_query_handler(func=lambda call: call.data.startswith('feedbacktxt_'))
+def show_profile_callback(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+    'feedbacktxt_' + str(pair_history_id) + '_pair_' + 'dontwant'
+    pair_history_id = call.data.partition('_pair_')[0][len('feedbacktxt_'):]
+    feedback_status = call.data.partition('_pair_')[2]
+    answer = ('👉 Текст после poll_txt_2')
+    bot.send_chat_action(user_id, 'typing')
+    bot.edit_message_text(
+        chat_id=user_id,
+        message_id=message_id,
+        text=answer
+    )
+    pair_history = get_pair_history(pair_history_id)
+    field = 'test'
+    if str(user_id) == str(pair_history[0].user_b):
+        field = 'feedback_user_b'
+    elif str(user_id) == str(pair_history[0].user_a):
+        field = 'feedback_user_a'
+    if feedback_status == 'dontwant':
+        answer = (f'Спасибо , я запомню что ты не очень общительный')
+        set_pair_history_field(pair_history_id, field, 'dontwant')
+
+    elif feedback_status == 'nesroslos':
+        answer = (f'Обязательно получится в следующий раз')
+        set_pair_history_field(pair_history_id, field, 'nesroslos')
+    elif feedback_status == 'userfeedback':
+        answer = (f'Оставь отзыв в группе // тут как то надо ответ передать в ДБ')
+
+
+        set_pair_history_field(pair_history_id, field, 'userfeedback')
+    else:
+        reported_user = feedback_status[len('reportuser_'):]
+
+        bot.send_message(wudmc_tg,
+                         f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
+        set_field(reported_user, 'balls', int(get_user(reported_user).balls) + 1)
+        bot.send_message(wudmc_tg,
+                         f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
+
+
+
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, parse_mode='Markdown')
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'show_users')
