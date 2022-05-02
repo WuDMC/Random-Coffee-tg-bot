@@ -506,21 +506,14 @@ def show_profile_callback(call):
         text=answer
     )
     pair_history = get_pair_history(pair_history_id)
-    bot.send_message(wudmc_tg,
-                     f' история пары: {pair_history}')
-    bot.send_message(wudmc_tg,
-                     f' история пары: {pair_history[0]}')
-    bot.send_message(wudmc_tg,
-                     f' история пары: {pair_history[0].id}')
-    bot.send_message(wudmc_tg,
-                     f' история пары: {pair_history[0].user_a}')
-    bot.send_message(wudmc_tg,
-                     f' история пары: {pair_history[0].user_b}')
+
     field = 'test'
     if str(user_id) == str(pair_history[0].user_b):
         field = 'success_user_b'
+        reported_user = pair_history[0].user_a
     elif str(user_id) == str(pair_history[0].user_a):
         field = 'success_user_a'
+        reported_user = pair_history[0].user_b
     bot.send_message(user_id, f'user = {user_id}, field = {field} user_a:{pair_history[0].user_a} user_b:{pair_history[0].user_b} test_a {str(user_id) == str(pair_history[0].user_a)} test_b {str(user_id) == str(pair_history[0].user_b)}')
     if feedback_status == 'yes':
         answer = (f'Отлично, встреча состоялась, теперь напиши текстовый отзыв и мне надо его в ДБ закинуть . field {field}')
@@ -528,6 +521,11 @@ def show_profile_callback(call):
     elif feedback_status == 'no':
         answer = (f'Очень жаль, а собеседник отвечал? если да - скажи почему встреча не состоялась, если нет - +1 балл партнеру field {field}')
         set_pair_history_field(pair_history_id, field, 0)
+        bot.send_message(wudmc_tg,
+                         f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
+        set_field(reported_user, 'balls', int(get_user(reported_user).balls) + 1)
+        bot.send_message(wudmc_tg,
+                         f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
     elif feedback_status == 'cancel':
         answer = ('в следующий раз')
 
@@ -1964,7 +1962,7 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().monday.at('18:59').do(ask_about_last_week)
+    schedule.every().monday.at('20:04').do(ask_about_last_week)
 
 
 

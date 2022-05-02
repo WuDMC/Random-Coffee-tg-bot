@@ -253,3 +253,5 @@ def get_pairs():
         .all()
     )
     return pairs if pairs else []
+
+
