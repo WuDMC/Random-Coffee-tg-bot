@@ -545,11 +545,7 @@ def show_profile_callback(call):
                 callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_'  + 'reportuser_' + str(reported_user)
             )
         )
-        bot.send_message(wudmc_tg,
-                         f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
-        set_field(reported_user, 'balls', int(get_user(reported_user).balls) + 1)
-        bot.send_message(wudmc_tg,
-                         f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
+
     elif feedback_status == 'cancel':
         answer = ('в следующий раз')
 
@@ -593,7 +589,7 @@ def show_profile_callback(call):
             set_pair_history_field(pair_history_id, field, 'userfeedback')
         else:
             reported_user = feedback_status[len('reportuser_'):]
-
+            set_pair_history_field(pair_history_id, field, 'bezotveta')
             bot.send_message(wudmc_tg,
                              f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
             set_field(reported_user, 'balls', int(get_user(reported_user).balls) + 1)
@@ -2031,7 +2027,7 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().monday.at('21:41').do(ask_about_last_week)
+    schedule.every().monday.at('21:49').do(ask_about_last_week)
 
 
 
