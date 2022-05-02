@@ -509,11 +509,15 @@ def show_profile_callback(call):
     bot.send_message(wudmc_tg,
                      f' история пары: {pair_history}')
     bot.send_message(wudmc_tg,
-                     f' история пары: {pair_history.id}')
-    bot.send_message(wudmc_tg,
                      f' история пары: {pair_history[0]}')
+    bot.send_message(wudmc_tg,
+                     f' история пары: {pair_history[0].id}')
+    bot.send_message(wudmc_tg,
+                     f' история пары: {pair_history[0].user_a}')
+    bot.send_message(wudmc_tg,
+                     f' история пары: {pair_history[0].user_b}')
     field = 'success_user_a'
-    if user_id == pair_history.user_b:
+    if user_id == pair_history[0].user_b:
         field = 'success_user_b'
     if feedback_status == 'yes':
         answer = ('Отлично, встреча состоялась, теперь напиши текстовый отзыв и мне надо его в ДБ закинуть ')
@@ -853,15 +857,15 @@ def ask_about_last_week():
                     keyboard.add(
                         types.InlineKeyboardButton(
                             text='Встреча состоялась',
-                            callback_data='feedback_yes_id_' + pair.pair_history_id
+                            callback_data='feedback_yes_id_' + str(pair.pair_history_id)
                         ),
                         types.InlineKeyboardButton(
                             text='Не состоялась',
-                            callback_data='feedback_no_id_' + pair.pair_history_id
+                            callback_data='feedback_no_id_' + str(pair.pair_history_id)
                         ),
                         types.InlineKeyboardButton(
                             text='Не хочу отвечать',
-                            callback_data='feedback_cancel_id_' + pair.pair_history_id
+                            callback_data='feedback_cancel_id_' + str(pair.pair_history_id)
                         )
 
                     )
@@ -1957,7 +1961,7 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().monday.at('11:45').do(ask_about_last_week)
+    schedule.every().monday.at('11:53').do(ask_about_last_week)
 
 
 
