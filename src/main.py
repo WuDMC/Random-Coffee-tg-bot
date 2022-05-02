@@ -834,26 +834,41 @@ def ask_about_last_week():
                     bot.send_message(wudmc_tg,
                                      f' запрос фидбека юзеру А {pair.user_a} успешно отправлено')
 
-                    bot.send_message(
-                    pair.user_b, poll_txt_1, parse_mode='Markdown', reply_markup=keyboard)
 
-                    bot.send_message(wudmc_tg,
-                                     f' запрос фидбека юзеру Б {pair.user_b} успешно отправлено')
-
-
-                    # TODO: добавить кнопку в клавиатуре (дать фидбек)
                 except Exception:
                     set_field(pair.user_a, 'is_active', False)
                     set_field(pair.user_a, 'is_verified', False)
+                    bot.send_message(wudmc_tg,
+                                     f' запрос фидбека юзеру А {pair.user_b} НЕ отправлено')
 
                 try:
+                    keyboard = types.InlineKeyboardMarkup()
+                    keyboard.row_width = 1
+                    keyboard.add(
+                        types.InlineKeyboardButton(
+                            text='Встреча состоялась',
+                            callback_data='feedback_yes_id_' + pair.pair_history_id
+                        ),
+                        types.InlineKeyboardButton(
+                            text='Не состоялась',
+                            callback_data='feedback_no_id_' + pair.pair_history_id
+                        ),
+                        types.InlineKeyboardButton(
+                            text='Не хочу отвечать',
+                            callback_data='feedback_cancel_id_' + pair.pair_history_id
+                        )
+
+                    )
                     bot.send_message(
-                    pair.user_b, poll_txt, parse_mode='Markdown')
-                    # TODO: добавить кнопку в клавиатуре (дать фидбек)
+                    pair.user_b, poll_txt_1, parse_mode='Markdown', reply_markup=keyboard)
+                    bot.send_message(wudmc_tg,
+                                     f' запрос фидбека юзеру Б {pair.user_b} успешно отправлено')
 
                 except Exception:
                     set_field(pair.user_b, 'is_active', False)
                     set_field(pair.user_b, 'is_verified', False)
+                    bot.send_message(wudmc_tg,
+                                     f' запрос фидбека юзеру Б {pair.user_b} НЕ отправлено')
 
             bot.send_message(wudmc_tg,
                              f' запрос фидбека паре {pair.id} успешно отправлено')
