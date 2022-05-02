@@ -518,9 +518,31 @@ def show_profile_callback(call):
     if feedback_status == 'yes':
         answer = (f'Отлично, встреча состоялась, теперь напиши текстовый отзыв и мне надо его в ДБ закинуть . field {field}')
         set_pair_history_field(pair_history_id, field, 1)
+        keyboard = types.InlineKeyboardMarkup()
+        keyboard.add(
+            types.InlineKeyboardButton(
+                text='Оставить отзыв',
+                callback_data='help'
+            ),
+            types.InlineKeyboardButton(
+                text='Не хочу оставлять отзыв',
+                callback_data='help'
+            )
+        )
     elif feedback_status == 'no':
         answer = (f'Очень жаль, а собеседник отвечал? если да - скажи почему встреча не состоялась, если нет - +1 балл партнеру field {field}')
         set_pair_history_field(pair_history_id, field, 0)
+        keyboard = types.InlineKeyboardMarkup()
+        keyboard.add(
+            types.InlineKeyboardButton(
+                text='Отвечал, просто не срослось',
+                callback_data='help'
+            ),
+            types.InlineKeyboardButton(
+                text='Не отвечал',
+                callback_data='help'
+            )
+        )
         bot.send_message(wudmc_tg,
                          f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
         set_field(reported_user, 'balls', int(get_user(reported_user).balls) + 1)
@@ -529,13 +551,13 @@ def show_profile_callback(call):
     elif feedback_status == 'cancel':
         answer = ('в следующий раз')
 
-    keyboard = types.InlineKeyboardMarkup()
-    keyboard.add(
-        types.InlineKeyboardButton(
-            text='Назад',
-            callback_data='help'
-        )
-    )
+    # keyboard = types.InlineKeyboardMarkup()
+    # keyboard.add(
+    #     types.InlineKeyboardButton(
+    #         text='Назад',
+    #         callback_data='help'
+    #     )
+    # )
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, parse_mode='Markdown',
                      reply_markup=keyboard)
@@ -1962,7 +1984,7 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().monday.at('20:04').do(ask_about_last_week)
+    schedule.every().monday.at('20:24').do(ask_about_last_week)
 
 
 
