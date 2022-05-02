@@ -506,6 +506,8 @@ def show_profile_callback(call):
         text=answer
     )
     pair_history = get_pair_history(pair_history_id)
+    bot.send_message(wudmc_tg,
+                     f' история пары: {pair_history}')
     field = 'success_user_a'
     if user_id == pair_history.user_b:
         field = 'success_user_b'
@@ -1951,7 +1953,7 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().monday.at('11:30').do(ask_about_last_week)
+    schedule.every().monday.at('11:38').do(ask_about_last_week)
 
 
 
