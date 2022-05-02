@@ -508,6 +508,10 @@ def show_profile_callback(call):
     pair_history = get_pair_history(pair_history_id)
     bot.send_message(wudmc_tg,
                      f' история пары: {pair_history}')
+    bot.send_message(wudmc_tg,
+                     f' история пары: {pair_history.id}')
+    bot.send_message(wudmc_tg,
+                     f' история пары: {pair_history[0]}')
     field = 'success_user_a'
     if user_id == pair_history.user_b:
         field = 'success_user_b'
