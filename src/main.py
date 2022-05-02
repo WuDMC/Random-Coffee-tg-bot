@@ -521,7 +521,7 @@ def show_profile_callback(call):
         field = 'success_user_b'
     elif user_id == pair_history[0].user_a:
         field = 'success_user_a'
-    bot.send_message(user_id, f'user = {user_id}, field = {field} user_a:{pair_history[0].user_a} user_b:{pair_history[0].user_b} test_a {str(user_id) == str(pair_history[0].user_a)} test_b {str(user_id) == str(pair_history[0].user_b})')
+    bot.send_message(user_id, f'user = {user_id}, field = {field} user_a:{pair_history[0].user_a} user_b:{pair_history[0].user_b} test_a {str(user_id) == str(pair_history[0].user_a)} test_b {str(user_id) == str(pair_history[0].user_b)}')
     if feedback_status == 'yes':
         answer = (f'Отлично, встреча состоялась, теперь напиши текстовый отзыв и мне надо его в ДБ закинуть . field {field}')
         set_pair_history_field(pair_history_id, field, 1)
