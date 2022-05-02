@@ -519,6 +519,7 @@ def show_profile_callback(call):
     field = 'success_user_a'
     if user_id == pair_history[0].user_b:
         field = 'success_user_b'
+    bot.send_message(user_id, f'user = {user_id}, field = {field}')
     if feedback_status == 'yes':
         answer = (f'Отлично, встреча состоялась, теперь напиши текстовый отзыв и мне надо его в ДБ закинуть . field {field}')
         set_pair_history_field(pair_history_id, field, 1)
@@ -1961,7 +1962,7 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().monday.at('17:03').do(ask_about_last_week)
+    schedule.every().monday.at('17:18').do(ask_about_last_week)
 
 
 
