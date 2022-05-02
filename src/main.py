@@ -815,15 +815,15 @@ def ask_about_last_week():
                     keyboard.add(
                         types.InlineKeyboardButton(
                             text='Встреча состоялась',
-                            callback_data='feedback_yes_id_' + pair.pair_history_id
+                            callback_data='feedback_yes_id_' + str(pair.pair_history_id)
                         ),
                         types.InlineKeyboardButton(
                             text='Не состоялась',
-                            callback_data='feedback_no_id_' + pair.pair_history_id
+                            callback_data='feedback_no_id_' + str(pair.pair_history_id)
                         ),
                         types.InlineKeyboardButton(
                             text='Не хочу отвечать',
-                            callback_data='feedback_cancel_id_' + pair.pair_history_id
+                            callback_data='feedback_cancel_id_' + str(pair.pair_history_id)
                         )
 
                     )
@@ -1951,7 +1951,7 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().monday.at('11:23').do(ask_about_last_week)
+    schedule.every().monday.at('11:30').do(ask_about_last_week)
 
 
 
