@@ -575,30 +575,35 @@ def show_profile_callback(call):
     )
     pair_history = get_pair_history(pair_history_id)
     field = 'test'
-    if str(user_id) == str(pair_history[0].user_b):
-        field = 'feedback_user_b'
-    elif str(user_id) == str(pair_history[0].user_a):
-        field = 'feedback_user_a'
-    if feedback_status == 'dontwant':
-        answer = (f'Спасибо , я запомню что ты не очень общительный')
-        set_pair_history_field(pair_history_id, field, 'dontwant')
+    try:
+        if str(user_id) == str(pair_history[0].user_b):
+            field = 'feedback_user_b'
+        elif str(user_id) == str(pair_history[0].user_a):
+            field = 'feedback_user_a'
+        if feedback_status == 'dontwant':
+            answer = (f'Спасибо , я запомню что ты не очень общительный')
+            set_pair_history_field(pair_history_id, field, 'dontwant')
 
-    elif feedback_status == 'nesroslos':
-        answer = (f'Обязательно получится в следующий раз')
-        set_pair_history_field(pair_history_id, field, 'nesroslos')
-    elif feedback_status == 'userfeedback':
-        answer = (f'Оставь отзыв в группе // тут как то надо ответ передать в ДБ')
+        elif feedback_status == 'nesroslos':
+            answer = (f'Обязательно получится в следующий раз')
+            set_pair_history_field(pair_history_id, field, 'nesroslos')
+        elif feedback_status == 'userfeedback':
+            answer = (f'Оставь отзыв в группе // тут как то надо ответ передать в ДБ')
 
 
-        set_pair_history_field(pair_history_id, field, 'userfeedback')
-    else:
-        reported_user = feedback_status[len('reportuser_'):]
+            set_pair_history_field(pair_history_id, field, 'userfeedback')
+        else:
+            reported_user = feedback_status[len('reportuser_'):]
 
+            bot.send_message(wudmc_tg,
+                             f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
+            set_field(reported_user, 'balls', int(get_user(reported_user).balls) + 1)
+            bot.send_message(wudmc_tg,
+                             f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
+    except:
         bot.send_message(wudmc_tg,
-                         f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
-        set_field(reported_user, 'balls', int(get_user(reported_user).balls) + 1)
-        bot.send_message(wudmc_tg,
-                         f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
+                         f' ошибка: {traceback.format_exc()}')
+
 
 
 
@@ -2027,7 +2032,7 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().monday.at('21:09').do(ask_about_last_week)
+    schedule.every().monday.at('21:17').do(ask_about_last_week)
 
 
 
