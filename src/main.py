@@ -516,9 +516,11 @@ def show_profile_callback(call):
                      f' история пары: {pair_history[0].user_a}')
     bot.send_message(wudmc_tg,
                      f' история пары: {pair_history[0].user_b}')
-    field = 'success_user_a'
+    field = 'test'
     if user_id == pair_history[0].user_b:
         field = 'success_user_b'
+    elif user_id == pair_history[0].user_a:
+        field = 'success_user_a'
     bot.send_message(user_id, f'user = {user_id}, field = {field}')
     if feedback_status == 'yes':
         answer = (f'Отлично, встреча состоялась, теперь напиши текстовый отзыв и мне надо его в ДБ закинуть . field {field}')
@@ -1962,7 +1964,7 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().monday.at('17:18').do(ask_about_last_week)
+    schedule.every().monday.at('17:23').do(ask_about_last_week)
 
 
 
