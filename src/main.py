@@ -839,7 +839,7 @@ def ask_about_last_week():
                     set_field(pair.user_a, 'is_active', False)
                     set_field(pair.user_a, 'is_verified', False)
                     bot.send_message(wudmc_tg,
-                                     f' запрос фидбека юзеру А {pair.user_b} НЕ отправлено')
+                                     f' запрос фидбека юзеру А {pair.user_b} НЕ отправлено: {traceback.format_exc()}')
 
                 try:
                     keyboard = types.InlineKeyboardMarkup()
@@ -868,7 +868,7 @@ def ask_about_last_week():
                     set_field(pair.user_b, 'is_active', False)
                     set_field(pair.user_b, 'is_verified', False)
                     bot.send_message(wudmc_tg,
-                                     f' запрос фидбека юзеру Б {pair.user_b} НЕ отправлено')
+                                     f' запрос фидбека юзеру Б {pair.user_b} НЕ отправлено: {traceback.format_exc()}')
 
             bot.send_message(wudmc_tg,
                              f' запрос фидбека паре {pair.id} успешно отправлено')
@@ -1951,7 +1951,7 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().monday.at('11:17').do(ask_about_last_week)
+    schedule.every().monday.at('11:23').do(ask_about_last_week)
 
 
 
