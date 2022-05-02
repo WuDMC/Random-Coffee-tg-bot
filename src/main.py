@@ -1951,9 +1951,8 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().monday.at('10:51').do(ask_about_last_week)
-    schedule.every().monday.at('10:53').do(ask_about_last_week)
-    schedule.every().monday.at('10:55').do(ask_about_last_week)
+    schedule.every().monday.at('11:07').do(ask_about_last_week)
+
 
 
 
