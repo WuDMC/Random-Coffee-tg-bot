@@ -11,7 +11,8 @@ from datetime import datetime
 from settings import ADMINS, TELEGRAM_TOKEN, SMTP
 from messages import generate_password
 from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_users, set_field, create_user, \
-    get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users, get_verified_users, get_ban_users, create_pair_history, set_pair_field, set_pair_history_field
+    get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users, get_verified_users, \
+    get_ban_users, create_pair_history, set_pair_field, set_pair_history_field, get_pair_history
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 wudmc_tg = '1205912479'
@@ -495,20 +496,27 @@ def show_profile_callback(call):
 def show_profile_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-    feedback_status = call.data[len('feedback_'):]
-    answer = ('👉 Твой фидбек')
+    pair_history_id = call.data.partition('_id_')[2]
+    feedback_status = call.data.partition('_id_')[0][len('feedback_'):]
+    answer = ('👉 Текст после poll_txt_1')
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
         message_id=message_id,
         text=answer
     )
+    pair_history = get_pair_history(pair_history_id)
+    field = 'success_user_a'
+    if user_id == pair_history.user_b:
+        field = 'success_user_b'
     if feedback_status == 'yes':
-        answer = ('👉 Твой фидбек YES')
+        answer = ('Отлично, встреча состоялась, теперь напиши текстовый отзыв и мне надо его в ДБ закинуть ')
+        set_pair_history_field(pair_history_id, field, 1)
     elif feedback_status == 'no':
-        answer = ('👉 Твой фидбек NO')
+        answer = ('Очень жаль, а собеседник отвечал? если да - скажи почему встреча не состоялась, если нет - +1 балл партнеру')
+        set_pair_history_field(pair_history_id, field, 0)
     elif feedback_status == 'cancel':
-        answer = ('👉 Твой фидбек CANCEL')
+        answer = ('в следующий раз')
 
     keyboard = types.InlineKeyboardMarkup()
     keyboard.add(
@@ -807,15 +815,15 @@ def ask_about_last_week():
                     keyboard.add(
                         types.InlineKeyboardButton(
                             text='Встреча состоялась',
-                            callback_data='feedback_yes'
+                            callback_data='feedback_yes_id_' + pair.pair_history_id
                         ),
                         types.InlineKeyboardButton(
                             text='Не состоялась',
-                            callback_data='feedback_no'
+                            callback_data='feedback_no_id_' + pair.pair_history_id
                         ),
                         types.InlineKeyboardButton(
                             text='Не хочу отвечать',
-                            callback_data='feedback_cancel'
+                            callback_data='feedback_cancel_id_' + pair.pair_history_id
                         )
 
                     )
@@ -1928,9 +1936,9 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().monday.at('10:10').do(ask_about_last_week)
-    schedule.every().monday.at('10:12').do(ask_about_last_week)
-    schedule.every().monday.at('10:15').do(ask_about_last_week)
+    schedule.every().monday.at('10:51').do(ask_about_last_week)
+    schedule.every().monday.at('10:53').do(ask_about_last_week)
+    schedule.every().monday.at('10:55').do(ask_about_last_week)
 
 
 

@@ -228,6 +228,19 @@ def create_pair_history(id, user_id_a, user_id_b):
     session.flush()
     return pair if pair else 'test'
 
+def get_pair_history(id):
+    pairs = (
+        session.query(
+            Pair_History
+        )
+        .filter(
+            Pair_History.id == id,
+        )
+        .all()
+    )
+    return pairs if pairs else []
+
+
 def delete_pairs():
     session.query(Pair).delete()
 
