@@ -563,7 +563,6 @@ def show_profile_callback(call):
 def show_profile_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-    'feedbacktxt_' + str(pair_history_id) + '_pair_' + 'dontwant'
     pair_history_id = call.data.partition('_pair_')[0][len('feedbacktxt_'):]
     feedback_status = call.data.partition('_pair_')[2]
     answer = ('👉 Текст после poll_txt_2')
@@ -2032,7 +2031,7 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().monday.at('21:17').do(ask_about_last_week)
+    schedule.every().monday.at('21:41').do(ask_about_last_week)
 
 
 
