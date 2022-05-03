@@ -548,7 +548,7 @@ def feedback_callback(call):
                 callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'nesroslos'
             ),
             types.InlineKeyboardButton(
-                text='Даже не отетил',
+                text='Собеседник мне не отетил',
                 callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_'  + 'reportuser_' + str(reported_user)
             )
         )
@@ -557,9 +557,20 @@ def feedback_callback(call):
                          reply_markup=keyboard)
     elif feedback_status == 'cancel':
         set_pair_history_field(pair_history_id, feedback_field, 'cancel')
-        answer = ('в следующий раз')
+        answer = (f'😎А твой отзыв надеюсь получу уже в следующий раз\n\n'
+                      f'В понедельник будут назначены новые пары!\n'
+                      f'Проверь, что в твоем профиле актуальная информация')
         bot.send_chat_action(user_id, 'typing')
-        bot.send_message(user_id, answer, parse_mode='Markdown')
+        sleep(2)
+        keyboard = types.InlineKeyboardMarkup()
+        keyboard.add(
+            types.InlineKeyboardButton(
+                text='ПРОФИЛЬ',
+                callback_data='help'
+            )
+        )
+        bot.send_message(user_id, answer, parse_mode='Markdown',
+                         reply_markup=keyboard)
 
 
 
