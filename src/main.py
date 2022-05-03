@@ -597,7 +597,8 @@ def feedbacktxt_callback(call):
                     callback_data='help'
                 )
             )
-
+            bot.send_chat_action(user_id, 'typing')
+            bot.send_message(user_id, answer, reply_markup=keyboard)
 
         elif feedback_status == 'nesroslos':
             answer = (f'😢 Обязательно получится в следующий раз.\n\n'
@@ -612,7 +613,8 @@ def feedbacktxt_callback(call):
                     callback_data='help'
                 )
             )
-
+            bot.send_chat_action(user_id, 'typing')
+            bot.send_message(user_id, answer, reply_markup=keyboard)
         elif feedback_status == 'userfeedback':
             next_state = States.userfeedback
 
@@ -621,7 +623,8 @@ def feedbacktxt_callback(call):
             set_field(user_id, 'about', pair_history_id)
             set_pair_history_field(pair_history_id, field, 'userfeedback')
             bot.set_state(user_id, next_state)
-
+            bot.send_chat_action(user_id, 'typing')
+            bot.send_message(user_id, answer)
 
         else:
 
@@ -636,11 +639,11 @@ def feedbacktxt_callback(call):
                              f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
             bot.send_message(reported_user,
                              f' Ауч! Ты нарушил правила и не отвечал собеседнику, больше не делай так. \n Помни: 3 жалобы = бан. Жалоб сейчас: {int(get_user(reported_user).balls)}')
+            bot.send_chat_action(user_id, 'typing')
+            bot.send_message(user_id, answer, reply_markup=keyboard)
 
 
 
-        bot.send_chat_action(user_id, 'typing')
-        bot.send_message(user_id, answer, reply_markup=keyboard)
     except Exception:
         bot.send_message(wudmc_tg,
                          f' ошибка: {traceback.format_exc()}')
