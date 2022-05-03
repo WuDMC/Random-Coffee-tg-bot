@@ -1304,7 +1304,7 @@ def add_user_feedback(message):
     user_id = message.from_user.id
     next_state = States.complete
 
-    feedback = message.text
+    user_feedback = message.text
     pair_history_id = get_user(user_id).about
     pair_history = get_pair_history(pair_history_id)
     field = 'test'
@@ -1313,15 +1313,17 @@ def add_user_feedback(message):
         field = 'feedback_user_b'
     elif str(user_id) == str(pair_history[0].user_a):
         field = 'feedback_user_a'
-    answer = 'Готово'
+    answer = (f'Твой отзыв очень полезен\n\n'
+              f'В понедельник будут назначены новые пары!\n'
+              f'Проверь, что в твоем профиле актуальная информация')
 
-    set_pair_history_field(pair_history_id, field, feedback)
+    set_pair_history_field(pair_history_id, field, user_feedback)
     set_field(user_id, 'about', 'None')
     keyboard = types.InlineKeyboardMarkup()
 
     keyboard.add(
         types.InlineKeyboardButton(
-            text='Назад',
+            text='ПРОФИЛЬ',
             callback_data='help'
         )
     )
