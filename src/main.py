@@ -590,6 +590,7 @@ def show_profile_callback(call):
 
 
             set_pair_history_field(pair_history_id, field, 'userfeedback')
+            bot.set_state(user_id, next_state)
         else:
             reported_user = feedback_status[len('reportuser_'):]
             set_pair_history_field(pair_history_id, field, 'bezotveta')
@@ -2052,7 +2053,7 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().tuesday.at('10:11').do(ask_about_last_week)
+    schedule.every().tuesday.at('10:32').do(ask_about_last_week)
 
 
 
