@@ -584,12 +584,37 @@ def feedbacktxt_callback(call):
         elif str(user_id) == str(pair_history[0].user_a):
             field = 'feedback_user_a'
         if feedback_status == 'dontwant':
-            answer = (f'Спасибо , я запомню что ты не очень общительный 😂')
             set_pair_history_field(pair_history_id, field, 'dontwant')
+            answer = (f'Спасибо , я запомню что ты не очень общительный 😂\n\n'
+                      f'В понедельник будут назначены новые пары!\n'
+                      f'Проверь, что в твоем профиле актуальная информация')
+
+            keyboard = types.InlineKeyboardMarkup()
+
+            keyboard.add(
+                types.InlineKeyboardButton(
+                    text='ПРОФИЛЬ',
+                    callback_data='help'
+                )
+            )
+            bot.send_chat_action(user_id, 'typing')
+            bot.send_message(user_id, answer, reply_markup=keyboard)
 
         elif feedback_status == 'nesroslos':
-            answer = (f'😢 Обязательно получится в следующий раз.')
+            answer = (f'😢 Обязательно получится в следующий раз.\n\n'
+                      f'В понедельник будут назначены новые пары!\n'
+                      f'Проверь, что в твоем профиле актуальная информация')
             set_pair_history_field(pair_history_id, field, 'nesroslos')
+            keyboard = types.InlineKeyboardMarkup()
+
+            keyboard.add(
+                types.InlineKeyboardButton(
+                    text='ПРОФИЛЬ',
+                    callback_data='help'
+                )
+            )
+            bot.send_chat_action(user_id, 'typing')
+            bot.send_message(user_id, answer, reply_markup=keyboard)
         elif feedback_status == 'userfeedback':
             next_state = States.userfeedback
 
@@ -598,14 +623,16 @@ def feedbacktxt_callback(call):
             set_field(user_id, 'about', pair_history_id)
             set_pair_history_field(pair_history_id, field, 'userfeedback')
             bot.set_state(user_id, next_state)
+
         else:
             reported_user = feedback_status[len('reportuser_'):]
             set_pair_history_field(pair_history_id, field, 'bezotveta')
-            bot.send_message(wudmc_tg,
-                             f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
+
             set_field(reported_user, 'balls', int(get_user(reported_user).balls) + 1)
             bot.send_message(wudmc_tg,
                              f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
+            bot.send_message(reported_user,
+                             f' Ауч! Ты нарушил правила и не отвечал собеседнику, больше не делай так. \n Помни: 3 жалобы = бан. Жалоб сейчас: {int(get_user(reported_user).balls)}')
     except Exception:
         bot.send_message(wudmc_tg,
                          f' ошибка: {traceback.format_exc()}')
