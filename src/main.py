@@ -1140,6 +1140,10 @@ def start_handler(message):
     user = get_user(user_id)
     if user and user.ban:
         answer = ('BANNED')
+    elif user and message.from_user.username in ADMINS:
+        answer = ('Что то пошло не так, вернул тебя к жизни')
+        set_field(user_id, 'is_verified', True)
+        next_state = States.complete
 
     elif (not user or not user.is_verified) and message.from_user.username not in ADMINS:
         create_user(user_id)
@@ -1266,7 +1270,6 @@ def ask_link_handler(message):
 @bot.message_handler(commands=['help'])
 def help_handler(message):
     user_id = message.from_user.id
-
     user = get_user(user_id)
     if user and user.is_verified:
         help(message)
