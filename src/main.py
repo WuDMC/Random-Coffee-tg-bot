@@ -639,12 +639,18 @@ def feedbacktxt_callback(call):
                 )
             )
             reported_user = feedback_status[len('reportuser_'):]
+
+
             set_pair_history_field(pair_history_id, field, 'bezotveta')
             set_field(reported_user, 'balls', int(get_user(reported_user).balls) + 1)
             bot.send_message(wudmc_tg,
                              f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
             bot.send_message(reported_user,
                              f' Ауч! Ты нарушил правила и не отвечал собеседнику, больше не делай так. \n Помни: 3 жалобы = бан. Жалоб сейчас: {int(get_user(reported_user).balls)}')
+            if get_user(reported_user).ball > 2:
+                set_field(reported_user, 'ban', True)
+                bot.send_message(reported_user,
+                                 f' Ауч! Ты нарушил правила 3 раза. \n 😡 Ты забанен!')
             bot.send_chat_action(user_id, 'typing')
             bot.send_message(user_id, answer, reply_markup=keyboard)
 
@@ -841,19 +847,8 @@ def generate_pairs_callback(call):
     bot.send_message(user_id, answer, parse_mode='Markdown',
                      reply_markup=keyboard)
 
-def feedback():
-    # TODO: создать метод feedback
-#  который спросит, была ли встреча? если да то попросит оставить комментарий
-# если нет то :отвечал ли собеседник? да/нет - потом коммент
-# при неответе - собеседнику ставится 1 штрафной балл, 3 балла - бан
-# писать сообщение юзеру о повышении баллов
-    bot.send_message(wudmc_tg,
-                     f'feedback')
 
-def check_balls(user_id):
-    # TODO: проверять этой функцией кол-во баллов у юзера и если >3 то бан
-    bot.send_message(wudmc_tg,
-                     f'check_balls')
+
 
 def no_info_users():
     # TODO: добавить напоминание пользователям заполнять профили.
