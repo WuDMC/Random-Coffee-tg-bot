@@ -658,7 +658,7 @@ def feedbacktxt_callback(call):
                              f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
             bot.send_message(reported_user,
                              f' Ауч! Ты нарушил правила и не отвечал собеседнику, больше не делай так. \n Помни: 3 жалобы = бан. Жалоб сейчас: {int(get_user(reported_user).balls)}')
-            if get_user(reported_user).ball > 2:
+            if get_user(reported_user).balls > 2:
                 set_field(reported_user, 'ban', True)
                 bot.send_message(reported_user,
                                  f' Ауч! Ты нарушил правила 3 раза. \n 😡 Ты забанен!')
