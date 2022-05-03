@@ -499,7 +499,7 @@ def feedback_callback(call):
     message_id = call.message.message_id
     pair_history_id = call.data.partition('_id_')[2]
     feedback_status = call.data.partition('_id_')[0][len('feedback_'):]
-    answer = ('👉 Текст после poll_txt_1')
+    answer = ('👍 Рад слышать, что все прошло как надо ')
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
@@ -517,10 +517,8 @@ def feedback_callback(call):
         field = 'success_user_a'
         feedback_field = 'feedback_user_a'
         reported_user = pair_history[0].user_b
-    bot.send_message(user_id, f'user = {user_id}, field = {field} user_a:{pair_history[0].user_a} user_b:{pair_history[0].user_b} test_a {str(user_id) == str(pair_history[0].user_a)} test_b {str(user_id) == str(pair_history[0].user_b)}')
     if feedback_status == 'yes':
-        answer = (f'Рад слышать, что все прошло как надо =)\n\n'
-                  f'По возможности, поделись впечатлением об этой встрече со мной, это поможет мне стать лучше.')
+        answer = (f'По возможности, поделись впечатлением об этой встрече со мной')
         set_pair_history_field(pair_history_id, field, 1)
         keyboard = types.InlineKeyboardMarkup()
         keyboard.row_width = 1
@@ -570,7 +568,7 @@ def feedbacktxt_callback(call):
     message_id = call.message.message_id
     pair_history_id = call.data.partition('_pair_')[0][len('feedbacktxt_'):]
     feedback_status = call.data.partition('_pair_')[2]
-    answer = ('👉 Текст после poll_txt_2')
+    answer = ('👇 Остался последний шаг')
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
@@ -585,16 +583,16 @@ def feedbacktxt_callback(call):
         elif str(user_id) == str(pair_history[0].user_a):
             field = 'feedback_user_a'
         if feedback_status == 'dontwant':
-            answer = (f'Спасибо , я запомню что ты не очень общительный')
+            answer = (f'Спасибо , я запомню что ты не очень общительный 😂')
             set_pair_history_field(pair_history_id, field, 'dontwant')
 
         elif feedback_status == 'nesroslos':
-            answer = (f'Обязательно получится в следующий раз')
+            answer = (f'😢 Обязательно получится в следующий раз.')
             set_pair_history_field(pair_history_id, field, 'nesroslos')
         elif feedback_status == 'userfeedback':
             next_state = States.userfeedback
 
-            answer = (f'Оставь отзыв в группе // тут как то надо ответ передать в ДБ')
+            answer = (f'Напиши пару слов о прошедшей встрече в одном сообщении.')
 
             set_field(user_id, 'about', pair_history_id)
             set_pair_history_field(pair_history_id, field, 'userfeedback')
