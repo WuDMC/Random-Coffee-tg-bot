@@ -1537,7 +1537,7 @@ def sender_callback(call):
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'test')
-def test_handler():
+def test_handler(call):
     ask_about_last_week()
 
 @bot.callback_query_handler(func=lambda call: call.data == 'send_to_all')
