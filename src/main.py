@@ -588,7 +588,7 @@ def show_profile_callback(call):
 
             answer = (f'Оставь отзыв в группе // тут как то надо ответ передать в ДБ')
 
-
+            set_field(user_id, 'about', pair_history_id)
             set_pair_history_field(pair_history_id, field, 'userfeedback')
             bot.set_state(user_id, next_state)
         else:
@@ -1295,11 +1295,18 @@ def add_user_feedback(message):
     next_state = States.complete
 
     feedback = message.text
+    pair_history_id = get_user(user_id).about
+    pair_history = get_pair_history(pair_history_id)
+    field = 'test'
 
+    if str(user_id) == str(pair_history[0].user_b):
+        field = 'feedback_user_b'
+    elif str(user_id) == str(pair_history[0].user_a):
+        field = 'feedback_user_a'
     answer = 'Готово'
 
-    set_pair_history_field(1, 'feedback_user_a', feedback)
-
+    set_pair_history_field(pair_history_id, field, feedback)
+    set_field(user_id, 'about', None)
     keyboard = types.InlineKeyboardMarkup()
 
     keyboard.add(
@@ -2053,7 +2060,7 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().tuesday.at('10:32').do(ask_about_last_week)
+    schedule.every().tuesday.at('11:02').do(ask_about_last_week)
 
 
 
