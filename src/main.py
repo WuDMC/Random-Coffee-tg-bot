@@ -561,7 +561,7 @@ def feedback_callback(call):
                       f'В понедельник будут назначены новые пары!\n'
                       f'Проверь, что в твоем профиле актуальная информация')
         bot.send_chat_action(user_id, 'typing')
-        sleep(2)
+        sleep(1)
         keyboard = types.InlineKeyboardMarkup()
         keyboard.add(
             types.InlineKeyboardButton(
