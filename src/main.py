@@ -368,7 +368,7 @@ def show_profile_callback(call):
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('refuse_'))
-def show_profile_callback(call):
+def refuse__callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
     target_user_id = call.data[len('refuse_'):]
@@ -404,7 +404,7 @@ def show_profile_callback(call):
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('ban_'))
-def show_profile_callback(call):
+def ban_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
     target_user_id = call.data[len('ban_'):]
@@ -439,7 +439,7 @@ def show_profile_callback(call):
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('set_pause_for_admin_'))
-def show_profile_callback(call):
+def set_pause_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
     target_user_id = call.data[len('set_pause_for_admin_'):]
@@ -466,7 +466,7 @@ def show_profile_callback(call):
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('set_run_for_admin_'))
-def show_profile_callback(call):
+def set_run_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
     target_user_id = call.data[len('set_run_for_admin_'):]
@@ -494,7 +494,7 @@ def show_profile_callback(call):
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('feedback_'))
-def show_profile_callback(call):
+def feedback_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
     pair_history_id = call.data.partition('_id_')[2]
@@ -511,13 +511,16 @@ def show_profile_callback(call):
     field = 'test'
     if str(user_id) == str(pair_history[0].user_b):
         field = 'success_user_b'
+        feedback_field = 'feedback_user_b'
         reported_user = pair_history[0].user_a
     elif str(user_id) == str(pair_history[0].user_a):
         field = 'success_user_a'
+        feedback_field = 'feedback_user_a'
         reported_user = pair_history[0].user_b
     bot.send_message(user_id, f'user = {user_id}, field = {field} user_a:{pair_history[0].user_a} user_b:{pair_history[0].user_b} test_a {str(user_id) == str(pair_history[0].user_a)} test_b {str(user_id) == str(pair_history[0].user_b)}')
     if feedback_status == 'yes':
-        answer = (f'Отлично, встреча состоялась, теперь напиши текстовый отзыв и мне надо его в ДБ закинуть . field {field}')
+        answer = (f'Рад слышать, что все прошло как надо =)\n\n'
+                  f'По возможности, поделись впечатлением об этой встрече со мной, это поможет мне стать лучше.')
         set_pair_history_field(pair_history_id, field, 1)
         keyboard = types.InlineKeyboardMarkup()
         keyboard.row_width = 1
@@ -531,33 +534,38 @@ def show_profile_callback(call):
                 callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'dontwant'
             )
         )
+        bot.send_chat_action(user_id, 'typing')
+        bot.send_message(user_id, answer, parse_mode='Markdown',
+                         reply_markup=keyboard)
     elif feedback_status == 'no':
-        answer = (f'Очень жаль, а собеседник отвечал? если да - скажи почему встреча не состоялась, если нет - +1 балл партнеру field {field}')
+        answer = (f'Мне очень жаль =(\n\n'
+                  f' а собеседник отвечал?')
         set_pair_history_field(pair_history_id, field, 0)
         keyboard = types.InlineKeyboardMarkup()
         keyboard.row_width = 1
         keyboard.add(
             types.InlineKeyboardButton(
-                text='Отвечал, просто не срослось',
+                text='Отвечал, просто не получилось',
                 callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'nesroslos'
             ),
             types.InlineKeyboardButton(
-                text='Не отвечал',
+                text='Даже не отетил',
                 callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_'  + 'reportuser_' + str(reported_user)
             )
         )
-
+        bot.send_chat_action(user_id, 'typing')
+        bot.send_message(user_id, answer, parse_mode='Markdown',
+                         reply_markup=keyboard)
     elif feedback_status == 'cancel':
+        set_pair_history_field(pair_history_id, feedback_field, 'cancel')
         answer = ('в следующий раз')
+        bot.send_chat_action(user_id, 'typing')
+        bot.send_message(user_id, answer, parse_mode='Markdown')
 
-
-    bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, parse_mode='Markdown',
-                     reply_markup=keyboard)
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('feedbacktxt_'))
-def show_profile_callback(call):
+def feedbacktxt_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
     pair_history_id = call.data.partition('_pair_')[0][len('feedbacktxt_'):]
@@ -611,7 +619,7 @@ def show_profile_callback(call):
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'show_users')
-def show_profile_callback(call):
+def show_users_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
     users = get_users()
@@ -661,7 +669,7 @@ def show_profile_callback(call):
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'change_user')
-def show_profile_callback(call):
+def change_user_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
     next_state = States.change_user_for_ask_id_admin
@@ -687,7 +695,7 @@ def show_profile_callback(call):
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'show_pairs')
-def show_profile_callback(call):
+def show_pairs_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
     answer = ('👉 Пары')
@@ -766,7 +774,7 @@ def generate_pairs():
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'generate_pairs')
-def show_profile_callback(call):
+def generate_pairs_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
     answer = ('👉 Сгенерировать пары')
@@ -1093,7 +1101,7 @@ def send_to_admins_callback(call):
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'send_invites')
-def show_profile_callback(call):
+def send_invites_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
     send_invites()
@@ -1491,6 +1499,10 @@ def sender_callback(call):
 
     keyboard.add(
         types.InlineKeyboardButton(
+            text='TEST',
+            callback_data='test'
+        ),
+        types.InlineKeyboardButton(
             text='Отправить админам заготовку',
             callback_data='send_to_admins'
         ),
@@ -1522,6 +1534,11 @@ def sender_callback(call):
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
     bot.set_state(user_id, next_state)
+
+
+@bot.callback_query_handler(func=lambda call: call.data == 'test')
+def test_handler():
+    ask_about_last_week()
 
 @bot.callback_query_handler(func=lambda call: call.data == 'send_to_all')
 def send_to_all_handler(call):
