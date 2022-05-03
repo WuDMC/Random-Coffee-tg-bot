@@ -499,7 +499,7 @@ def feedback_callback(call):
     message_id = call.message.message_id
     pair_history_id = call.data.partition('_id_')[2]
     feedback_status = call.data.partition('_id_')[0][len('feedback_'):]
-    answer = ('👍 Рад слышать, что все прошло как надо ')
+    answer = ('❤️Спасибо, мне важен каждый отзыв')
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
@@ -518,7 +518,8 @@ def feedback_callback(call):
         feedback_field = 'feedback_user_a'
         reported_user = pair_history[0].user_b
     if feedback_status == 'yes':
-        answer = (f'По возможности, поделись впечатлением об этой встрече со мной')
+        answer = (f'👍 Рад слышать, что все прошло как надо\n\n'
+                  f'По возможности, поделись впечатлением об этой встрече со мной')
         set_pair_history_field(pair_history_id, field, 1)
         keyboard = types.InlineKeyboardMarkup()
         keyboard.row_width = 1
@@ -568,7 +569,7 @@ def feedbacktxt_callback(call):
     message_id = call.message.message_id
     pair_history_id = call.data.partition('_pair_')[0][len('feedbacktxt_'):]
     feedback_status = call.data.partition('_pair_')[2]
-    answer = ('👇 Остался последний шаг')
+    answer = ('Уже почти всё...')
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
         chat_id=user_id,
