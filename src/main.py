@@ -1138,7 +1138,7 @@ def start_handler(message):
     user = get_user(user_id)
     if user and user.ban:
         answer = ('BANNED')
-    elif user and message.from_user.username in ADMINS:
+    elif user and not user.is_verified and message.from_user.username in ADMINS:
         answer = ('Что то пошло не так, вернул тебя к жизни')
         set_field(user_id, 'is_verified', True)
         next_state = States.complete
