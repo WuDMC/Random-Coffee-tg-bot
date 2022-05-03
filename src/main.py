@@ -49,6 +49,7 @@ class States:
     send_message_to_user_id = 11
     send_message_to_all_users = 12
     forward_message = 13
+    userfeedback = 14
 
 
 # заготовки сообщения
@@ -583,6 +584,8 @@ def show_profile_callback(call):
             answer = (f'Обязательно получится в следующий раз')
             set_pair_history_field(pair_history_id, field, 'nesroslos')
         elif feedback_status == 'userfeedback':
+            next_state = States.userfeedback
+
             answer = (f'Оставь отзыв в группе // тут как то надо ответ передать в ДБ')
 
 
@@ -1285,6 +1288,28 @@ def change_name_handler(message):
     bot.send_message(user_id, answer, reply_markup=keyboard)
     bot.set_state(user_id, next_state)
 
+@bot.message_handler(state=States.userfeedback)
+def add_user_feedback(message):
+    user_id = message.from_user.id
+    next_state = States.complete
+
+    feedback = message.text
+
+    answer = 'Готово'
+
+    set_pair_history_field(1, 'feedback_user_a', feedback)
+
+    keyboard = types.InlineKeyboardMarkup()
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text='Назад',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, reply_markup=keyboard)
+    bot.set_state(user_id, next_state)
 
 @bot.message_handler(state=States.change_link)
 def change_link_handler(message):
@@ -2027,7 +2052,7 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().monday.at('21:49').do(ask_about_last_week)
+    schedule.every().tuesday.at('10:11').do(ask_about_last_week)
 
 
 
