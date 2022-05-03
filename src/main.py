@@ -599,7 +599,7 @@ def show_profile_callback(call):
             set_field(reported_user, 'balls', int(get_user(reported_user).balls) + 1)
             bot.send_message(wudmc_tg,
                              f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
-    except:
+    except Exception:
         bot.send_message(wudmc_tg,
                          f' ошибка: {traceback.format_exc()}')
 
@@ -1306,7 +1306,7 @@ def add_user_feedback(message):
     answer = 'Готово'
 
     set_pair_history_field(pair_history_id, field, feedback)
-    set_field(user_id, 'about', None)
+    set_field(user_id, 'about', 'None')
     keyboard = types.InlineKeyboardMarkup()
 
     keyboard.add(
@@ -2060,7 +2060,7 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    schedule.every().tuesday.at('11:02').do(ask_about_last_week)
+    schedule.every().tuesday.at('11:09').do(ask_about_last_week)
 
 
 
