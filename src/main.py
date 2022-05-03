@@ -627,13 +627,19 @@ def feedbacktxt_callback(call):
             bot.send_message(user_id, answer)
 
         else:
-
             answer = (f'😢 Вот негодяй, я отмечу у себя. Как только на него будет 3 жалобы - БАН.\n\n'
                       f'В понедельник будут назначены новые пары!\n'
                       f'Проверь, что в твоем профиле актуальная информация')
+            keyboard = types.InlineKeyboardMarkup()
+
+            keyboard.add(
+                types.InlineKeyboardButton(
+                    text='ПРОФИЛЬ',
+                    callback_data='help'
+                )
+            )
             reported_user = feedback_status[len('reportuser_'):]
             set_pair_history_field(pair_history_id, field, 'bezotveta')
-
             set_field(reported_user, 'balls', int(get_user(reported_user).balls) + 1)
             bot.send_message(wudmc_tg,
                              f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
