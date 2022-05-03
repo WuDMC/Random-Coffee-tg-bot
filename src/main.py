@@ -623,6 +623,8 @@ def feedbacktxt_callback(call):
             set_field(user_id, 'about', pair_history_id)
             set_pair_history_field(pair_history_id, field, 'userfeedback')
             bot.set_state(user_id, next_state)
+            bot.send_chat_action(user_id, 'typing')
+            bot.send_message(user_id, answer)
 
         else:
             reported_user = feedback_status[len('reportuser_'):]
