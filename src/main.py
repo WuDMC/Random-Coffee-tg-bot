@@ -640,8 +640,7 @@ def feedbacktxt_callback(call):
 
 
 
-    bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, parse_mode='Markdown')
+
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'show_users')
