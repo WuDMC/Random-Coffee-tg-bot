@@ -2132,8 +2132,6 @@ if __name__ == "__main__":
     schedule.every().sunday.at('19:42').do(remind_inactive)
 
 
-    # schedule.every().tuesday.at('11:09').do(ask_about_last_week)
-
 
 
 
