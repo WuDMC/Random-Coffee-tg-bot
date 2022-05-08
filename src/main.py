@@ -2085,6 +2085,11 @@ def change_interests_callback(call):
     get_fifa = get_user_field(user_id, 'int_2')
     get_tur = get_user_field(user_id, 'int_3')
     get_sport = get_user_field(user_id, 'int_4')
+    try:
+        bot.send_message(wudmc_tg, str(get_chess))
+        bot.send_message(wudmc_tg, str(get_fifa))
+    except Exception:
+        bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
     keyboard.add(
         types.InlineKeyboardButton(
             text=f'{get_chess} Шахматы',
@@ -2116,9 +2121,12 @@ def switch_int_callback(call):
     user_id = call.message.chat.id
     interest = call.data[len('refuse_'):]
     interest_value = get_user_field(user_id, interest)
-    bot.send_message(wudmc_tg, str(interest_value))
-    bot.send_message(wudmc_tg, str(user_id))
-    bot.send_message(wudmc_tg, interest_value)
+    try:
+        bot.send_message(wudmc_tg, str(interest_value))
+        bot.send_message(wudmc_tg, str(user_id))
+        bot.send_message(wudmc_tg, interest_value)
+    except Exception:
+        bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
     if interest_value == 1:
         set_field(user_id, interest, 0)
     else:
