@@ -2081,6 +2081,11 @@ def change_interests_callback(call):
         else:
             set_field(user_id, interest, True)
         answer = 'Кликай по кнопкам'
+        bot.delete_message(
+                            chat_id=user_id,
+                            message_id=message_id
+                          )
+
     else:
         answer = 'Чем Увлекаешься?'
         bot.send_chat_action(user_id, 'typing')
