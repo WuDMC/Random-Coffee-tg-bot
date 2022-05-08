@@ -2066,7 +2066,6 @@ def change_profile_callback(call):
 def change_interests_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-    answer = 'Чем Увлекаешься?'
 
     if call.data.startswith('switch_'):
         interest = call.data[len('switch_'):]
@@ -2081,15 +2080,15 @@ def change_interests_callback(call):
             set_field(user_id, interest, False)
         else:
             set_field(user_id, interest, True)
-    else:
         answer = 'Кликай по кнопкам'
-
-    bot.send_chat_action(user_id, 'typing')
-    bot.edit_message_text(
-        chat_id=user_id,
-        message_id=message_id,
-        text=answer
-    )
+    else:
+        answer = 'Чем Увлекаешься?'
+        bot.send_chat_action(user_id, 'typing')
+        bot.edit_message_text(
+            chat_id=user_id,
+            message_id=message_id,
+            text=answer
+        )
 
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 2
@@ -2125,7 +2124,7 @@ def change_interests_callback(call):
         )
     )
     bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, reply_markup=keyboard)
+    bot.send_message(user_id, answer, reply_markup=keyboard)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'set_pause')
