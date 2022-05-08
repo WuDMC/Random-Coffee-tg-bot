@@ -2077,6 +2077,20 @@ def change_interests_callback(call):
         text=answer
     )
 
+    if call.data.startswith('switch_'):
+        interest = call.data[len('switch_'):]
+        interest_value = get_user_field(user_id, interest)
+        try:
+            bot.send_message(wudmc_tg, str(interest_value))
+            bot.send_message(wudmc_tg, str(user_id))
+            bot.send_message(wudmc_tg, interest_value)
+        except Exception:
+            bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
+        if interest_value:
+            set_field(user_id, interest, False)
+        else:
+            set_field(user_id, interest, True)
+
     answer = ('Чем Увлекаешься?')
 
     keyboard = types.InlineKeyboardMarkup()
@@ -2116,21 +2130,7 @@ def change_interests_callback(call):
     bot.send_message(user_id, answer, reply_markup=keyboard)
 
 
-@bot.callback_query_handler(func=lambda call: call.data.startswith('switch_'))
-def switch_int_callback(call):
-    user_id = call.message.chat.id
-    interest = call.data[len('refuse_'):]
-    interest_value = get_user_field(user_id, interest)
-    try:
-        bot.send_message(wudmc_tg, str(interest_value))
-        bot.send_message(wudmc_tg, str(user_id))
-        bot.send_message(wudmc_tg, interest_value)
-    except Exception:
-        bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
-    if interest_value:
-        set_field(user_id, interest, False)
-    else:
-        set_field(user_id, interest, True)
+
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'set_pause')
