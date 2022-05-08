@@ -1594,8 +1594,12 @@ def sender_callback(call):
 
 @bot.callback_query_handler(func=lambda call: call.data == 'test')
 def test_handler(call):
-    field = get_user_field(wudmc_tg, 'link')
-    bot.send_message(wudmc_tg, field)
+    try:
+        field = get_user_field(wudmc_tg, 'link')
+        bot.send_message(wudmc_tg, field)
+    except Exception:
+        bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
+
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'send_to_all')
