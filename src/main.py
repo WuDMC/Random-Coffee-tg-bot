@@ -2095,10 +2095,10 @@ def change_interests_callback(call):
 
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 2
-    get_chess = get_user_field(user_id, 'int_1')
-    get_fifa = get_user_field(user_id, 'int_2')
-    get_tur = get_user_field(user_id, 'int_3')
-    get_sport = get_user_field(user_id, 'int_4')
+    get_chess = '✅' if get_user_field(user_id, 'int_1') else '❌'
+    get_fifa = '✅' if get_user_field(user_id, 'int_2') else '❌'
+    get_tur = '✅' if get_user_field(user_id, 'int_3') else '❌'
+    get_sport = '✅' if get_user_field(user_id, 'int_4') else '❌'
     try:
         bot.send_message(wudmc_tg, str(get_chess))
         bot.send_message(wudmc_tg, str(get_fifa))
