@@ -2089,11 +2089,15 @@ def change_interests_callback(call):
     else:
         answer = 'Чем Увлекаешься?'
         bot.send_chat_action(user_id, 'typing')
-        bot.edit_message_text(
-            chat_id=user_id,
-            message_id=message_id,
-            text=answer
-        )
+        # bot.edit_message_text(
+        #     chat_id=user_id,
+        #     message_id=message_id,
+        #     text=answer
+        # )
+        bot.delete_message(
+                            chat_id=user_id,
+                            message_id=message_id
+                          )
 
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 2
