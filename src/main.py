@@ -2099,11 +2099,11 @@ def change_interests_callback(call):
     get_fifa = '✅' if get_user_field(user_id, 'int_2') else '❌'
     get_tur = '✅' if get_user_field(user_id, 'int_3') else '❌'
     get_sport = '✅' if get_user_field(user_id, 'int_4') else '❌'
-    try:
-        bot.send_message(wudmc_tg, str(get_chess))
-        bot.send_message(wudmc_tg, str(get_fifa))
-    except Exception:
-        bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
+    # try:
+    #     bot.send_message(wudmc_tg, str(get_chess))
+    #     bot.send_message(wudmc_tg, str(get_fifa))
+    # except Exception:
+    #     bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
     keyboard.add(
         types.InlineKeyboardButton(
             text=f'{get_chess} Шахматы',
@@ -2114,11 +2114,11 @@ def change_interests_callback(call):
             callback_data='switch_int_2'
         ),
         types.InlineKeyboardButton(
-            text=f'{get_tur} Туризм',
+            text=f'{get_tur} Пинг-понг',
             callback_data='switch_int_3'
         ),
         types.InlineKeyboardButton(
-            text=f'{get_sport} СПОРТ',
+            text=f'{get_sport} Хуебала',
             callback_data='switch_int_4'
         ),
         types.InlineKeyboardButton(
