@@ -2125,7 +2125,7 @@ def change_interests_callback(call):
         )
     )
     bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, reply_markup=keyboard)
+    bot.send_message(user_id, reply_markup=keyboard)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'set_pause')
