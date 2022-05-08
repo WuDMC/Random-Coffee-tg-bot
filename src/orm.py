@@ -33,7 +33,7 @@ def get_user_field(user_id, field):
         )
         .first()
     )
-    return user.columns[field] if user else None
+    return user.columns[field] if user else 'None'
 
 
 def get_admins():
