@@ -2068,14 +2068,6 @@ def change_interests_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
 
-    answer = ('👉 Поменять данные профиля')
-
-    bot.send_chat_action(user_id, 'typing')
-    bot.edit_message_text(
-        chat_id=user_id,
-        message_id=message_id,
-        text=answer
-    )
 
     if call.data.startswith('switch_'):
         interest = call.data[len('switch_'):]
@@ -2090,6 +2082,16 @@ def change_interests_callback(call):
             set_field(user_id, interest, False)
         else:
             set_field(user_id, interest, True)
+    else:
+        answer = ('👉 Поменять данные профиля')
+
+        bot.send_chat_action(user_id, 'typing')
+        bot.edit_message_text(
+            chat_id=user_id,
+            message_id=message_id,
+            text=answer
+        )
+
 
     answer = ('Чем Увлекаешься?')
 
