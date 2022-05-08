@@ -23,6 +23,18 @@ def get_user(user_id):
     )
     return user if user else None
 
+def get_user_field(user_id, field):
+    user = (
+        session.query(
+            User
+        )
+        .filter(
+            User.telegram_id == user_id,
+        )
+        .first()
+    )
+    return user.columns[field] if user else None
+
 
 def get_admins():
     admins = (

@@ -7,11 +7,11 @@ from threading import Thread
 from telebot import types, custom_filters
 from datetime import datetime
 
-
 from settings import ADMINS, TELEGRAM_TOKEN, SMTP
 from messages import generate_password
 from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_users, set_field, create_user, \
-    get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users, get_verified_users, \
+    get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users, \
+    get_verified_users, get_user_field, \
     get_ban_users, create_pair_history, set_pair_field, set_pair_history_field, get_pair_history
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
@@ -21,7 +21,7 @@ forward_users = []
 __escape_markdown_map = {
 
     "_": "\\_",  # underscore
-    "-": "\\_",  # underscore
+    "-": "\\-",  # minus
 
 }
 
@@ -33,23 +33,28 @@ def __escape_markdown(raw_string):
     return s
 
 
+forward_users
+
+
 # states
 
 class States:
     ask_password = 1
     ask_name = 2
     ask_link = 3
-    complete = 4
-    change_name = 5
-    change_link = 6
-    change_work = 7
-    change_about = 8
-    change_user_for_ask_id_admin = 9
-    update_nickname = 10
-    send_message_to_user_id = 11
-    send_message_to_all_users = 12
-    forward_message = 13
-    userfeedback = 14
+    ask_interests = 4
+    complete = 5
+    change_name = 6
+    change_link = 7
+    change_work = 8
+    change_about = 9
+    change_interests = 10
+    change_user_for_ask_id_admin = 11
+    update_nickname = 12
+    send_message_to_user_id = 13
+    send_message_to_all_users = 14
+    forward_message = 15
+    userfeedback = 16
 
 
 # заготовки сообщения
@@ -61,7 +66,6 @@ next_week_txt = (
     'Просто *кликни по кнопке "Буду участвовать".*\n\n'
     'Также можно менять свой статус самостоятельно тут - /help\n'
 )
-
 
 how_txt = (
     '*Как все будет происходить???*\n\n'
@@ -87,7 +91,6 @@ poll_txt_1 = (
     'Привет, как прошла твоя встреча на этой неделе?\n'
     'Твой отзыв поможет мне стать лучше'
 )
-
 
 poll_txt_old = (
     'Привет, как прошла твоя встреча на этой неделе?\n'
@@ -216,7 +219,7 @@ def send_stats():
         f'Пар на прошлой неделе:  {pairs_len}\n\n'
         f'а всего через 2 часа будут новые пары!\n'
         f'Проверь свой статус в профиле /help!\n'
-             )
+    )
 
     bot.send_message(wudmc_tg, 'Отправляю статистики')
     for user in get_users():
@@ -231,6 +234,7 @@ def send_stats():
             bot.send_message(wudmc_tg, f' юзер {user.telegram_id} отключен')
         sleep(2)
     bot.send_message(wudmc_tg, 'Статистика отправлена')
+
 
 def help(message):
     user_id = message.from_user.id
@@ -402,7 +406,6 @@ def refuse__callback(call):
                      reply_markup=keyboard)
 
 
-
 @bot.callback_query_handler(func=lambda call: call.data.startswith('ban_'))
 def ban_callback(call):
     user_id = call.message.chat.id
@@ -549,7 +552,7 @@ def feedback_callback(call):
             ),
             types.InlineKeyboardButton(
                 text='Собеседник мне не отетил',
-                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_'  + 'reportuser_' + str(reported_user)
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'reportuser_' + str(reported_user)
             )
         )
         bot.send_chat_action(user_id, 'typing')
@@ -558,8 +561,8 @@ def feedback_callback(call):
     elif feedback_status == 'cancel':
         set_pair_history_field(pair_history_id, feedback_field, 'cancel')
         answer = (f'😎А твой отзыв надеюсь получу уже в следующий раз\n\n'
-                      f'В понедельник будут назначены новые пары!\n'
-                      f'Проверь, что в твоем профиле актуальная информация')
+                  f'В понедельник будут назначены новые пары!\n'
+                  f'Проверь, что в твоем профиле актуальная информация')
         bot.send_chat_action(user_id, 'typing')
         sleep(1)
         keyboard = types.InlineKeyboardMarkup()
@@ -571,7 +574,6 @@ def feedback_callback(call):
         )
         bot.send_message(user_id, answer, parse_mode='Markdown',
                          reply_markup=keyboard)
-
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('feedbacktxt_'))
@@ -651,7 +653,6 @@ def feedbacktxt_callback(call):
             )
             reported_user = feedback_status[len('reportuser_'):]
 
-
             set_pair_history_field(pair_history_id, field, 'bezotveta')
             set_field(reported_user, 'balls', int(get_user(reported_user).balls) + 1)
             bot.send_message(wudmc_tg,
@@ -672,11 +673,6 @@ def feedbacktxt_callback(call):
     except Exception:
         bot.send_message(wudmc_tg,
                          f' ошибка: {traceback.format_exc()}')
-
-
-
-
-
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'show_users')
@@ -814,7 +810,8 @@ def generate_pairs():
             try:
                 bot.send_message(wudmc_tg,
                                  f'Отправляю сообщение юзеру {user.telegram_id} о назначении пары ')
-                bot.send_message(user.telegram_id, 'Ура! Пары назначены, скоро тебе придет сообщение с твоей парой на эту неделю')
+                bot.send_message(user.telegram_id,
+                                 'Ура! Пары назначены, скоро тебе придет сообщение с твоей парой на эту неделю')
             except Exception:
                 set_field(user.telegram_id, 'is_active', False)
                 set_field(user.telegram_id, 'is_verified', False)
@@ -825,7 +822,7 @@ def generate_pairs():
                 bot.send_message(wudmc_tg,
                                  f'Отправляю сообщение юзеру {user.telegram_id} о назначении пары ')
                 bot.send_message(user.telegram_id,
-                             'Пары назначены, но твой профиль был на паузе. Не упусти свой шанс на будущей неделе.')
+                                 'Пары назначены, но твой профиль был на паузе. Не упусти свой шанс на будущей неделе.')
             except Exception:
                 set_field(user.telegram_id, 'is_active', False)
                 set_field(user.telegram_id, 'is_verified', False)
@@ -861,12 +858,11 @@ def generate_pairs_callback(call):
                      reply_markup=keyboard)
 
 
-
-
 def no_info_users():
     # TODO: добавить напоминание пользователям заполнять профили.
     bot.send_message(wudmc_tg,
                      f'no_info_users')
+
 
 def ask_about_next_week():
     for user in get_verified_users():
@@ -874,22 +870,22 @@ def ask_about_next_week():
             keyboard = types.InlineKeyboardMarkup()
             keyboard.row_width = 1
             keyboard.add(
-            types.InlineKeyboardButton(
-                text='Буду участвовать',
-                callback_data='set_run'
+                types.InlineKeyboardButton(
+                    text='Буду участвовать',
+                    callback_data='set_run'
                 ),
-            types.InlineKeyboardButton(
-                text='Возьму перерыв',
-                callback_data='set_pause'
+                types.InlineKeyboardButton(
+                    text='Возьму перерыв',
+                    callback_data='set_pause'
                 )
             )
             bot.send_message(wudmc_tg,
-                     f' отправля запрос участия  юзеру {user.telegram_id} ')
+                             f' отправля запрос участия  юзеру {user.telegram_id} ')
             if (datetime.now() - user.created_at).days > 6:
                 set_field(user.telegram_id, 'is_active', False)
                 try:
                     bot.send_message(user.telegram_id,
-                                 '[Ты со мной уже больше недели, поэтому я поставил твой профиль на паузу]')
+                                     '[Ты со мной уже больше недели, поэтому я поставил твой профиль на паузу]')
                     sleep(1)
                 except Exception:
                     set_field(user.telegram_id, 'is_active', False)
@@ -898,17 +894,18 @@ def ask_about_next_week():
                                      f' запрос участия юзеру {user.telegram_id} не отправлен: {traceback.format_exc()}')
             bot.send_message(
                 user.telegram_id, next_week_txt, parse_mode='Markdown',
-                 reply_markup=keyboard)
+                reply_markup=keyboard)
             bot.send_message(wudmc_tg,
-                         f' запрос участия  юзеру {user.telegram_id} успешно отправлен')
+                             f' запрос участия  юзеру {user.telegram_id} успешно отправлен')
         except Exception:
             set_field(user.telegram_id, 'is_active', False)
             set_field(user.telegram_id, 'is_verified', False)
             bot.send_message(wudmc_tg,
-                         f' запрос участия юзеру {user.telegram_id} не отправлен: {traceback.format_exc()}')
+                             f' запрос участия юзеру {user.telegram_id} не отправлен: {traceback.format_exc()}')
         sleep(1)
     bot.send_message(wudmc_tg,
                      f' запрос участия успешно отправлены')
+
 
 def remind_inactive():
     for user in get_inactive_users():
@@ -923,8 +920,8 @@ def remind_inactive():
                 types.InlineKeyboardButton(
                     text='Не хочу участвовать',
                     callback_data='set_pause'
-                    )
                 )
+            )
             bot.send_message(wudmc_tg,
                              f' отправляю напоминание  юзеру {user.telegram_id} ')
             bot.send_message(
@@ -966,9 +963,8 @@ def ask_about_last_week():
 
                     )
 
-
                     bot.send_message(
-                    pair.user_a, poll_txt_1, parse_mode='Markdown', reply_markup=keyboard)
+                        pair.user_a, poll_txt_1, parse_mode='Markdown', reply_markup=keyboard)
                     bot.send_message(wudmc_tg,
                                      f' запрос фидбека юзеру А {pair.user_a} успешно отправлено')
 
@@ -998,7 +994,7 @@ def ask_about_last_week():
 
                     )
                     bot.send_message(
-                    pair.user_b, poll_txt_1, parse_mode='Markdown', reply_markup=keyboard)
+                        pair.user_b, poll_txt_1, parse_mode='Markdown', reply_markup=keyboard)
                     bot.send_message(wudmc_tg,
                                      f' запрос фидбека юзеру Б {pair.user_b} успешно отправлено')
 
@@ -1023,10 +1019,14 @@ def send_invites():
             if pair.user_b:
                 bot.send_message(
 
-                    pair.user_a, f'На этой неделе я познакомил {len_pairs} пар\n\nТвоя пара!\n\n{get_user(pair.user_b)}', parse_mode='Markdown')
+                    pair.user_a,
+                    f'На этой неделе я познакомил {len_pairs} пар\n\nТвоя пара!\n\n{get_user(pair.user_b)}',
+                    parse_mode='Markdown')
 
                 bot.send_message(
-                    pair.user_b, f'На этой неделе я познакомил {len_pairs} пар\n\nТвоя пара!\n\n{get_user(pair.user_a)}', parse_mode='Markdown')
+                    pair.user_b,
+                    f'На этой неделе я познакомил {len_pairs} пар\n\nТвоя пара!\n\n{get_user(pair.user_a)}',
+                    parse_mode='Markdown')
             else:
                 bot.send_message(
                     pair.user_a,
@@ -1034,7 +1034,7 @@ def send_invites():
                     parse_mode='Markdown')
             bot.send_message(wudmc_tg,
                              f' сообщения паре {pair.id} успешно отправлено')
-            set_pair_history_field(pair.pair_history_id,'invited', True)
+            set_pair_history_field(pair.pair_history_id, 'invited', True)
         except Exception:
             set_field(pair.user_a, 'is_active', False)
             set_field(pair.user_a, 'is_verified', False)
@@ -1255,7 +1255,7 @@ def ask_password_handler(message):
             set_field(user_id, 'is_verified', True)
         except Exception:
             bot.send_message(wudmc_tg,
-                         f' сообщения юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
+                             f' сообщения юзеру {user.telegram_id} не отправлено: {traceback.format_exc()}')
 
     else:
         answer = ('Попробуй еще раз\n')
@@ -1350,6 +1350,7 @@ def change_name_handler(message):
     bot.send_message(user_id, answer, reply_markup=keyboard)
     bot.set_state(user_id, next_state)
 
+
 @bot.message_handler(state=States.userfeedback)
 def add_user_feedback(message):
     user_id = message.from_user.id
@@ -1381,6 +1382,7 @@ def add_user_feedback(message):
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
     bot.set_state(user_id, next_state)
+
 
 @bot.message_handler(state=States.change_link)
 def change_link_handler(message):
@@ -1478,7 +1480,6 @@ def update_nickname_handler(message):
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
     bot.set_state(user_id, next_state)
-
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'manage_users')
@@ -1593,7 +1594,9 @@ def sender_callback(call):
 
 @bot.callback_query_handler(func=lambda call: call.data == 'test')
 def test_handler(call):
-    ask_about_last_week()
+    field = get_user_field(wudmc_tg, 'link')
+    bot.send_message(wudmc_tg, field)
+
 
 @bot.callback_query_handler(func=lambda call: call.data == 'send_to_all')
 def send_to_all_handler(call):
@@ -1747,6 +1750,7 @@ def send_to_user_msg_callback(message):
                      reply_markup=keyboard)
     bot.set_state(user_id, next_state)
 
+
 # user callbacks
 
 
@@ -1786,6 +1790,7 @@ def change_profile_callback(call):
 
     help(call)
 
+
 @bot.callback_query_handler(func=lambda call: call.data == 'how_it_works')
 def how_it_works_callback(call):
     user_id = call.message.chat.id
@@ -1810,6 +1815,7 @@ def how_it_works_callback(call):
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, parse_mode='Markdown',
                      reply_markup=keyboard)
+
 
 @bot.callback_query_handler(func=lambda call: call.data == 'show_profile')
 def show_profile_callback(call):
@@ -1997,6 +2003,7 @@ def update_nickname_callback(call):
     bot.send_message(user_id, answer, reply_markup=keyboard)
     bot.set_state(user_id, next_state)
 
+
 @bot.callback_query_handler(func=lambda call: call.data == 'change_profile')
 def change_profile_callback(call):
     user_id = call.message.chat.id
@@ -2021,6 +2028,10 @@ def change_profile_callback(call):
         types.InlineKeyboardButton(
             text='Своё имя',
             callback_data='change_name'
+        ),
+        types.InlineKeyboardButton(
+            text='Интересы',
+            callback_data='change_interests'
         ),
         types.InlineKeyboardButton(
             text='Ссылку на социальную сеть',
@@ -2048,6 +2059,65 @@ def change_profile_callback(call):
     bot.set_state(user_id, next_state)
 
 
+@bot.callback_query_handler(func=lambda call: call.data == 'change_interests')
+def change_interests_callback(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+
+    answer = ('👉 Поменять данные профиля')
+
+    bot.send_chat_action(user_id, 'typing')
+    bot.edit_message_text(
+        chat_id=user_id,
+        message_id=message_id,
+        text=answer
+    )
+
+    answer = ('Чем Увлекаешься?')
+
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.row_width = 2
+    get_chess = get_user(user_id).int_1
+    get_fifa = get_user(user_id).int_2
+    get_tur = get_user(user_id).int_3
+    get_sport = get_user(user_id).int_4
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text=f'{get_chess} Шахматы',
+            callback_data='switch_int_1'
+        ),
+        types.InlineKeyboardButton(
+            text=f'{get_fifa} FIFA',
+            callback_data='switch_int_2'
+        ),
+        types.InlineKeyboardButton(
+            text=f'{get_tur} Туризм',
+            callback_data='switch_int_3'
+        ),
+        types.InlineKeyboardButton(
+            text=f'{get_sport} СПОРТ',
+            callback_data='switch_int_4'
+        ),
+        types.InlineKeyboardButton(
+            text='ГОТОВО',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, reply_markup=keyboard)
+
+
+@bot.callback_query_handler(func=lambda call: call.data.startswith('switch_'))
+def switch_int_callback(call):
+    user_id = call.message.chat.id
+    int = call.data[len('refuse_'):]
+    get_user(user_id).int_1
+    if get_user(user_id).int_1 == 1:
+        set_field(user_id, int, 0)
+    else:
+        set_field(user_id, int, 1)
+
+
 @bot.callback_query_handler(func=lambda call: call.data == 'set_pause')
 def set_pause_callback(call):
     user_id = call.message.chat.id
@@ -2062,7 +2132,7 @@ def set_pause_callback(call):
         text=answer
     )
 
-    answer = ('Готово')
+    answer = 'Готово'
 
     set_field(user_id, 'is_active', False)
 
@@ -2083,7 +2153,7 @@ def set_run_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
 
-    answer = ('👉 Снять с паузы')
+    answer = '👉 Снять с паузы'
 
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
@@ -2092,7 +2162,7 @@ def set_run_callback(call):
         text=answer
     )
 
-    answer = ('Готово')
+    answer = 'Готово'
 
     set_field(user_id, 'is_active', True)
 
@@ -2106,6 +2176,7 @@ def set_run_callback(call):
     )
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
+
 
 # хрен знает что это
 
@@ -2122,6 +2193,7 @@ def schedule_checker():
     except Exception as e:
         print(e)
 
+
 if __name__ == "__main__":
     schedule.every().monday.at('10:00').do(send_stats)
     schedule.every().monday.at('10:20').do(generate_pairs)
@@ -2130,13 +2202,6 @@ if __name__ == "__main__":
     schedule.every().saturday.at('14:05').do(ask_about_next_week)
     schedule.every().sunday.at('12:42').do(ask_about_last_week)
     schedule.every().sunday.at('19:42').do(remind_inactive)
-
-
-    schedule.every().tuesday.at('11:09').do(ask_about_last_week)
-
-
-
-
     Thread(target=schedule_checker).start()
 
     bot.infinity_polling()

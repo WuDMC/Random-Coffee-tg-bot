@@ -26,6 +26,10 @@ class User(Base):
     updated_at = Column(DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     ban = Column(Boolean, default=False, nullable=False)
     balls = Column(Integer, default=0, nullable=False)
+    int_1 = Column(Boolean, default=False, nullable=False)
+    int_2 = Column(Boolean, default=False, nullable=False)
+    int_3 = Column(Boolean, default=False, nullable=False)
+    int_4 = Column(Boolean, default=False, nullable=False)
 
     def __repr__(self):
         # проблема с маркдаун только решает никнеймы
