@@ -2063,7 +2063,7 @@ def change_profile_callback(call):
     bot.set_state(user_id, next_state)
 
 
-@bot.callback_query_handler(func=lambda call: call.data == 'change_interests')
+@bot.callback_query_handler(func=lambda call: call.data.startswith(tuple(['change_interests', 'switch_'])))
 def change_interests_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
@@ -2081,10 +2081,10 @@ def change_interests_callback(call):
 
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 2
-    get_chess = get_user(user_id).int_1
-    get_fifa = get_user(user_id).int_2
-    get_tur = get_user(user_id).int_3
-    get_sport = get_user(user_id).int_4
+    get_chess = get_user_field(user_id, 'int_1')
+    get_fifa = get_user_field(user_id, 'int_2')
+    get_tur = get_user_field(user_id, 'int_3')
+    get_sport = get_user_field(user_id, 'int_4')
     keyboard.add(
         types.InlineKeyboardButton(
             text=f'{get_chess} Шахматы',
@@ -2114,12 +2114,12 @@ def change_interests_callback(call):
 @bot.callback_query_handler(func=lambda call: call.data.startswith('switch_'))
 def switch_int_callback(call):
     user_id = call.message.chat.id
-    int = call.data[len('refuse_'):]
-    get_user(user_id).int_1
-    if get_user(user_id).int_1 == 1:
-        set_field(user_id, int, 0)
+    interest = call.data[len('refuse_'):]
+    interest_value = get_user_field(user_id, interest)
+    if interest_value == 1:
+        set_field(user_id, interest, 0)
     else:
-        set_field(user_id, int, 1)
+        set_field(user_id, interest, 1)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'set_pause')
