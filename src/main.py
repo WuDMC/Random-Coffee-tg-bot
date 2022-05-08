@@ -2127,10 +2127,10 @@ def switch_int_callback(call):
         bot.send_message(wudmc_tg, interest_value)
     except Exception:
         bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
-    if interest_value == 1:
-        set_field(user_id, interest, 0)
+    if interest_value:
+        set_field(user_id, interest, False)
     else:
-        set_field(user_id, interest, 1)
+        set_field(user_id, interest, True)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'set_pause')
