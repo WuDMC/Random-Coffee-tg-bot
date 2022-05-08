@@ -2080,12 +2080,12 @@ def change_interests_callback(call):
     if call.data.startswith('switch_'):
         interest = call.data[len('switch_'):]
         interest_value = get_user_field(user_id, interest)
-        try:
-            bot.send_message(wudmc_tg, str(interest_value))
-            bot.send_message(wudmc_tg, str(user_id))
-            bot.send_message(wudmc_tg, interest_value)
-        except Exception:
-            bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
+        # try:
+        #     bot.send_message(wudmc_tg, str(interest_value))
+        #     bot.send_message(wudmc_tg, str(user_id))
+        #     bot.send_message(wudmc_tg, interest_value)
+        # except Exception:
+        #     bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
         if interest_value:
             set_field(user_id, interest, False)
         else:
