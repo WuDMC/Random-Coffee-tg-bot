@@ -53,6 +53,9 @@ class User(Base):
                 f'Напиши собеседнику в Telegram – [{self.name}](tg://user?id={self.telegram_id})\n\n'
                 f'*Никнейм в тг* {__escape_markdown(self.mail)}\n\n')
 
+    def __getitem__(self, field):
+        return self.__dict__[field]
+
 
 class Pair(Base):
     __tablename__ = 'pair'
