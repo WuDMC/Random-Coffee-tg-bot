@@ -43,18 +43,20 @@ class States:
     ask_name = 2
     ask_link = 3
     ask_interests = 4
-    complete = 5
-    change_name = 6
-    change_link = 7
-    change_work = 8
-    change_about = 9
-    change_interests = 10
-    change_user_for_ask_id_admin = 11
-    update_nickname = 12
-    send_message_to_user_id = 13
-    send_message_to_all_users = 14
-    forward_message = 15
-    userfeedback = 16
+    ask_location = 5
+    complete = 6
+    change_name = 7
+    change_link = 8
+    change_work = 9
+    change_about = 10
+    change_interests = 11
+    change_location = 12
+    change_user_for_ask_id_admin = 13
+    update_nickname = 14
+    send_message_to_user_id = 15
+    send_message_to_all_users = 16
+    forward_message = 17
+    userfeedback = 18
 
 
 # заготовки сообщения
@@ -2038,6 +2040,10 @@ def change_profile_callback(call):
             callback_data='change_interests'
         ),
         types.InlineKeyboardButton(
+            text='Локация',
+            callback_data='change_location'
+        ),
+        types.InlineKeyboardButton(
             text='Ссылку на социальную сеть',
             callback_data='change_link'
         ),
@@ -2062,6 +2068,55 @@ def change_profile_callback(call):
     bot.send_message(user_id, answer, reply_markup=keyboard)
     bot.set_state(user_id, next_state)
 
+
+
+@bot.callback_query_handler(func=lambda call: call.data.startswith(tuple(['change_location', 'set_location_'])))
+def change_location_callback(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+    location_value = get_user_field(user_id, 'location')
+    if call.data.startswith('set_location_'):
+        location = call.data[len('set_location_'):]
+        set_field(user_id, 'location', location)
+        answer = 'Кликай по кнопкам'
+        bot.delete_message(
+                            chat_id=user_id,
+                            message_id=message_id
+                          )
+    else:
+        answer = 'Выбери локейшн'
+        bot.send_chat_action(user_id, 'typing')
+        bot.delete_message(
+                            chat_id=user_id,
+                            message_id=message_id
+                          )
+
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.row_width = 2
+    online = '✅' if location_value == 'online' else '❌'
+    batumi = '✅' if location_value == 'batumi' else '❌'
+    tbilisi = '✅' if location_value == 'tbilisi' else '❌'
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text=f'{online} Онлайн',
+            callback_data='set_location_online'
+        ),
+        types.InlineKeyboardButton(
+            text=f'{batumi} Батуми',
+            callback_data='set_location_batumi'
+        ),
+        types.InlineKeyboardButton(
+            text=f'{tbilisi} Тбилиси',
+            callback_data='set_location_tbilisi'
+        ),
+        types.InlineKeyboardButton(
+            text='ГОТОВО',
+            callback_data='help'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, reply_markup=keyboard)
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith(tuple(['change_interests', 'switch_'])))
 def change_interests_callback(call):
