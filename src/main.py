@@ -359,6 +359,7 @@ def show_profile_callback(call):
         status = 'Не участвую в Random Coffee'
     answer = (
         f'*Статус на этой неделе:* {status}\n\n'
+        f'*Твоя локация на этой неделе:* {user.location}\n\n'
         'Вот так будет выглядеть твой профиль для собеседника:\n\n'
         f'{user}'
     )
@@ -1282,22 +1283,22 @@ def ask_name_handler(message):
     location_value = get_user_field(user_id, 'location')
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 1
-    online = '✅' if location_value == 'online' else '❌'
-    batumi = '✅' if location_value == 'batumi' else '❌'
-    tbilisi = '✅' if location_value == 'tbilisi' else '❌'
+    online = '✅' if location_value == 'Online' else '❌'
+    batumi = '✅' if location_value == 'Batumi' else '❌'
+    tbilisi = '✅' if location_value == 'Tbilisi' else '❌'
 
     keyboard.add(
         types.InlineKeyboardButton(
-            text=f'{online} Онлайн',
-            callback_data='did_location_online'
+            text=f'Онлайн',
+            callback_data='did_location_Online'
         ),
         types.InlineKeyboardButton(
-            text=f'{batumi} Батуми',
-            callback_data='did_location_batumi'
+            text=f'Батуми',
+            callback_data='did_location_Batumi'
         ),
         types.InlineKeyboardButton(
-            text=f'{tbilisi} Тбилиси',
-            callback_data='did_location_tbilisi'
+            text=f'Тбилиси',
+            callback_data='did_location_Tbilisi'
         )
     )
     bot.send_chat_action(user_id, 'typing')
@@ -1306,34 +1307,34 @@ def ask_name_handler(message):
 
 
 
-
-@bot.message_handler(state=States.ask_location)
-def ask_location_handler(message):
-    user_id = message.from_user.id
-    next_state = States.ask_link
-
-
-    answer = ('Отлично! \n\n'
-              'Теперь пришли ссылку (или никнейм) на свой профиль '
-              'в любой социальной сети. '
-              'Так вы в паре сможете лучше узнать '
-              'друг о друге до встречи🔎')
-    nickname = str(message.from_user.username or 'Не указан')
-    if nickname == 'Не указан':
-        answer = ('Отлично!\n\n'
-
-                  'Теперь пришли ссылку (или никнейм) на свой профиль '
-                  'в любой социальной сети. '
-                  'Так вы в паре сможете лучше узнать '
-                  'друг о друге до встречи🔎\n\n'
-                  'ВАЖНО: У тебя не указан nickname в Telegram\n'
-                  'Обязательно укажи актуальную ссылку, иначе с тобой не получиться связаться'
-                  )
-
-
-    bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer)
-    bot.set_state(user_id, next_state)
+# эту часть кода перенес в change_location handler
+# @bot.message_handler(state=States.ask_location)
+# def ask_location_handler(message):
+#     user_id = message.from_user.id
+#     next_state = States.ask_link
+#
+#
+#     answer = ('Отлично! \n\n'
+#               'Теперь пришли ссылку (или никнейм) на свой профиль '
+#               'в любой социальной сети. '
+#               'Так вы в паре сможете лучше узнать '
+#               'друг о друге до встречи🔎')
+#     nickname = str(message.from_user.username or 'Не указан')
+#     if nickname == 'Не указан':
+#         answer = ('Отлично!\n\n'
+#
+#                   'Теперь пришли ссылку (или никнейм) на свой профиль '
+#                   'в любой социальной сети. '
+#                   'Так вы в паре сможете лучше узнать '
+#                   'друг о друге до встречи🔎\n\n'
+#                   'ВАЖНО: У тебя не указан nickname в Telegram\n'
+#                   'Обязательно укажи актуальную ссылку, иначе с тобой не получиться связаться'
+#                   )
+#
+#
+#     bot.send_chat_action(user_id, 'typing')
+#     bot.send_message(user_id, answer)
+#     bot.set_state(user_id, next_state)
 
 
 @bot.message_handler(state=States.ask_link)
@@ -2159,22 +2160,22 @@ def change_location_callback(call):
     location_value = get_user_field(user_id, 'location')
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 2
-    online = '✅' if location_value == 'online' else '❌'
-    batumi = '✅' if location_value == 'batumi' else '❌'
-    tbilisi = '✅' if location_value == 'tbilisi' else '❌'
+    online = '✅' if location_value == 'Online' else '❌'
+    batumi = '✅' if location_value == 'Batumi' else '❌'
+    tbilisi = '✅' if location_value == 'Tbilisi' else '❌'
 
     keyboard.add(
         types.InlineKeyboardButton(
             text=f'{online} Онлайн',
-            callback_data='set_location_online'
+            callback_data='set_location_Online'
         ),
         types.InlineKeyboardButton(
             text=f'{batumi} Батуми',
-            callback_data='set_location_batumi'
+            callback_data='set_location_Batumi'
         ),
         types.InlineKeyboardButton(
             text=f'{tbilisi} Тбилиси',
-            callback_data='set_location_tbilisi'
+            callback_data='set_location_Tbilisi'
         ),
         types.InlineKeyboardButton(
             text='ГОТОВО',
