@@ -2117,19 +2117,18 @@ def change_location_callback(call):
         location = call.data[len('set_location_'):]
         set_field(user_id, 'location', location)
         if call.data.startswith('did_location_'):
-            bot.set_state(user_id, States.ask_location)
+            bot.set_state(user_id, States.ask_link)
             bot.delete_message(
                 chat_id=user_id,
                 message_id=message_id
             )
-            next_state = States.ask_link
 
             answer = ('Отлично! \n\n'
                       'Теперь пришли ссылку (или никнейм) на свой профиль '
                       'в любой социальной сети. '
                       'Так вы в паре сможете лучше узнать '
                       'друг о друге до встречи🔎')
-            nickname = str(message.from_user.username or 'Не указан')
+            nickname = str(call.message.from_user.username or 'Не указан')
             if nickname == 'Не указан':
                 answer = ('Отлично!\n\n'
 
@@ -2143,7 +2142,6 @@ def change_location_callback(call):
 
             bot.send_chat_action(user_id, 'typing')
             bot.send_message(user_id, answer)
-            bot.set_state(user_id, next_state)
             return
         else:
             answer = 'Кликай по кнопкам'
