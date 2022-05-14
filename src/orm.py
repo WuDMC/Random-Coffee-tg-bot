@@ -118,6 +118,51 @@ def get_active_users():
     )
     return users if users else []
 
+def get_active_online():
+    users = (
+        session.query(
+            User
+        )
+        .filter(
+            User.is_active == True,
+            User.is_verified == True,
+            User.ban == False,
+            User.location == 'online'
+        )
+        .all()
+    )
+    return users if users else []
+
+def get_active_tbilisi():
+    users = (
+        session.query(
+            User
+        )
+        .filter(
+            User.is_active == True,
+            User.is_verified == True,
+            User.ban == False,
+            User.location == 'tbilisi'
+        )
+        .all()
+    )
+    return users if users else []
+
+def get_active_batumi():
+    users = (
+        session.query(
+            User
+        )
+        .filter(
+            User.is_active == True,
+            User.is_verified == True,
+            User.ban == False,
+            User.location == 'batumi'
+        )
+        .all()
+    )
+    return users if users else []
+
 def get_inactive_users():
     users = (
         session.query(
