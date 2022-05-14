@@ -2074,7 +2074,6 @@ def change_profile_callback(call):
 def change_location_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-    location_value = get_user_field(user_id, 'location')
     if call.data.startswith('set_location_'):
         location = call.data[len('set_location_'):]
         set_field(user_id, 'location', location)
@@ -2090,7 +2089,7 @@ def change_location_callback(call):
                             chat_id=user_id,
                             message_id=message_id
                           )
-
+    location_value = get_user_field(user_id, 'location')
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 2
     online = '✅' if location_value == 'online' else '❌'
