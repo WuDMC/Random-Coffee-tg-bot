@@ -1814,6 +1814,7 @@ def change_profile_callback(call):
             status = 'Не участвую в Random Coffee'
         answer = (
             f'*Статус на этой неделе:* {status}\n\n'
+            f'*Твоя локация на этой неделе:* {user.location}\n\n'
             'Вот так будет выглядеть твой профиль для собеседника:\n\n'
             f'{user}'
         )
@@ -1878,6 +1879,7 @@ def show_profile_callback(call):
         status = 'Не участвую в Random Coffee'
     answer = (
         f'*Статус на этой неделе:* {status}\n\n'
+        f'*Твоя локация на этой неделе:* {user.location}\n\n'
         'Вот так будет выглядеть твой профиль для собеседника:\n\n'
         f'{user}\n\n'
     )
