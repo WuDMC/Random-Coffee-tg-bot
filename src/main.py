@@ -242,6 +242,9 @@ def send_stats():
 
 def help(message):
     user_id = message.from_user.id
+    user = get_user(user_id)
+    pause_data = 'set_pause' if user.is_acitve else 'set_run'
+    pause_txt = 'Поставить на паузу' if user.is_acitve else 'Снять с паузы'
     next_state = States.complete
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 1
@@ -259,12 +262,8 @@ def help(message):
             callback_data='change_profile'
         ),
         types.InlineKeyboardButton(
-            text='Поставить на паузу',
-            callback_data='set_pause'
-        ),
-        types.InlineKeyboardButton(
-            text='Снять c паузы',
-            callback_data='set_run'
+            text=f'{pause_txt}',
+            callback_data=pause_data
         )
     )
 
