@@ -277,7 +277,12 @@ def help(message):
                 callback_data='sender'
             )
         )
-    help_txt = ('Поддержка по боту в чате @BatumiRandomCoffee\n\n'
+    status = 'Участвую в Random Coffee'
+    if not user.is_active:
+        status = 'Не участвую в Random Coffee'
+
+    help_txt = (f'*Статус на этой неделе:* {status}\n\n'
+                'Поддержка по боту в чате @BatumiRandomCoffee\n\n'
                 'Выбери подходящую опцию ниже')
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, help_txt,
@@ -351,11 +356,7 @@ def show_profile_callback(call):
         text=answer
     )
     user = get_user(target_user_id)
-    status = 'Участвую в Random Coffee'
-    if user.is_active == False:
-        status = 'Не участвую в Random Coffee'
     answer = (
-        f'*Статус на этой неделе:* {status}\n\n'
         f'*Твоя локация на этой неделе:* {user.location}\n\n'
         'Вот так будет выглядеть твой профиль для собеседника:\n\n'
         f'{user}'
@@ -1806,11 +1807,7 @@ def change_profile_callback(call):
 
     if call.data == 'help_from_show_profile':
         user = get_user(user_id)
-        status = 'Участвую в Random Coffee'
-        if user.is_active == False:
-            status = 'Не участвую в Random Coffee'
         answer = (
-            f'*Статус на этой неделе:* {status}\n\n'
             f'*Твоя локация на этой неделе:* {user.location}\n\n'
             'Вот так будет выглядеть твой профиль для собеседника:\n\n'
             f'{user}'
@@ -1871,11 +1868,7 @@ def show_profile_callback(call):
         text=answer
     )
     user = get_user(user_id)
-    status = 'Участвую в Random Coffee'
-    if user.is_active == False:
-        status = 'Не участвую в Random Coffee'
     answer = (
-        f'*Статус на этой неделе:* {status}\n\n'
         f'*Твоя локация на этой неделе:* {user.location}\n\n'
         'Вот так будет выглядеть твой профиль для собеседника:\n\n'
         f'{user}\n\n'
