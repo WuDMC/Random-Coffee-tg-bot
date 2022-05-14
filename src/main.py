@@ -1308,8 +1308,7 @@ def ask_name_handler(message):
 
 
 @bot.message_handler(state=States.ask_location)
-def ask_location_handler(message):
-    user_id = message.from_user.id
+def ask_location_handler(user_id):
     next_state = States.ask_link
 
 
@@ -2118,6 +2117,11 @@ def change_location_callback(call):
         set_field(user_id, 'location', location)
         if call.data.startswith('did_location_'):
             bot.set_state(user_id, States.ask_location)
+            bot.delete_message(
+                chat_id=user_id,
+                message_id=message_id
+            )
+            ask_location_handler(user_id)
             return
         else:
             answer = 'Кликай по кнопкам'
