@@ -30,7 +30,7 @@ class User(Base):
     int_2 = Column(Boolean, default=False, nullable=False)
     int_3 = Column(Boolean, default=False, nullable=False)
     int_4 = Column(Boolean, default=False, nullable=False)
-    location = Column(String, default='online', nullable=False)
+    location = Column(String, default='', nullable=False)
 
     def __repr__(self):
         # проблема с маркдаун только решает никнеймы

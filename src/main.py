@@ -1204,13 +1204,13 @@ def start_handler(message):
         set_field(user_id, 'mail', nickname)
         set_field(user_id, 'name', 'Имя не указано')
         answer = ('Гамарджоба!🤩\n'
-                  'Я Random Coffee бот 🤖 в Батуми\n\n'
+                  'Я Random Coffee бот 🤖  в Грузии\n\n'
                   'Каждую неделю я буду предлагать '
                   'тебе для встречи интересного человека, '
                   'случайно выбранного среди '
                   'других участников🎲\n\n'
                   'Введи инвайт-код, чтобы продолжить\n\n'
-                  'ПОДСКАЗКА - инвайт-код в сообщении со ссылкой\n'
+                  'ПОДСКАЗКА - инвайт-код был в рекламном сообщении\n'
                   'Или спроси в нашем чате в @it\_batumi\_offlain')
 
 
@@ -1270,20 +1270,57 @@ def ask_password_handler(message):
 @bot.message_handler(state=States.ask_name)
 def ask_name_handler(message):
     user_id = message.from_user.id
+    next_state = States.ask_location
+    name = message.text
+    set_field(user_id, 'name', name)
+
+
+    answer = ('Рад познакомиться! \n\n'
+              'Теперь выбери локацию для встреч, ты сможешь изменить ее в любое время.')
+
+    location_value = get_user_field(user_id, 'location')
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.row_width = 1
+    online = '✅' if location_value == 'online' else '❌'
+    batumi = '✅' if location_value == 'batumi' else '❌'
+    tbilisi = '✅' if location_value == 'tbilisi' else '❌'
+
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text=f'{online} Онлайн',
+            callback_data='set_location_online'
+        ),
+        types.InlineKeyboardButton(
+            text=f'{batumi} Батуми',
+            callback_data='set_location_batumi'
+        ),
+        types.InlineKeyboardButton(
+            text=f'{tbilisi} Тбилиси',
+            callback_data='set_location_tbilisi'
+        )
+    )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, reply_markup=keyboard)
+    bot.set_state(user_id, next_state)
+
+
+
+@bot.message_handler(state=States.ask_location)
+def ask_location_handler(message):
+    user_id = message.from_user.id
     next_state = States.ask_link
 
-    name = message.text
 
-    answer = ('Рад познакомиться!)\n\n'
-              'Пришли ссылку (или никнейм) на свой профиль '
+    answer = ('Отлично! \n\n'
+              'Теперь пришли ссылку (или никнейм) на свой профиль '
               'в любой социальной сети. '
               'Так вы в паре сможете лучше узнать '
               'друг о друге до встречи🔎')
     nickname = str(message.from_user.username or 'Не указан')
     if nickname == 'Не указан':
-        answer = ('Рад познакомиться!)\n\n'
+        answer = ('Отлично!\n\n'
 
-                  'Пришли ссылку (или никнейм) на свой профиль '
+                  'Теперь пришли ссылку (или никнейм) на свой профиль '
                   'в любой социальной сети. '
                   'Так вы в паре сможете лучше узнать '
                   'друг о друге до встречи🔎\n\n'
@@ -1291,7 +1328,6 @@ def ask_name_handler(message):
                   'Обязательно укажи актуальную ссылку, иначе с тобой не получиться связаться'
                   )
 
-    set_field(user_id, 'name', name)
 
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer)
