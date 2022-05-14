@@ -286,7 +286,7 @@ def help(message):
                 'Выбери подходящую опцию ниже')
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, help_txt,
-                     reply_markup=keyboard)
+                     reply_markup=keyboard, parse_mode='Markdown')
     bot.set_state(user_id, next_state)
 
 
