@@ -7,12 +7,14 @@ from threading import Thread
 from telebot import types, custom_filters
 from datetime import datetime
 
+
 from settings import ADMINS, TELEGRAM_TOKEN, SMTP
 from messages import generate_password
 from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_users, set_field, create_user, \
     get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users, \
     get_verified_users, get_user_field, get_active_online, get_active_tbilisi, get_active_batumi, \
     get_ban_users, create_pair_history, set_pair_field, set_pair_history_field, get_pair_history
+
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 wudmc_tg = '1205912479'
@@ -1287,15 +1289,15 @@ def ask_name_handler(message):
     keyboard.add(
         types.InlineKeyboardButton(
             text=f'{online} Онлайн',
-            callback_data='set_location_online'
+            callback_data='did_location_online'
         ),
         types.InlineKeyboardButton(
             text=f'{batumi} Батуми',
-            callback_data='set_location_batumi'
+            callback_data='did_location_batumi'
         ),
         types.InlineKeyboardButton(
             text=f'{tbilisi} Тбилиси',
-            callback_data='set_location_tbilisi'
+            callback_data='did_location_tbilisi'
         )
     )
     bot.send_chat_action(user_id, 'typing')
@@ -1634,8 +1636,8 @@ def sender_callback(call):
 @bot.callback_query_handler(func=lambda call: call.data == 'test')
 def test_handler(call):
     try:
-        test = str(bot.get_state)
-        bot.send_message(wudmc_tg, test)
+        # test = str(bot.get_state)
+        bot.send_message(wudmc_tg, 'test')
     except Exception:
         bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
 
@@ -2106,20 +2108,23 @@ def change_profile_callback(call):
 
 
 
-@bot.callback_query_handler(func=lambda call: call.data.startswith(tuple(['change_location', 'set_location_'])))
+@bot.callback_query_handler(func=lambda call: call.data.startswith(tuple(['change_location', 'set_location_', 'did_location_'])))
 def change_location_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-    if bot.get_state == 'complete':
-        bot.set_state(user_id, States.ask_location)
-    if call.data.startswith('set_location_'):
+
+    if call.data.startswith(tuple(['did_location_', 'set_location_'])):
         location = call.data[len('set_location_'):]
         set_field(user_id, 'location', location)
-        answer = 'Кликай по кнопкам'
-        bot.delete_message(
-                            chat_id=user_id,
-                            message_id=message_id
-                          )
+        if call.data.startswith('did_location_'):
+            bot.set_state(user_id, States.ask_location)
+            return
+        else:
+            answer = 'Кликай по кнопкам'
+            bot.delete_message(
+                                chat_id=user_id,
+                                message_id=message_id
+                              )
     else:
         answer = 'Выбери локейшн'
         bot.send_chat_action(user_id, 'typing')
