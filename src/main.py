@@ -787,16 +787,21 @@ def show_pairs_callback(call):
 
 
 def generate_pairs():
-    all_active_users = get_active_users()
+    all_active_users = []
+    all_active_users.append(get_active_online())
+    all_active_users.append(get_active_batumi())
+    all_active_users.append(get_active_tbilisi())
     delete_pairs()
-    random.shuffle(all_active_users)
-    pairs = [all_active_users[i:i + 2]
-             for i in range(0, len(all_active_users), 2)]
-    for pair in pairs:
-        if len(pair) == 2:
-            create_pair(pair[0].telegram_id, pair[1].telegram_id)
-        else:
-            create_pair(pair[0].telegram_id, '')
+
+    for user_list in all_active_users:
+        random.shuffle(user_list)
+        pairs = [user_list[i:i + 2]
+                 for i in range(0, len(user_list), 2)]
+        for pair in pairs:
+            if len(pair) == 2:
+                create_pair(pair[0].telegram_id, pair[1].telegram_id)
+            else:
+                create_pair(pair[0].telegram_id, '')
     sleep(1)
     pairs_db = get_pairs()
     for pair in pairs_db:
@@ -881,17 +886,13 @@ def ask_about_next_week():
             )
             bot.send_message(wudmc_tg,
                              f' отправля запрос участия  юзеру {user.telegram_id} ')
-            if (datetime.now() - user.created_at).days > 6:
+
+            if ((datetime.now() - user.created_at).days > 6) and user.is_active:
                 set_field(user.telegram_id, 'is_active', False)
-                try:
-                    bot.send_message(user.telegram_id,
-                                     '[Ты со мной уже больше недели, поэтому я поставил твой профиль на паузу]')
-                    sleep(1)
-                except Exception:
-                    set_field(user.telegram_id, 'is_active', False)
-                    set_field(user.telegram_id, 'is_verified', False)
-                    bot.send_message(wudmc_tg,
-                                     f' запрос участия юзеру {user.telegram_id} не отправлен: {traceback.format_exc()}')
+                bot.send_message(user.telegram_id, '[Ты со мной уже больше недели, поэтому я поставил твой профиль на паузу]')
+            elif user.is_active:
+                set_field(user.telegram_id, 'is_active', False)
+                bot.send_message(user.telegram_id, '[Я поставил твой профиль на паузу, подтверди участие еще раз вручную пожалуйста]')
             bot.send_message(
                 user.telegram_id, next_week_txt, parse_mode='Markdown',
                 reply_markup=keyboard)
