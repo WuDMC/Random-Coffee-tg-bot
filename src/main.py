@@ -1270,7 +1270,6 @@ def ask_password_handler(message):
 @bot.message_handler(state=States.ask_name)
 def ask_name_handler(message):
     user_id = message.from_user.id
-    next_state = States.ask_location
     name = message.text
     set_field(user_id, 'name', name)
 
@@ -1301,7 +1300,8 @@ def ask_name_handler(message):
     )
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
-    bot.set_state(user_id, next_state)
+
+
 
 
 
@@ -1634,8 +1634,8 @@ def sender_callback(call):
 @bot.callback_query_handler(func=lambda call: call.data == 'test')
 def test_handler(call):
     try:
-        field = get_user_field(wudmc_tg, 'link')
-        bot.send_message(wudmc_tg, field)
+        test = str(bot.get_state)
+        bot.send_message(wudmc_tg, test)
     except Exception:
         bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
 
@@ -2110,6 +2110,8 @@ def change_profile_callback(call):
 def change_location_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
+    if bot.get_state == 'complete':
+        bot.set_state(user_id, States.ask_location)
     if call.data.startswith('set_location_'):
         location = call.data[len('set_location_'):]
         set_field(user_id, 'location', location)
@@ -2152,6 +2154,7 @@ def change_location_callback(call):
     )
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
+
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith(tuple(['change_interests', 'switch_'])))
 def change_interests_callback(call):
