@@ -2067,7 +2067,7 @@ def update_nickname_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
     next_state = States.update_nickname
-    nickname = get_user(user_id).nickname
+    nickname = get_user(user_id).mail
     answer = ('👉 Обновить Имя пользователя\n'
               f'Твой никнейм сейчас {nickname}')
 
