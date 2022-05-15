@@ -245,6 +245,7 @@ def help(message):
     user = get_user(user_id)
     pause_data = 'set_pause' if user.is_active else 'set_run'
     pause_txt = 'Поставить на паузу' if user.is_active else 'Снять с паузы'
+    location = str(user.location)
     next_state = States.complete
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 1
@@ -264,7 +265,11 @@ def help(message):
         types.InlineKeyboardButton(
             text=f'{pause_txt}',
             callback_data=pause_data
-        )
+        ),
+        types.InlineKeyboardButton(
+            text=f'Локация: {location}',
+            callback_data='change_location'
+        ),
     )
     if user.is_admin:
         keyboard.add(
@@ -1282,8 +1287,8 @@ def ask_name_handler(message):
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 1
     online = '✅' if location_value == 'Online' else '❌'
-    batumi = '✅' if location_value == 'Batumi' else '❌'
-    tbilisi = '✅' if location_value == 'Tbilisi' else '❌'
+    batumi = '✅' if location_value == 'Батуми' else '❌'
+    tbilisi = '✅' if location_value == 'Тбилиси' else '❌'
 
     keyboard.add(
         types.InlineKeyboardButton(
@@ -1292,11 +1297,11 @@ def ask_name_handler(message):
         ),
         types.InlineKeyboardButton(
             text=f'Батуми',
-            callback_data='did_location_Batumi'
+            callback_data='did_location_Батуми'
         ),
         types.InlineKeyboardButton(
             text=f'Тбилиси',
-            callback_data='did_location_Tbilisi'
+            callback_data='did_location_Тбилиси'
         )
     )
     bot.send_chat_action(user_id, 'typing')
@@ -2071,10 +2076,6 @@ def change_profile_callback(call):
             callback_data='change_interests'
         ),
         types.InlineKeyboardButton(
-            text='Локация',
-            callback_data='change_location'
-        ),
-        types.InlineKeyboardButton(
             text='Ссылку на социальную сеть',
             callback_data='change_link'
         ),
@@ -2153,8 +2154,8 @@ def change_location_callback(call):
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 2
     online = '✅' if location_value == 'Online' else '❌'
-    batumi = '✅' if location_value == 'Batumi' else '❌'
-    tbilisi = '✅' if location_value == 'Tbilisi' else '❌'
+    batumi = '✅' if location_value == 'Батуми' else '❌'
+    tbilisi = '✅' if location_value == 'Тбилиси' else '❌'
 
     keyboard.add(
         types.InlineKeyboardButton(
@@ -2163,11 +2164,11 @@ def change_location_callback(call):
         ),
         types.InlineKeyboardButton(
             text=f'{batumi} Батуми',
-            callback_data='set_location_Batumi'
+            callback_data='set_location_Батуми'
         ),
         types.InlineKeyboardButton(
             text=f'{tbilisi} Тбилиси',
-            callback_data='set_location_Tbilisi'
+            callback_data='set_location_Тбилиси'
         ),
         types.InlineKeyboardButton(
             text='ГОТОВО',
