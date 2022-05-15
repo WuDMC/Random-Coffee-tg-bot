@@ -2073,8 +2073,9 @@ def update_nickname_callback(call):
 
     set_field(user_id, 'mail', nickname)
     nickname_db = get_user(user_id).mail
+    nick = f'🟥{nickname_db}🟥' if nickname_db == 'Не указан' else nickname_db
     answer = ('👉 Обновить Имя пользователя\n'
-              f'Твой никнейм сейчас {nickname_db}')
+              f'Твой никнейм сейчас {nick}')
 
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
