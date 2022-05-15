@@ -52,7 +52,8 @@ class States:
     update_nickname = 9
     forward_message = 10
     userfeedback = 11
-    complete = 12
+    send_message_to_user_id = 12
+    complete = 13
 
 
 # заготовки сообщения
