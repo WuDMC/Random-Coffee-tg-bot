@@ -276,7 +276,7 @@ def help(message):
                 callback_data='update_nickname'
             )
         )
-    if user.mail != str(message.from_user.username)[1:]:
+    elif user.mail != str(message.from_user.username)[1:]:
         keyboard.add(
             types.InlineKeyboardButton(
                 text='‼ALERT‼ ОБНОВИ НИК',
