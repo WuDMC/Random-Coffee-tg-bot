@@ -1409,13 +1409,13 @@ def ask_link_handler(message):
 
     about = message.text
 
-    answer = ('Отлично, все готово!✨\n\n'
+    answer = ('Отлично, все готово!\n\n'
               'Свою пару для встречи ты будешь узнавать'
               ' каждый понедельник в 12-00 — сообщение придет в этот чат\n\n'
               'Напиши партнеру в Telegram, '
               'чтобы договориться о встрече или звонке\n'
               'Время и место вы выбираете сами\n\n'
-              'Заполни свой профиль тут - /help')
+              'Изменить свой профиль тут - /help')
 
     set_field(user_id, 'about', about)
 
@@ -2182,13 +2182,13 @@ def change_location_callback(call):
         location = call.data[len('set_location_'):]
         set_field(user_id, 'location', location)
 
-        answer = 'Кликай по кнопкам'
+        answer = 'Выбери локацию для встречи и нажми "ГОТОВО"'
         bot.delete_message(
                             chat_id=user_id,
                             message_id=message_id
                           )
     else:
-        answer = 'Выбери локейшн'
+        answer = 'Выбери локацию для встречи и нажми "ГОТОВО"'
         bot.send_chat_action(user_id, 'typing')
         bot.delete_message(
                             chat_id=user_id,
@@ -2391,7 +2391,7 @@ if __name__ == "__main__":
     schedule.every().monday.at('12:00').do(send_invites)
     schedule.every().wednesday.at('17:30').do(send_blocked_users)
     schedule.every().saturday.at('14:05').do(ask_about_next_week)
-    schedule.every().sunday.at('12:42').do(ask_about_last_week)
+    schedule.every().sunday.at('14:30').do(ask_about_last_week)
     schedule.every().sunday.at('19:42').do(remind_inactive)
     Thread(target=schedule_checker).start()
 
