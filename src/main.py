@@ -53,7 +53,8 @@ class States:
     forward_message = 10
     userfeedback = 11
     send_message_to_user_id = 12
-    complete = 13
+    send_message_to_all_users = 13
+    complete = 14
 
 
 # заготовки сообщения
