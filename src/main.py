@@ -269,6 +269,13 @@ def help(message):
             callback_data='change_location'
         ),
     )
+    if user.mail == 'Не указан':
+        keyboard.add(
+            types.InlineKeyboardButton(
+                text='‼ALERT‼️Укажи НИК в TG',
+                callback_data='update_nickname'
+            )
+        )
     if user.is_admin:
         keyboard.add(
             types.InlineKeyboardButton(
