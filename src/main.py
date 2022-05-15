@@ -1283,7 +1283,6 @@ def ask_name_handler(message):
     answer = ('Рад познакомиться! \n\n'
               'Теперь выбери локацию для встреч, ты сможешь изменить ее в любое время.')
 
-    location_value = get_user_field(user_id, 'location')
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 1
 
