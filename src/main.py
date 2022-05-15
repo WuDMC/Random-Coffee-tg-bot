@@ -360,8 +360,7 @@ def show_profile_callback(call):
     )
     user = get_user(target_user_id)
     answer = (
-        f'*Твоя локация на этой неделе:* {user.location}\n\n'
-        'Вот так будет выглядеть твой профиль для собеседника:\n\n'
+        f'Вот так будет выглядеть твой профиль для собеседника:\n\n'
         f'{user}'
     )
 
@@ -2068,8 +2067,9 @@ def update_nickname_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
     next_state = States.update_nickname
-
-    answer = ('👉 Обновить Имя пользователя')
+    nickname = get_user(user_id).nickname
+    answer = ('👉 Обновить Имя пользователя\n'
+              f'Твой никнейм сейчас {nickname}')
 
     bot.send_chat_action(user_id, 'typing')
     bot.edit_message_text(
@@ -2080,11 +2080,15 @@ def update_nickname_callback(call):
 
     answer = ('Чтобы обновить никнейм зайди в настройки:'
               ' Изменить профиль >> Имя пользователя.\n'
-              ' После сохранения введи его сюда')
+              ' После изменения нажми "Обновить"')
 
     keyboard = types.InlineKeyboardMarkup()
 
     keyboard.add(
+        types.InlineKeyboardButton(
+            text='Обновить',
+            callback_data='update_nickname'
+        ),
         types.InlineKeyboardButton(
             text='Назад',
             callback_data='help'
