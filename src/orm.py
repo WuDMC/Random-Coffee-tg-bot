@@ -127,7 +127,7 @@ def get_active_online():
             User.is_active == True,
             User.is_verified == True,
             User.ban == False,
-            User.location == 'online'
+            User.location == 'Online'
         )
         .all()
     )
@@ -142,7 +142,7 @@ def get_active_tbilisi():
             User.is_active == True,
             User.is_verified == True,
             User.ban == False,
-            User.location == 'tbilisi'
+            User.location == 'Тбилиси'
         )
         .all()
     )
@@ -157,7 +157,7 @@ def get_active_batumi():
             User.is_active == True,
             User.is_verified == True,
             User.ban == False,
-            User.location == 'batumi'
+            User.location == 'Батуми'
         )
         .all()
     )
