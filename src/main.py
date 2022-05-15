@@ -44,21 +44,15 @@ class States:
     ask_password = 1
     ask_name = 2
     ask_link = 3
-    ask_interests = 4
-    ask_location = 5
-    complete = 6
-    change_name = 7
-    change_link = 8
-    change_work = 9
-    change_about = 10
-    change_interests = 11
-    change_location = 12
-    change_user_for_ask_id_admin = 13
-    update_nickname = 14
-    send_message_to_user_id = 15
-    send_message_to_all_users = 16
-    forward_message = 17
-    userfeedback = 18
+    change_name = 4
+    change_link = 5
+    change_work = 6
+    change_about = 7
+    change_user_for_ask_id_admin = 8
+    update_nickname = 9
+    forward_message = 10
+    userfeedback = 11
+    complete = 12
 
 
 # заготовки сообщения
@@ -282,9 +276,9 @@ def help(message):
                 callback_data='sender'
             )
         )
-    status = 'Участвую в Random Coffee'
+    status = '🟩 Участвую в Random Coffee 🟩'
     if not user.is_active:
-        status = 'Не участвую в Random Coffee'
+        status = '🟥 Не участвую в Random Coffee 🟥'
 
     help_txt = (f'*Статус на этой неделе:* {status}\n\n'
                 'Поддержка по боту в чате @BatumiRandomCoffee\n\n'
@@ -1290,21 +1284,54 @@ def ask_name_handler(message):
     keyboard.add(
         types.InlineKeyboardButton(
             text=f'Онлайн',
-            callback_data='did_location_Online'
+            callback_data='first_location_Online'
         ),
         types.InlineKeyboardButton(
             text=f'Батуми',
-            callback_data='did_location_Батуми'
+            callback_data='first_location_Батуми'
         ),
         types.InlineKeyboardButton(
             text=f'Тбилиси',
-            callback_data='did_location_Тбилиси'
+            callback_data='first_location_Тбилиси'
         )
     )
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
 
 
+
+@bot.callback_query_handler(func=lambda call: call.data.startswith('first_location_'))
+def change_location_callback(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+
+    location = call.data[len('first_location_'):]
+    set_field(user_id, 'location', location)
+    bot.set_state(user_id, States.ask_link)
+    bot.delete_message(
+        chat_id=user_id,
+        message_id=message_id
+    )
+
+    answer = ('Отлично! \n\n'
+              'Теперь пришли ссылку (или никнейм) на свой профиль '
+              'в любой социальной сети. '
+              'Так вы в паре сможете лучше узнать '
+              'друг о друге до встречи🔎')
+    nickname = str(call.message.from_user.username or 'Не указан')
+    if nickname == 'Не указан':
+        answer = ('Отлично!\n\n'
+
+                  'Теперь пришли ссылку (или никнейм) на свой профиль '
+                  'в любой социальной сети. '
+                  'Так вы в паре сможете лучше узнать '
+                  'друг о друге до встречи🔎\n\n'
+                  'ВАЖНО: У тебя не указан nickname в Telegram\n'
+                  'Обязательно укажи актуальную ссылку, иначе с тобой не получиться связаться'
+                  )
+
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer)
 
 
 # эту часть кода перенес в change_location handler
@@ -1647,7 +1674,6 @@ def test_handler(call):
 def send_to_all_handler(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-    next_state = States.send_message_to_all_users
 
     answer = ('👉 Отправка сообщения всем юзерам')
 
@@ -1670,7 +1696,6 @@ def send_to_all_handler(call):
     )
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
-    bot.set_state(user_id, next_state)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'send_to_user_id')
@@ -2068,10 +2093,10 @@ def change_profile_callback(call):
             text='Своё имя',
             callback_data='change_name'
         ),
-        types.InlineKeyboardButton(
-            text='Интересы',
-            callback_data='change_interests'
-        ),
+        # types.InlineKeyboardButton(
+        #     text='Интересы',
+        #     callback_data='change_interests'
+        # ),
         types.InlineKeyboardButton(
             text='Ссылку на социальную сеть',
             callback_data='change_link'
@@ -2099,47 +2124,20 @@ def change_profile_callback(call):
 
 
 
-@bot.callback_query_handler(func=lambda call: call.data.startswith(tuple(['change_location', 'set_location_', 'did_location_'])))
+@bot.callback_query_handler(func=lambda call: call.data.startswith(tuple(['change_location', 'set_location_'])))
 def change_location_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
 
-    if call.data.startswith(tuple(['did_location_', 'set_location_'])):
+    if call.data.startswith('set_location_'):
         location = call.data[len('set_location_'):]
         set_field(user_id, 'location', location)
-        if call.data.startswith('did_location_'):
-            bot.set_state(user_id, States.ask_link)
-            bot.delete_message(
-                chat_id=user_id,
-                message_id=message_id
-            )
 
-            answer = ('Отлично! \n\n'
-                      'Теперь пришли ссылку (или никнейм) на свой профиль '
-                      'в любой социальной сети. '
-                      'Так вы в паре сможете лучше узнать '
-                      'друг о друге до встречи🔎')
-            nickname = str(call.message.from_user.username or 'Не указан')
-            if nickname == 'Не указан':
-                answer = ('Отлично!\n\n'
-
-                          'Теперь пришли ссылку (или никнейм) на свой профиль '
-                          'в любой социальной сети. '
-                          'Так вы в паре сможете лучше узнать '
-                          'друг о друге до встречи🔎\n\n'
-                          'ВАЖНО: У тебя не указан nickname в Telegram\n'
-                          'Обязательно укажи актуальную ссылку, иначе с тобой не получиться связаться'
+        answer = 'Кликай по кнопкам'
+        bot.delete_message(
+                            chat_id=user_id,
+                            message_id=message_id
                           )
-
-            bot.send_chat_action(user_id, 'typing')
-            bot.send_message(user_id, answer)
-            return
-        else:
-            answer = 'Кликай по кнопкам'
-            bot.delete_message(
-                                chat_id=user_id,
-                                message_id=message_id
-                              )
     else:
         answer = 'Выбери локейшн'
         bot.send_chat_action(user_id, 'typing')
@@ -2175,79 +2173,79 @@ def change_location_callback(call):
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
 
-
-@bot.callback_query_handler(func=lambda call: call.data.startswith(tuple(['change_interests', 'switch_'])))
-def change_interests_callback(call):
-    user_id = call.message.chat.id
-    message_id = call.message.message_id
-
-    if call.data.startswith('switch_'):
-        interest = call.data[len('switch_'):]
-        interest_value = get_user_field(user_id, interest)
-        # try:
-        #     bot.send_message(wudmc_tg, str(interest_value))
-        #     bot.send_message(wudmc_tg, str(user_id))
-        #     bot.send_message(wudmc_tg, interest_value)
-        # except Exception:
-        #     bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
-        if interest_value:
-            set_field(user_id, interest, False)
-        else:
-            set_field(user_id, interest, True)
-        answer = 'Кликай по кнопкам'
-        bot.delete_message(
-                            chat_id=user_id,
-                            message_id=message_id
-                          )
-
-    else:
-        answer = 'Чем Увлекаешься?'
-        bot.send_chat_action(user_id, 'typing')
-        # bot.edit_message_text(
-        #     chat_id=user_id,
-        #     message_id=message_id,
-        #     text=answer
-        # )
-        bot.delete_message(
-                            chat_id=user_id,
-                            message_id=message_id
-                          )
-
-    keyboard = types.InlineKeyboardMarkup()
-    keyboard.row_width = 2
-    get_chess = '✅' if get_user_field(user_id, 'int_1') else '❌'
-    get_fifa = '✅' if get_user_field(user_id, 'int_2') else '❌'
-    get_tur = '✅' if get_user_field(user_id, 'int_3') else '❌'
-    get_sport = '✅' if get_user_field(user_id, 'int_4') else '❌'
-    # try:
-    #     bot.send_message(wudmc_tg, str(get_chess))
-    #     bot.send_message(wudmc_tg, str(get_fifa))
-    # except Exception:
-    #     bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
-    keyboard.add(
-        types.InlineKeyboardButton(
-            text=f'{get_chess} Шахматы',
-            callback_data='switch_int_1'
-        ),
-        types.InlineKeyboardButton(
-            text=f'{get_fifa} FIFA',
-            callback_data='switch_int_2'
-        ),
-        types.InlineKeyboardButton(
-            text=f'{get_tur} Пинг-понг',
-            callback_data='switch_int_3'
-        ),
-        types.InlineKeyboardButton(
-            text=f'{get_sport} Хуебала',
-            callback_data='switch_int_4'
-        ),
-        types.InlineKeyboardButton(
-            text='ГОТОВО',
-            callback_data='help'
-        )
-    )
-    bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, reply_markup=keyboard)
+#
+# @bot.callback_query_handler(func=lambda call: call.data.startswith(tuple(['change_interests', 'switch_'])))
+# def change_interests_callback(call):
+#     user_id = call.message.chat.id
+#     message_id = call.message.message_id
+#
+#     if call.data.startswith('switch_'):
+#         interest = call.data[len('switch_'):]
+#         interest_value = get_user_field(user_id, interest)
+#         # try:
+#         #     bot.send_message(wudmc_tg, str(interest_value))
+#         #     bot.send_message(wudmc_tg, str(user_id))
+#         #     bot.send_message(wudmc_tg, interest_value)
+#         # except Exception:
+#         #     bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
+#         if interest_value:
+#             set_field(user_id, interest, False)
+#         else:
+#             set_field(user_id, interest, True)
+#         answer = 'Кликай по кнопкам'
+#         bot.delete_message(
+#                             chat_id=user_id,
+#                             message_id=message_id
+#                           )
+#
+#     else:
+#         answer = 'Чем Увлекаешься?'
+#         bot.send_chat_action(user_id, 'typing')
+#         # bot.edit_message_text(
+#         #     chat_id=user_id,
+#         #     message_id=message_id,
+#         #     text=answer
+#         # )
+#         bot.delete_message(
+#                             chat_id=user_id,
+#                             message_id=message_id
+#                           )
+#
+#     keyboard = types.InlineKeyboardMarkup()
+#     keyboard.row_width = 2
+#     get_chess = '✅' if get_user_field(user_id, 'int_1') else '❌'
+#     get_fifa = '✅' if get_user_field(user_id, 'int_2') else '❌'
+#     get_tur = '✅' if get_user_field(user_id, 'int_3') else '❌'
+#     get_sport = '✅' if get_user_field(user_id, 'int_4') else '❌'
+#     # try:
+#     #     bot.send_message(wudmc_tg, str(get_chess))
+#     #     bot.send_message(wudmc_tg, str(get_fifa))
+#     # except Exception:
+#     #     bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
+#     keyboard.add(
+#         types.InlineKeyboardButton(
+#             text=f'{get_chess} Шахматы',
+#             callback_data='switch_int_1'
+#         ),
+#         types.InlineKeyboardButton(
+#             text=f'{get_fifa} FIFA',
+#             callback_data='switch_int_2'
+#         ),
+#         types.InlineKeyboardButton(
+#             text=f'{get_tur} Пинг-понг',
+#             callback_data='switch_int_3'
+#         ),
+#         types.InlineKeyboardButton(
+#             text=f'{get_sport} Хуебала',
+#             callback_data='switch_int_4'
+#         ),
+#         types.InlineKeyboardButton(
+#             text='ГОТОВО',
+#             callback_data='help'
+#         )
+#     )
+#     bot.send_chat_action(user_id, 'typing')
+#     bot.send_message(user_id, answer, reply_markup=keyboard)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'set_pause')
