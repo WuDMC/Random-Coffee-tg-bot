@@ -2067,7 +2067,7 @@ def update_nickname_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
     next_state = States.update_nickname
-    nickname = str(call.message.from_user.username or 'Не указан')
+    nickname = str(user_id.username or 'Не указан')
     if nickname != 'Не указан':
         nickname = '@' + nickname
 
