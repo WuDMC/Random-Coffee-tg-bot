@@ -44,17 +44,19 @@ class States:
     ask_password = 1
     ask_name = 2
     ask_link = 3
-    change_name = 4
-    change_link = 5
-    change_work = 6
-    change_about = 7
-    change_user_for_ask_id_admin = 8
-    update_nickname = 9
-    forward_message = 10
-    userfeedback = 11
-    send_message_to_user_id = 12
-    send_message_to_all_users = 13
-    complete = 14
+    ask_work = 4
+    ask_about = 5
+    change_name = 6
+    change_link = 7
+    change_work = 8
+    change_about = 9
+    change_user_for_ask_id_admin = 10
+    update_nickname = 11
+    forward_message = 12
+    userfeedback = 13
+    send_message_to_user_id = 14
+    send_message_to_all_users = 15
+    complete = 16
 
 
 # заготовки сообщения
@@ -1309,31 +1311,20 @@ def change_location_callback(call):
 
     location = call.data[len('first_location_'):]
     set_field(user_id, 'location', location)
-    bot.set_state(user_id, States.ask_link)
     bot.delete_message(
         chat_id=user_id,
         message_id=message_id
     )
 
-    answer = ('Отлично! \n\n'
-              'Теперь пришли ссылку (или никнейм) на свой профиль '
-              'в любой социальной сети. '
+    answer = ('Отлично! Перед тем как твой профиль станет активным надо заполнить информацию о себе.'
               'Так вы в паре сможете лучше узнать '
-              'друг о друге до встречи🔎')
-    nickname = str(call.message.from_user.username or 'Не указан')
-    if nickname == 'Не указан':
-        answer = ('Отлично!\n\n'
-
-                  'Теперь пришли ссылку (или никнейм) на свой профиль '
-                  'в любой социальной сети. '
-                  'Так вы в паре сможете лучше узнать '
-                  'друг о друге до встречи🔎\n\n'
-                  'ВАЖНО: У тебя не указан nickname в Telegram\n'
-                  'Обязательно укажи актуальную ссылку, иначе с тобой не получиться связаться'
-                  )
+              'друг о друге до встречи🔎\n\n'
+              'Для начала пришли ссылку (или никнейм) на свой профиль '
+              'в любой социальной сети. ')
 
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer)
+    bot.set_state(user_id, States.ask_link)
 
 
 # эту часть кода перенес в change_location handler
@@ -1365,13 +1356,47 @@ def change_location_callback(call):
 #     bot.send_message(user_id, answer)
 #     bot.set_state(user_id, next_state)
 
-
 @bot.message_handler(state=States.ask_link)
+def ask_link_handler(message):
+    user_id = message.from_user.id
+    next_state = States.ask_work
+
+    link = message.text
+
+    answer = ('Так, ясно. 😎 А кем работаешь?✨\n\n'
+              'Расскажи в двух словах о том как зарабатываешь на жизнь или о '
+              'своих профессиональных увлечениях\n\n')
+
+    set_field(user_id, 'link', link)
+
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer)
+    bot.set_state(user_id, next_state)
+
+@bot.message_handler(state=States.ask_work)
 def ask_link_handler(message):
     user_id = message.from_user.id
     next_state = States.complete
 
-    link = message.text
+    work = message.text
+
+    answer = ('Уууу, вот это да!✨\n\n'
+              'Остался последний шаг: \n'
+              'Добавь зацепки для разговора, например, что то про свои хобби, '
+              'увлечения или интересы.')
+
+    set_field(user_id, 'work', work)
+
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer)
+    bot.set_state(user_id, next_state)
+
+@bot.message_handler(state=States.ask_about)
+def ask_link_handler(message):
+    user_id = message.from_user.id
+    next_state = States.complete
+
+    about = message.text
 
     answer = ('Отлично, все готово!✨\n\n'
               'Свою пару для встречи ты будешь узнавать'
@@ -1381,7 +1406,7 @@ def ask_link_handler(message):
               'Время и место вы выбираете сами\n\n'
               'Заполни свой профиль тут - /help')
 
-    set_field(user_id, 'link', link)
+    set_field(user_id, 'about', about)
 
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer)
