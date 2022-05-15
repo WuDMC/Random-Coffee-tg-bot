@@ -1550,31 +1550,31 @@ def change_about_handler(message):
     bot.send_message(user_id, answer, reply_markup=keyboard)
     bot.set_state(user_id, next_state)
 
-
-@bot.message_handler(state=States.update_nickname)
-def update_nickname_handler(message):
-    user_id = message.from_user.id
-    next_state = States.complete
-
-    nickname = str(message.from_user.username or 'Не указан')
-    if nickname != 'Не указан':
-        nickname = '@' + nickname
-
-    answer = 'Готово'
-
-    set_field(user_id, 'mail', nickname)
-
-    keyboard = types.InlineKeyboardMarkup()
-
-    keyboard.add(
-        types.InlineKeyboardButton(
-            text='Назад',
-            callback_data='help'
-        )
-    )
-    bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, reply_markup=keyboard)
-    bot.set_state(user_id, next_state)
+#
+# @bot.message_handler(state=States.update_nickname)
+# def update_nickname_handler(message):
+#     user_id = message.from_user.id
+#     next_state = States.complete
+#
+#     nickname = str(message.from_user.username or 'Не указан')
+#     if nickname != 'Не указан':
+#         nickname = '@' + nickname
+#
+#     answer = 'Готово'
+#
+#     set_field(user_id, 'mail', nickname)
+#
+#     keyboard = types.InlineKeyboardMarkup()
+#
+#     keyboard.add(
+#         types.InlineKeyboardButton(
+#             text='Назад',
+#             callback_data='help'
+#         )
+#     )
+#     bot.send_chat_action(user_id, 'typing')
+#     bot.send_message(user_id, answer, reply_markup=keyboard)
+#     bot.set_state(user_id, next_state)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'manage_users')
@@ -2066,8 +2066,8 @@ def change_about_callback(call):
 def update_nickname_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-    next_state = States.update_nickname
-    nickname = str(user_id.username or 'Не указан')
+    # next_state = States.update_nickname
+    nickname = str(call.message.chat.username or 'Не указан')
     if nickname != 'Не указан':
         nickname = '@' + nickname
 
@@ -2101,7 +2101,7 @@ def update_nickname_callback(call):
     )
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
-    bot.set_state(user_id, next_state)
+    # bot.set_state(user_id, next_state)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'change_profile')
