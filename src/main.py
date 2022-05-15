@@ -246,6 +246,11 @@ def help(message):
     location = str(user.location)
     next_state = States.complete
     keyboard = types.InlineKeyboardMarkup()
+    if str(user.mail)[1:] != str(message.from_user.username):
+        nickname = str(message.from_user.username or 'Не указан')
+        if nickname != 'Не указан':
+            nickname = '@' + nickname
+        set_field(user_id, 'mail', nickname)
     keyboard.row_width = 1
     keyboard.add(
         types.InlineKeyboardButton(
@@ -273,13 +278,6 @@ def help(message):
         keyboard.add(
             types.InlineKeyboardButton(
                 text='‼ALERT‼️Укажи НИК в TG',
-                callback_data='update_nickname'
-            )
-        )
-    elif str(user.mail)[1:] != str(message.from_user.username):
-        keyboard.add(
-            types.InlineKeyboardButton(
-                text='‼ALERT‼ ОБНОВИ НИК',
                 callback_data='update_nickname'
             )
         )
