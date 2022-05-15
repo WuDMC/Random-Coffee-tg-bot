@@ -1712,7 +1712,7 @@ def test_handler(call):
 def send_to_all_handler(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-
+    next_state = States.send_message_to_all_users
     answer = ('👉 Отправка сообщения всем юзерам')
 
     bot.send_chat_action(user_id, 'typing')
@@ -1734,7 +1734,7 @@ def send_to_all_handler(call):
     )
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
-
+    bot.set_state(user_id, next_state)
 
 @bot.callback_query_handler(func=lambda call: call.data == 'send_to_user_id')
 def send_to_user_handler(call):
