@@ -1286,9 +1286,7 @@ def ask_name_handler(message):
     location_value = get_user_field(user_id, 'location')
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 1
-    online = '✅' if location_value == 'Online' else '❌'
-    batumi = '✅' if location_value == 'Батуми' else '❌'
-    tbilisi = '✅' if location_value == 'Тбилиси' else '❌'
+
 
     keyboard.add(
         types.InlineKeyboardButton(
