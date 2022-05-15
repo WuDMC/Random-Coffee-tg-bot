@@ -1376,7 +1376,7 @@ def ask_link_handler(message):
 @bot.message_handler(state=States.ask_work)
 def ask_link_handler(message):
     user_id = message.from_user.id
-    next_state = States.complete
+    next_state = States.ask_about
 
     work = message.text
 
