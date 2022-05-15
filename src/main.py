@@ -2309,30 +2309,50 @@ def set_pause_callback(call):
 def set_run_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
+    user = get_user(user_id)
+    if user.link != '' and user.work != '' and user.about != '':
+        answer = '👉 Снять с паузы'
 
-    answer = '👉 Снять с паузы'
-
-    bot.send_chat_action(user_id, 'typing')
-    bot.edit_message_text(
-        chat_id=user_id,
-        message_id=message_id,
-        text=answer
-    )
-
-    answer = 'Готово'
-
-    set_field(user_id, 'is_active', True)
-
-    keyboard = types.InlineKeyboardMarkup()
-
-    keyboard.add(
-        types.InlineKeyboardButton(
-            text='Назад',
-            callback_data='help'
+        bot.send_chat_action(user_id, 'typing')
+        bot.edit_message_text(
+            chat_id=user_id,
+            message_id=message_id,
+            text=answer
         )
-    )
-    bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, reply_markup=keyboard)
+
+        answer = 'Готово'
+
+        set_field(user_id, 'is_active', True)
+
+        keyboard = types.InlineKeyboardMarkup()
+
+        keyboard.add(
+            types.InlineKeyboardButton(
+                text='Назад',
+                callback_data='help'
+            )
+        )
+        bot.send_chat_action(user_id, 'typing')
+        bot.send_message(user_id, answer, reply_markup=keyboard)
+    else:
+        answer = ('👉 Я не могу снять с паузы твой профиль, он еще не до конца заполнен\n'
+                  'Проверь что у тебя заполнены все разделы профиля')
+        bot.edit_message_text(
+            chat_id=user_id,
+            message_id=message_id,
+            text=answer
+        )
+
+        keyboard = types.InlineKeyboardMarkup()
+
+        keyboard.add(
+            types.InlineKeyboardButton(
+                text='Меню',
+                callback_data='help'
+            )
+        )
+        bot.send_chat_action(user_id, 'typing')
+        bot.send_message(user_id, answer, reply_markup=keyboard)
 
 
 # хрен знает что это
