@@ -244,14 +244,14 @@ def help(message):
     user_id = message.from_user.id
     user = get_user(user_id)
     pause_data = 'set_pause' if user.is_active else 'set_run'
-    pause_txt = 'Поставить на паузу' if user.is_active else 'Снять с паузы'
+    pause_txt = '⏸ Поставить на паузу' if user.is_active else '▶ Снять с паузы'
     location = str(user.location)
     next_state = States.complete
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 1
     keyboard.add(
         types.InlineKeyboardButton(
-            text='Как все работает',
+            text='📌 Как все работает',
             callback_data='how_it_works'
         ),
         types.InlineKeyboardButton(
@@ -267,7 +267,7 @@ def help(message):
             callback_data=pause_data
         ),
         types.InlineKeyboardButton(
-            text=f'Локация: {location}',
+            text=f'🏴󠁧󠁢󠁥󠁮󠁧󠁿 Локация: {location}',
             callback_data='change_location'
         ),
     )
