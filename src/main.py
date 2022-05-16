@@ -2383,11 +2383,12 @@ def schedule_checker():
             sleep(1)
     except Exception as e:
         print(e)
+        bot.send_message(wudmc_tg, f' ошибка расписания {traceback.format_exc()} или {e}')
 
 
 if __name__ == "__main__":
-    schedule.every().monday.at('10:00').do(send_stats)
-    schedule.every().monday.at('10:20').do(generate_pairs)
+    schedule.every().monday.at('10:20').do(send_stats)
+    schedule.every().monday.at('10:40').do(generate_pairs)
     schedule.every().monday.at('12:00').do(send_invites)
     schedule.every().wednesday.at('17:30').do(send_blocked_users)
     schedule.every().saturday.at('14:05').do(ask_about_next_week)
