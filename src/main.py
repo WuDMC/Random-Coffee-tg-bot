@@ -1340,7 +1340,6 @@ def ask_name_handler(message):
                 callback_data='country_{country}'
             )
         )
-
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
 
