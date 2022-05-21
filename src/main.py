@@ -2284,8 +2284,6 @@ def change_location_callback(call):
 def change_location_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-
-
     answer = 'Выбери локацию для встречи и нажми "ГОТОВО"'
     bot.send_chat_action(user_id, 'typing')
     bot.delete_message(
@@ -2313,12 +2311,6 @@ def change_location_callback(call):
         )
     )
     for country in country_map.keys():
-        keyboard.add(
-            types.InlineKeyboardButton(
-                text=f'{country}',
-                callback_data=f'country_{country}'
-            )
-        )
         if location_value in country_map[country]:
             print(f'true {country} + {location_value}')
             keyboard.add(
