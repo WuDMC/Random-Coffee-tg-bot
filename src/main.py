@@ -1337,7 +1337,7 @@ def ask_name_handler(message):
         keyboard.add(
             types.InlineKeyboardButton(
                 text=f'{country}',
-                callback_data='country_{country}'
+                callback_data=f'country_{country}'
             )
         )
     bot.send_chat_action(user_id, 'typing')
@@ -1371,7 +1371,7 @@ def change_location_callback(call):
         keyboard.add(
             types.InlineKeyboardButton(
                 text=f'{city}',
-                callback_data='first_location_{city}'
+                callback_data=f'first_location_{city}'
             )
         )
     answer = ('Отлично! город укажи ')
