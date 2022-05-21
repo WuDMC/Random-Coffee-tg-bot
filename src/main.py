@@ -1349,9 +1349,9 @@ def change_location_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
     user = get_user(user_id)
-    action = 'set'
+    action = 'first'
     if user.is_verified:
-        action = 'first'
+        action = 'set'
     country_map = {
         'Грузия': ['Батуми', 'Тбилиси'],
         'Португалия': ['Лиссабон'],
@@ -2261,7 +2261,6 @@ def change_location_callback(call):
     online = '✅' if location_value == 'Online' else '❌'
     batumi = '✅' if location_value == 'Батуми' else '❌'
     tbilisi = '✅' if location_value == 'Тбилиси' else '❌'
-
     keyboard.add(
         types.InlineKeyboardButton(
             text=f'{online} Онлайн',
