@@ -1344,6 +1344,41 @@ def ask_name_handler(message):
     bot.send_message(user_id, answer, reply_markup=keyboard)
 
 
+@bot.callback_query_handler(func=lambda call: call.data.startswith('country_'))
+def change_location_callback(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+    country_map = {
+        'Грузия': ['Батуми', 'Тбилиси'],
+        'Португалия': ['Лиссабон'],
+        'Турция': ['Анталья', 'Бодрум', 'Акьяка'],
+        'Армения': ['Ереван'],
+        'Израиль': ['Тель Авив', 'Рамат Ган', 'Ришон Лецион', 'Хайфа'],
+        'Испания': ['Валенсия', 'Барселона'],
+        'Германия': ['Штутгарт', 'Гамбург', 'Берлин'],
+        'Дания': ['Рибе'],
+        'Россия': ['Москва', 'Санкт-Путербург']
+    }
+    country = call.data[len('country_'):]
+    bot.delete_message(
+        chat_id=user_id,
+        message_id=message_id
+    )
+
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.row_width = 1
+    for city in country_map[country]:
+        keyboard.add(
+            types.InlineKeyboardButton(
+                text=f'{city}',
+                callback_data='first_location_{city}'
+            )
+        )
+    answer = ('Отлично! город укажи ')
+
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, reply_markup=keyboard)
+
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('first_location_'))
 def change_location_callback(call):
