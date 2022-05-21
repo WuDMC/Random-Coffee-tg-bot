@@ -1282,6 +1282,37 @@ def ask_password_handler(message):
     bot.set_state(user_id, next_state)
 
 
+# @bot.message_handler(state=States.ask_name)
+# def ask_name_handler(message):
+#     user_id = message.from_user.id
+#     name = message.text
+#     set_field(user_id, 'name', name)
+#
+#
+#     answer = ('Рад познакомиться! \n\n'
+#               'Теперь выбери локацию для встреч, ты сможешь изменить ее в любое время.')
+#
+#     keyboard = types.InlineKeyboardMarkup()
+#     keyboard.row_width = 1
+#
+#
+#     keyboard.add(
+#         types.InlineKeyboardButton(
+#             text=f'Онлайн',
+#             callback_data='first_location_Online'
+#         ),
+#         types.InlineKeyboardButton(
+#             text=f'Батуми',
+#             callback_data='first_location_Батуми'
+#         ),
+#         types.InlineKeyboardButton(
+#             text=f'Тбилиси',
+#             callback_data='first_location_Тбилиси'
+#         )
+#     )
+#     bot.send_chat_action(user_id, 'typing')
+#     bot.send_message(user_id, answer, reply_markup=keyboard)
+
 @bot.message_handler(state=States.ask_name)
 def ask_name_handler(message):
     user_id = message.from_user.id
@@ -1294,22 +1325,21 @@ def ask_name_handler(message):
 
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 1
-
+    countries = [ 'Грузия', 'Португалия', 'Турция', 'Армения','Израиль', 'Испания', 'Германия', 'Дания' , 'Россия']
 
     keyboard.add(
         types.InlineKeyboardButton(
             text=f'Онлайн',
             callback_data='first_location_Online'
-        ),
-        types.InlineKeyboardButton(
-            text=f'Батуми',
-            callback_data='first_location_Батуми'
-        ),
-        types.InlineKeyboardButton(
-            text=f'Тбилиси',
-            callback_data='first_location_Тбилиси'
         )
     )
+    for country in countries:
+        keyboard.add(
+            types.InlineKeyboardButton(
+                text=f'{country}',
+                callback_data='country_{country}'
+            )
+        )
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
 
