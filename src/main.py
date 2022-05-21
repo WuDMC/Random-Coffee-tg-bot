@@ -1348,6 +1348,10 @@ def ask_name_handler(message):
 def change_location_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
+    user = get_user(user_id)
+    action = 'set'
+    if user.is_verified:
+        action = 'first'
     country_map = {
         'Грузия': ['Батуми', 'Тбилиси'],
         'Португалия': ['Лиссабон'],
@@ -1364,14 +1368,13 @@ def change_location_callback(call):
         chat_id=user_id,
         message_id=message_id
     )
-
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 1
     for city in country_map[country]:
         keyboard.add(
             types.InlineKeyboardButton(
                 text=f'{city}',
-                callback_data=f'first_location_{city}'
+                callback_data=f'{action}_location_{city}'
             )
         )
     answer = ('Отлично! город укажи ')
@@ -2312,7 +2315,6 @@ def change_location_callback(call):
     )
     for country in country_map.keys():
         if location_value in country_map[country]:
-            print(f'true {country} + {location_value}')
             keyboard.add(
                 types.InlineKeyboardButton(
                     text=f'✅{country}: {location_value}',
