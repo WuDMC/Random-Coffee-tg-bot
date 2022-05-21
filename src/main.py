@@ -2237,28 +2237,21 @@ def change_profile_callback(call):
     bot.set_state(user_id, next_state)
 
 
-
-@bot.callback_query_handler(func=lambda call: call.data.startswith(tuple(['change_location', 'set_location_'])))
+@bot.callback_query_handler(func=lambda call: call.data.startswith('set_location_'))
 def change_location_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
 
-    if call.data.startswith('set_location_'):
-        location = call.data[len('set_location_'):]
-        set_field(user_id, 'location', location)
 
-        answer = 'Выбери локацию для встречи и нажми "ГОТОВО"'
-        bot.delete_message(
-                            chat_id=user_id,
-                            message_id=message_id
-                          )
-    else:
-        answer = 'Выбери локацию для встречи и нажми "ГОТОВО"'
-        bot.send_chat_action(user_id, 'typing')
-        bot.delete_message(
-                            chat_id=user_id,
-                            message_id=message_id
-                          )
+    location = call.data[len('set_location_'):]
+    set_field(user_id, 'location', location)
+
+    answer = 'Выбери локацию для встречи и нажми "ГОТОВО"'
+    bot.delete_message(
+                        chat_id=user_id,
+                        message_id=message_id
+                      )
+
     location_value = get_user_field(user_id, 'location')
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 2
@@ -2284,6 +2277,63 @@ def change_location_callback(call):
             callback_data='help'
         )
     )
+    bot.send_chat_action(user_id, 'typing')
+    bot.send_message(user_id, answer, reply_markup=keyboard)
+
+@bot.callback_query_handler(func=lambda call: call.data.startswith('change_location'))
+def change_location_callback(call):
+    user_id = call.message.chat.id
+    message_id = call.message.message_id
+
+
+    answer = 'Выбери локацию для встречи и нажми "ГОТОВО"'
+    bot.send_chat_action(user_id, 'typing')
+    bot.delete_message(
+                        chat_id=user_id,
+                        message_id=message_id
+                      )
+    location_value = get_user_field(user_id, 'location')
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.row_width = 2
+    country_map = {
+        'Грузия': ['Батуми', 'Тбилиси'],
+        'Португалия': ['Лиссабон'],
+        'Турция': ['Анталья', 'Бодрум', 'Акьяка'],
+        'Армения': ['Ереван'],
+        'Израиль': ['Тель Авив', 'Рамат Ган', 'Ришон Лецион', 'Хайфа'],
+        'Испания': ['Валенсия', 'Барселона'],
+        'Германия': ['Штутгарт', 'Гамбург', 'Берлин'],
+        'Дания': ['Рибе'],
+        'Россия': ['Москва', 'Санкт-Путербург']
+    }
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text=f'Онлайн',
+            callback_data='set_location_Online'
+        )
+    )
+    for country in country_map.keys():
+        keyboard.add(
+            types.InlineKeyboardButton(
+                text=f'{country}',
+                callback_data=f'country_{country}'
+            )
+        )
+        if location_value in country_map[country]:
+            print(f'true {country} + {city}')
+            keyboard.add(
+                types.InlineKeyboardButton(
+                    text=f'✅{country}: {location_value}',
+                    callback_data=f'country_{country}'
+                )
+            )
+        else:
+            keyboard.add(
+                types.InlineKeyboardButton(
+                    text=f'{country}',
+                    callback_data=f'country_{country}'
+                )
+            )
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
 
