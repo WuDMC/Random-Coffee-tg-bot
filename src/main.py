@@ -2320,7 +2320,7 @@ def change_location_callback(call):
             )
         )
         if location_value in country_map[country]:
-            print(f'true {country} + {city}')
+            print(f'true {country} + {location_value}')
             keyboard.add(
                 types.InlineKeyboardButton(
                     text=f'✅{country}: {location_value}',
