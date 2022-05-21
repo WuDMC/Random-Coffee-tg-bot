@@ -2244,7 +2244,17 @@ def change_profile_callback(call):
 def change_location_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-
+    country_map = {
+        'Грузия': ['Батуми', 'Тбилиси'],
+        'Португалия': ['Лиссабон'],
+        'Турция': ['Анталья', 'Бодрум', 'Акьяка'],
+        'Армения': ['Ереван'],
+        'Израиль': ['Тель Авив', 'Рамат Ган', 'Ришон Лецион', 'Хайфа'],
+        'Испания': ['Валенсия', 'Барселона'],
+        'Германия': ['Штутгарт', 'Гамбург', 'Берлин'],
+        'Дания': ['Рибе'],
+        'Россия': ['Москва', 'Санкт-Путербург']
+    }
 
     location = call.data[len('set_location_'):]
     set_field(user_id, 'location', location)
@@ -2257,25 +2267,11 @@ def change_location_callback(call):
 
     location_value = get_user_field(user_id, 'location')
     keyboard = types.InlineKeyboardMarkup()
-    keyboard.row_width = 2
-    online = '✅' if location_value == 'Online' else '❌'
-    batumi = '✅' if location_value == 'Батуми' else '❌'
-    tbilisi = '✅' if location_value == 'Тбилиси' else '❌'
+    keyboard.row_width = 1
+
     keyboard.add(
         types.InlineKeyboardButton(
-            text=f'{online} Онлайн',
-            callback_data='set_location_Online'
-        ),
-        types.InlineKeyboardButton(
-            text=f'{batumi} Батуми',
-            callback_data='set_location_Батуми'
-        ),
-        types.InlineKeyboardButton(
-            text=f'{tbilisi} Тбилиси',
-            callback_data='set_location_Тбилиси'
-        ),
-        types.InlineKeyboardButton(
-            text='ГОТОВО',
+            text=f'вроде все ок',
             callback_data='help'
         )
     )
