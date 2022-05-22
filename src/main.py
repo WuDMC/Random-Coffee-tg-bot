@@ -9,8 +9,7 @@ from datetime import datetime
 import txts
 
 
-from settings import ADMINS, TELEGRAM_TOKEN, SMTP
-from messages import generate_password
+from settings import ADMINS, TELEGRAM_TOKEN
 from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_users, set_field, create_user, \
     get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users, \
     get_verified_users, get_user_field,  is_user_fillevrth, \
@@ -362,7 +361,6 @@ def refuse__callback(call):
     )
     set_field(target_user_id, 'is_active', False)
     set_field(target_user_id, 'is_verified', False)
-    set_field(target_user_id, 'password', generate_password())
     try:
         bot.send_message(
             target_user_id, 'Ваш аккаунт заблокирован!\nДля повторной регистрации напишите /start')
