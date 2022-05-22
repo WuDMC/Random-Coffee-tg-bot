@@ -1724,7 +1724,7 @@ def sender_callback(call):
 @bot.callback_query_handler(func=lambda call: call.data == 'test')
 def test_handler(call):
     try:
-        ask_about_last_week()
+        # ask_about_last_week()
         bot.send_message(wudmc_tg, 'test')
     except Exception:
         bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
