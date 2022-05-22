@@ -479,12 +479,10 @@ def feedback_callback(call):
     message_id = call.message.message_id
     pair_history_id = call.data.partition('_id_')[2]
     feedback_status = call.data.partition('_id_')[0][len('feedback_'):]
-    answer = ('❤️Спасибо, мне важен каждый отзыв')
     bot.send_chat_action(user_id, 'typing')
-    bot.edit_message_text(
+    bot.delete_message(
         chat_id=user_id,
         message_id=message_id,
-        text=answer
     )
     pair_history = get_pair_history(pair_history_id)
 
@@ -499,7 +497,8 @@ def feedback_callback(call):
         reported_user = pair_history[0].user_b
     if feedback_status == 'yes':
         answer = (f'👍 Рад слышать, что все прошло как надо\n\n'
-                  f'По возможности, поделись впечатлением об этой встрече со мной')
+                  f'Оцени на сколько хорошо я подобрал тебе пару в этот раз? \n\n'
+                  f'По возможности, поделись впечатлением об этой встрече в нашем чате')
         set_pair_history_field(pair_history_id, field, 1)
         keyboard = types.InlineKeyboardMarkup()
         keyboard.row_width = 1
@@ -640,16 +639,16 @@ def feedbacktxt_callback(call):
             )
             bot.send_chat_action(user_id, 'typing')
             bot.send_message(user_id, answer, reply_markup=keyboard)
-        elif feedback_status == 'userfeedback':
-            next_state = States.userfeedback
-
-            answer = (f'Оцени от 1 до 5 на сколько интересно было тебе')
-
-            set_field(user_id, 'temp', pair_history_id)
-            set_pair_history_field(pair_history_id, field, 'userfeedback')
-            bot.set_state(user_id, next_state)
-            bot.send_chat_action(user_id, 'typing')
-            bot.send_message(user_id, answer)
+        # elif feedback_status == 'userfeedback':
+        #     next_state = States.userfeedback
+        #
+        #     answer = (f'Оцени от 1 до 5 на сколько интересно было тебе')
+        #
+        #     set_field(user_id, 'temp', pair_history_id)
+        #     set_pair_history_field(pair_history_id, field, 'userfeedback')
+        #     bot.set_state(user_id, next_state)
+        #     bot.send_chat_action(user_id, 'typing')
+        #     bot.send_message(user_id, answer)
 
         else:
             answer = (f'😢 Вот негодяй, я отмечу у себя. Как только на него будет 3 жалобы - БАН.\n\n'
@@ -808,9 +807,9 @@ def generate_pairs():
                  for i in range(0, len(user_list), 2)]
         for pair in pairs:
             if len(pair) == 2:
-                create_pair(pair[0].telegram_id, pair[1].telegram_id)
+                create_pair(pair[0].telegram_id, pair[1].telegram_id, get_user_field(pair[0].telegram_id, 'location'))
             else:
-                create_pair(pair[0].telegram_id, '')
+                create_pair(pair[0].telegram_id, '', get_user_field(pair[0].telegram_id, 'location'))
     sleep(1)
     pairs_db = get_pairs()
     for pair in pairs_db:
@@ -1479,38 +1478,38 @@ def change_name_handler(message):
     bot.send_message(user_id, answer, reply_markup=keyboard)
     bot.set_state(user_id, next_state)
 
-
-@bot.message_handler(state=States.userfeedback)
-def add_user_feedback(message):
-    user_id = message.from_user.id
-    next_state = States.complete
-
-    user_feedback = message.text
-    pair_history_id = get_user(user_id).about
-    pair_history = get_pair_history(pair_history_id)
-    field = 'test'
-
-    if str(user_id) == str(pair_history[0].user_b):
-        field = 'feedback_user_b'
-    elif str(user_id) == str(pair_history[0].user_a):
-        field = 'feedback_user_a'
-    answer = (f'Твой отзыв очень полезен\n\n'
-              f'В понедельник будут назначены новые пары!\n'
-              f'Проверь, что в твоем профиле актуальная информация')
-
-    set_pair_history_field(pair_history_id, field, user_feedback)
-    set_field(user_id, 'temp', 'None')
-    keyboard = types.InlineKeyboardMarkup()
-
-    keyboard.add(
-        types.InlineKeyboardButton(
-            text='ПРОФИЛЬ',
-            callback_data='help'
-        )
-    )
-    bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, reply_markup=keyboard)
-    bot.set_state(user_id, next_state)
+#
+# @bot.message_handler(state=States.userfeedback)
+# def add_user_feedback(message):
+#     user_id = message.from_user.id
+#     next_state = States.complete
+#
+#     user_feedback = message.text
+#     pair_history_id = get_user(user_id).about
+#     pair_history = get_pair_history(pair_history_id)
+#     field = 'test'
+#
+#     if str(user_id) == str(pair_history[0].user_b):
+#         field = 'feedback_user_b'
+#     elif str(user_id) == str(pair_history[0].user_a):
+#         field = 'feedback_user_a'
+#     answer = (f'Твой отзыв очень полезен\n\n'
+#               f'В понедельник будут назначены новые пары!\n'
+#               f'Проверь, что в твоем профиле актуальная информация')
+#
+#     set_pair_history_field(pair_history_id, field, user_feedback)
+#     set_field(user_id, 'temp', 'None')
+#     keyboard = types.InlineKeyboardMarkup()
+#
+#     keyboard.add(
+#         types.InlineKeyboardButton(
+#             text='ПРОФИЛЬ',
+#             callback_data='help'
+#         )
+#     )
+#     bot.send_chat_action(user_id, 'typing')
+#     bot.send_message(user_id, answer, reply_markup=keyboard)
+#     bot.set_state(user_id, next_state)
 
 
 @bot.message_handler(state=States.change_link)
