@@ -25,7 +25,7 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.datetime.now)
     updated_at = Column(DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     ban = Column(Boolean, default=False, nullable=False)
-    balls = Column(Integer, default=0, nullable=False)
+    points = Column(Integer, default=0, nullable=False)
     # int_1 = Column(Boolean, default=False, nullable=False)
     # int_2 = Column(Boolean, default=False, nullable=False)
     # int_3 = Column(Boolean, default=False, nullable=False)

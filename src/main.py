@@ -6,6 +6,7 @@ from time import sleep
 from threading import Thread
 from telebot import types, custom_filters
 from datetime import datetime
+import txts
 
 
 from settings import ADMINS, TELEGRAM_TOKEN, SMTP
@@ -59,93 +60,33 @@ class States:
     complete = 16
 
 
+country_map = {
+        'Грузия': ['Батуми', 'Тбилиси'],
+        'Португалия': ['Лиссабон'],
+        'Турция': ['Анталья', 'Бодрум', 'Акьяка'],
+        'Армения': ['Ереван'],
+        'Израиль': ['Тель Авив', 'Рамат Ган', 'Ришон Лецион', 'Хайфа'],
+        'Испания': ['Валенсия', 'Барселона'],
+        'Германия': ['Штутгарт', 'Гамбург', 'Берлин'],
+        'Дания': ['Рибе'],
+        'Россия': ['Москва', 'Санкт-Путербург']
+    }
 # заготовки сообщения
-next_week_txt = (
-    'Привет, скоро понедельник, а это значит \n'
-    'тебя ждут новые знакомства в Батуми\n\n'
-    'Я пишу уточнить: *Будешь ли ты участвовать* \n'
-    '*в Random Coffee на следюущей неделе?* \n\n'
-    'Просто *кликни по кнопке "Буду участвовать".*\n\n'
-    'Также можно менять свой статус самостоятельно тут - /help\n'
-)
-
-how_txt = (
-    '*Как все будет происходить???*\n\n'
-    '1) Раз в неделю по понедельникам я буду заочно \n'
-    'знакомить тебя с другим человеком в Батуми\n\n'
-    '2) Где и когда встретиться вы решаете \n'
-    'по договоренности\n\n'
-    '3) В конце недели я узнаю "Как все прошло?" \n\n'
-    '4) А в субботу уточню "Пойдешь ли ты на \n'
-    'новую встречу на будущей неделе?"\n\n'
-    'А еще мы проводим еженедельные встречи в @it\_batumi\_offlain'
-)
-
-reminder_for_inactive = (
-    'Завтра у тебя есть шанс познакомиться \n'
-    'с новым человеком в Батуми\n'
-    'но *твой профиль неактивен.*\n\n'
-    'Чтобы не упустить новое знакомство \n'
-    'кликни по кнопке ниже =)\n\n'
-)
-
-poll_txt_1 = (
-    'Привет, как прошла твоя встреча на этой неделе?\n'
-    'Твой отзыв поможет мне стать лучше'
-)
-
-poll_txt_old = (
-    'Привет, как прошла твоя встреча на этой неделе?\n'
-    'Оставь отзыв тут @BatumiRandomCoffee\n'
-    'Твой отзыв поможет мне стать лучше\n\n'
-    'Приходи на наши еженедельные встречи в @it\_batumi\_offlain\n\n'
-)
-msg_for_active = (
-    'Привет уже завтра будут известны первые пары\n'
-    'random coffe в Батуми, поделись ботом с друзьями! \n\n'
-    'Инвайт-код: Batumi \n\n'
-    'Приходи на наши еженедельные встречи в @it\_batumi\_offlain\n\n'
-)
-msg_for_admins = (
-    'Привет уже завтра будут известны первые пары\n'
-    'random coffe в Батуми, поделись ботом\n'
-    'с друзьями! \n\n'
-    'Инвайт-код: Batumi \n\n'
-    'Приходи на наши еженедельные встречи в @it\_batumi\_offlain\n\n'
-)
-msg_for_blocked = (
-    'Привет у меня временно не работала авторизация =(\n'
-    'Для участия в random coffe в Батуми, продолжи регистрацию:\n'
-    'нажми /start \n\n'
-    'И введи инвайт-код: Batumi \n\n'
-    'Приходи на наши еженедельные встречи в @it\_batumi\_offlain\n\n'
-)
-msg_for_no_link = (
-    'У тебя не указана ссылка на соц. сеть\n'
-    'Пожалуйста добавь ее, так твоему собеседнику \n'
-    'будет проще начать разговор\n\n'
-    'Для того, чтобы добавить ссылку нажми /help \n\n'
-)
-msg_for_no_nickname = (
-    'У тебя не указано имя пользователя в Telegram\n'
-    'Без нее не получится тебе написать =(\n\n'
-    'Для того, чтобы добавить имя пользователя нажми /help \n\n'
-)
 
 
 # функции рассылки
 def send_admins():
     for user in get_admins():
         try:
-            bot.send_message(user.telegram_id, msg_for_active, parse_mode='Markdown')
+            bot.send_message(user.telegram_id, txts.msg_for_active, parse_mode='Markdown')
             sleep(1)
-            bot.send_message(user.telegram_id, msg_for_admins, parse_mode='Markdown')
+            bot.send_message(user.telegram_id, txts.msg_for_admins, parse_mode='Markdown')
             sleep(1)
-            bot.send_message(user.telegram_id, msg_for_blocked, parse_mode='Markdown')
+            bot.send_message(user.telegram_id, txts.msg_for_blocked, parse_mode='Markdown')
             sleep(1)
-            bot.send_message(user.telegram_id, msg_for_no_link, parse_mode='Markdown')
+            bot.send_message(user.telegram_id, txts.msg_for_no_link, parse_mode='Markdown')
             sleep(1)
-            bot.send_message(user.telegram_id, msg_for_no_nickname, parse_mode='Markdown')
+            bot.send_message(user.telegram_id, txts.msg_for_no_nickname, parse_mode='Markdown')
             sleep(1)
         except Exception:
             set_field(user.telegram_id, 'is_active', False)
@@ -160,7 +101,7 @@ def send_no_contacts():
     for user in get_no_link_users():
         try:
             bot.send_message(wudmc_tg, f'отправляю сообщение юзеру {user.telegram_id}')
-            bot.send_message(user.telegram_id, msg_for_no_link, parse_mode='Markdown')
+            bot.send_message(user.telegram_id, txts.msg_for_no_link, parse_mode='Markdown')
             bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} успешно отправлено')
         except Exception:
             set_field(user.telegram_id, 'is_active', False)
@@ -172,7 +113,7 @@ def send_no_contacts():
     for user in get_no_nickname_users():
         try:
             bot.send_message(wudmc_tg, f'отправляю сообщение юзеру {user.telegram_id}')
-            bot.send_message(user.telegram_id, msg_for_no_nickname, parse_mode='Markdown')
+            bot.send_message(user.telegram_id, txts.msg_for_no_nickname, parse_mode='Markdown')
             bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} успешно отправлено')
         except Exception:
             set_field(user.telegram_id, 'is_active', False)
@@ -187,7 +128,7 @@ def send_blocked_users():
     for user in get_blocked_users():
         try:
             bot.send_message(wudmc_tg, f'отправляю сообщение юзеру {user.telegram_id}')
-            bot.send_message(user.telegram_id, msg_for_blocked, parse_mode='Markdown')
+            bot.send_message(user.telegram_id, txts.msg_for_blocked, parse_mode='Markdown')
             bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} успешно отправлено')
         except Exception:
             set_field(user.telegram_id, 'is_active', False)
@@ -202,7 +143,7 @@ def send_active_users():
     for user in get_verified_users():
         try:
             bot.send_message(wudmc_tg, f'отправляю сообщение юзеру {user.telegram_id}')
-            bot.send_message(user.telegram_id, msg_for_active, parse_mode='Markdown')
+            bot.send_message(user.telegram_id, txts.msg_for_active, parse_mode='Markdown')
             bot.send_message(wudmc_tg, f' сообщение юзеру {user.telegram_id} успешно отправлено')
         except Exception:
             set_field(user.telegram_id, 'is_active', False)
@@ -671,12 +612,12 @@ def feedbacktxt_callback(call):
             reported_user = feedback_status[len('reportuser_'):]
 
             set_pair_history_field(pair_history_id, field, 'bezotveta')
-            set_field(reported_user, 'balls', int(get_user(reported_user).balls) + 1)
+            set_field(reported_user, 'points', int(get_user(reported_user).points) + 1)
             bot.send_message(wudmc_tg,
-                             f' у юзера {reported_user} balls: {int(get_user(reported_user).balls)}')
+                             f' у юзера {reported_user} points: {int(get_user(reported_user).points)}')
             bot.send_message(reported_user,
-                             f' Ауч! Ты нарушил правила и не отвечал собеседнику, больше не делай так. \n Помни: 3 жалобы = бан. Жалоб сейчас: {int(get_user(reported_user).balls)}')
-            if get_user(reported_user).balls > 2:
+                             f' Ауч! Ты нарушил правила и не отвечал собеседнику, больше не делай так. \n Помни: 3 жалобы = бан. Жалоб сейчас: {int(get_user(reported_user).points)}')
+            if get_user(reported_user).points > 2:
                 set_field(reported_user, 'ban', True)
                 set_field(reported_user, 'is_active', False)
                 set_field(reported_user, 'is_verified', False)
@@ -911,7 +852,7 @@ def ask_about_next_week():
                 set_field(user.telegram_id, 'is_active', False)
                 bot.send_message(user.telegram_id, '[Я поставил твой профиль на паузу, подтверди участие еще раз вручную пожалуйста]')
             bot.send_message(
-                user.telegram_id, next_week_txt, parse_mode='Markdown',
+                user.telegram_id, txts.next_week_txt, parse_mode='Markdown',
                 reply_markup=keyboard)
             bot.send_message(wudmc_tg,
                              f' запрос участия  юзеру {user.telegram_id} успешно отправлен')
@@ -943,7 +884,7 @@ def remind_inactive():
             bot.send_message(wudmc_tg,
                              f' отправляю напоминание  юзеру {user.telegram_id} ')
             bot.send_message(
-                user.telegram_id, reminder_for_inactive, parse_mode='Markdown',
+                user.telegram_id, txts.reminder_for_inactive, parse_mode='Markdown',
                 reply_markup=keyboard)
             bot.send_message(wudmc_tg,
                              f' напоминание юзеру {user.telegram_id} успешно отправлен')
@@ -982,7 +923,7 @@ def ask_about_last_week():
                     )
 
                     bot.send_message(
-                        pair.user_a, poll_txt_1, parse_mode='Markdown', reply_markup=keyboard)
+                        pair.user_a, txts.poll_txt_1, parse_mode='Markdown', reply_markup=keyboard)
                     bot.send_message(wudmc_tg,
                                      f' запрос фидбека юзеру А {pair.user_a} успешно отправлено')
 
@@ -1012,7 +953,7 @@ def ask_about_last_week():
 
                     )
                     bot.send_message(
-                        pair.user_b, poll_txt_1, parse_mode='Markdown', reply_markup=keyboard)
+                        pair.user_b, txts.poll_txt_1, parse_mode='Markdown', reply_markup=keyboard)
                     bot.send_message(wudmc_tg,
                                      f' запрос фидбека юзеру Б {pair.user_b} успешно отправлено')
 
@@ -1325,7 +1266,6 @@ def ask_name_handler(message):
 
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 1
-    countries = [ 'Грузия', 'Португалия', 'Турция', 'Армения','Израиль', 'Испания', 'Германия', 'Дания' , 'Россия']
 
     keyboard.add(
         types.InlineKeyboardButton(
@@ -1333,7 +1273,7 @@ def ask_name_handler(message):
             callback_data='first_location_Online'
         )
     )
-    for country in countries:
+    for country in country_map.keys():
         keyboard.add(
             types.InlineKeyboardButton(
                 text=f'{country}',
@@ -1352,17 +1292,7 @@ def change_location_callback(call):
     action = 'first'
     if user.is_verified:
         action = 'set'
-    country_map = {
-        'Грузия': ['Батуми', 'Тбилиси'],
-        'Португалия': ['Лиссабон'],
-        'Турция': ['Анталья', 'Бодрум', 'Акьяка'],
-        'Армения': ['Ереван'],
-        'Израиль': ['Тель Авив', 'Рамат Ган', 'Ришон Лецион', 'Хайфа'],
-        'Испания': ['Валенсия', 'Барселона'],
-        'Германия': ['Штутгарт', 'Гамбург', 'Берлин'],
-        'Дания': ['Рибе'],
-        'Россия': ['Москва', 'Санкт-Путербург']
-    }
+
     country = call.data[len('country_'):]
     bot.delete_message(
         chat_id=user_id,
@@ -1975,7 +1905,7 @@ def how_it_works_callback(call):
         text=answer,
         parse_mode='Markdown'
     )
-    answer = how_txt
+    answer = txts.how_txt
 
     keyboard = types.InlineKeyboardMarkup()
 
@@ -2244,17 +2174,6 @@ def change_profile_callback(call):
 def change_location_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-    country_map = {
-        'Грузия': ['Батуми', 'Тбилиси'],
-        'Португалия': ['Лиссабон'],
-        'Турция': ['Анталья', 'Бодрум', 'Акьяка'],
-        'Армения': ['Ереван'],
-        'Израиль': ['Тель Авив', 'Рамат Ган', 'Ришон Лецион', 'Хайфа'],
-        'Испания': ['Валенсия', 'Барселона'],
-        'Германия': ['Штутгарт', 'Гамбург', 'Берлин'],
-        'Дания': ['Рибе'],
-        'Россия': ['Москва', 'Санкт-Путербург']
-    }
 
     location = call.data[len('set_location_'):]
     set_field(user_id, 'location', location)
@@ -2291,17 +2210,7 @@ def change_location_callback(call):
     location_value = get_user_field(user_id, 'location')
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 2
-    country_map = {
-        'Грузия': ['Батуми', 'Тбилиси'],
-        'Португалия': ['Лиссабон'],
-        'Турция': ['Анталья', 'Бодрум', 'Акьяка'],
-        'Армения': ['Ереван'],
-        'Израиль': ['Тель Авив', 'Рамат Ган', 'Ришон Лецион', 'Хайфа'],
-        'Испания': ['Валенсия', 'Барселона'],
-        'Германия': ['Штутгарт', 'Гамбург', 'Берлин'],
-        'Дания': ['Рибе'],
-        'Россия': ['Москва', 'Санкт-Путербург']
-    }
+
     keyboard.add(
         types.InlineKeyboardButton(
             text=f'Онлайн',
