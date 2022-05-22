@@ -1288,7 +1288,15 @@ def change_location_callback(call):
                 callback_data=f'{action}_location_{city}'
             )
         )
-    answer = ('Отлично! город укажи ')
+    keyboard.add(
+        types.InlineKeyboardButton(
+            text=f'Назад',
+            callback_data='change_location'
+            )
+    )
+    answer = ('Со станой разобрались, теперь выбери город \n\n'
+              'Если твоего города нету, ты можешь участвовать 🌎 ОНЛАЙН 🌎 \n'
+              'Чтобы выбрать онлайн >>> нажми "Назад"')
 
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
