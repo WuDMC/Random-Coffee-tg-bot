@@ -511,7 +511,27 @@ def feedback_callback(call):
             types.InlineKeyboardButton(
                 text='Не хочу оставлять отзыв',
                 callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'dontwant'
-            )
+            ),
+            types.InlineKeyboardButton(
+                text='1',
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star1'
+            ),
+            types.InlineKeyboardButton(
+                text='2',
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star2'
+            ),
+            types.InlineKeyboardButton(
+                text='3',
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star3'
+            ),
+            types.InlineKeyboardButton(
+                text='4',
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star4'
+            ),
+            types.InlineKeyboardButton(
+                text='5',
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star5'
+            ),
         )
         bot.send_chat_action(user_id, 'typing')
         bot.send_message(user_id, answer, parse_mode='Markdown',
@@ -595,6 +615,21 @@ def feedbacktxt_callback(call):
                       f'В понедельник будут назначены новые пары!\n'
                       f'Проверь, что в твоем профиле актуальная информация')
             set_pair_history_field(pair_history_id, field, 'nesroslos')
+            keyboard = types.InlineKeyboardMarkup()
+
+            keyboard.add(
+                types.InlineKeyboardButton(
+                    text='ПРОФИЛЬ',
+                    callback_data='help'
+                )
+            )
+            bot.send_chat_action(user_id, 'typing')
+            bot.send_message(user_id, answer, reply_markup=keyboard)
+        elif feedback_status.startswith('star'):
+            answer = (f'😢 Спасибо за оценку, в следующий раз я учту это при подборе пары.\n\n'
+                      f'В понедельник будут назначены новые пары!\n'
+                      f'Проверь, что в твоем профиле актуальная информация')
+            set_pair_history_field(pair_history_id, field, feedback_status[len('star'):])
             keyboard = types.InlineKeyboardMarkup()
 
             keyboard.add(
