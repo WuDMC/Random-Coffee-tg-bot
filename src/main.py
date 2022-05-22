@@ -504,34 +504,34 @@ def feedback_callback(call):
         keyboard = types.InlineKeyboardMarkup()
         keyboard.row_width = 1
         keyboard.add(
+            # types.InlineKeyboardButton(
+            #     text='Оставить отзыв',
+            #     callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'userfeedback'
+            # ),
             types.InlineKeyboardButton(
-                text='Оставить отзыв',
-                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'userfeedback'
+                text='⭐',
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star1'
+            ),
+            types.InlineKeyboardButton(
+                text='⭐⭐',
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star2'
+            ),
+            types.InlineKeyboardButton(
+                text='⭐⭐⭐',
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star3'
+            ),
+            types.InlineKeyboardButton(
+                text='⭐⭐⭐⭐',
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star4'
+            ),
+            types.InlineKeyboardButton(
+                text='⭐⭐⭐⭐⭐',
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star5'
             ),
             types.InlineKeyboardButton(
                 text='Не хочу оставлять отзыв',
                 callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'dontwant'
-            ),
-            types.InlineKeyboardButton(
-                text='1',
-                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star1'
-            ),
-            types.InlineKeyboardButton(
-                text='2',
-                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star2'
-            ),
-            types.InlineKeyboardButton(
-                text='3',
-                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star3'
-            ),
-            types.InlineKeyboardButton(
-                text='4',
-                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star4'
-            ),
-            types.InlineKeyboardButton(
-                text='5',
-                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star5'
-            ),
+            )
         )
         bot.send_chat_action(user_id, 'typing')
         bot.send_message(user_id, answer, parse_mode='Markdown',
