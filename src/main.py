@@ -71,6 +71,20 @@ country_map = {
         'Дания': ['Рибе'],
         'Россия': ['Москва', 'Санкт-Путербург']
     }
+
+flag_map = {
+        'Грузия': '🇬🇪',
+        'Португалия': '🇵🇹',
+        'Турция': '🇹🇷',
+        'Армения': '🇦🇲',
+        'Израиль': '🇮🇱',
+        'Испания': '🇪🇸',
+        'Германия': '🇩🇪',
+        'Дания': '🇩🇰',
+        'Россия': '🇷🇺',
+        'Онлайн' : '🌎'
+    }
+
 # заготовки сообщения
 
 
@@ -187,6 +201,7 @@ def help(message):
     location = str(user.location)
     next_state = States.complete
     keyboard = types.InlineKeyboardMarkup()
+    profile_status = '' if is_user_fillevrth(user_id) else '🟥'
     if str(user.nickname)[1:] != str(message.from_user.username):
         nickname = str(message.from_user.username or 'Не указан')
         if nickname != 'Не указан':
@@ -199,11 +214,11 @@ def help(message):
             callback_data='how_it_works'
         ),
         types.InlineKeyboardButton(
-            text='Посмотреть свой профиль',
+            text='👀Посмотреть свой профиль',
             callback_data='show_profile'
         ),
         types.InlineKeyboardButton(
-            text='Поменять данные профиля',
+            text=f'{profile_status}Поменять данные профиля{profile_status}',
             callback_data='change_profile'
         ),
         types.InlineKeyboardButton(
@@ -211,7 +226,7 @@ def help(message):
             callback_data=pause_data
         ),
         types.InlineKeyboardButton(
-            text=f'🏴󠁧󠁢󠁥󠁮󠁧󠁿 Локация: {location}',
+            text=f'{flag_map[location]}󠁧󠁢󠁥 Локация: {location}',
             callback_data='change_location'
         ),
     )
@@ -1157,7 +1172,7 @@ def start_handler(message):
         set_field(user_id, 'nickname', nickname)
         set_field(user_id, 'name', 'Имя не указано')
         answer = ('Привет!🤩\n'
-                  'Я Random Coffee бот 🤖  для ivilians\n\n'
+                  'Я Random Coffee бот 🤖  для Сivilians\n\n'
                   'Каждую неделю я буду предлагать '
                   'тебе для встречи интересного человека, '
                   'случайно выбранного среди '

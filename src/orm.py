@@ -87,7 +87,6 @@ def get_ban_users():
     )
     return users if users else []
 
-# TODO: написать проверку для пользователей без описания профилей
 
 def get_blocked_users():
     users = (
@@ -165,35 +164,9 @@ def get_active_online():
     )
     return users if users else []
 
-def get_active_tbilisi():
-    users = (
-        session.query(
-            User
-        )
-        .filter(
-            User.is_active == True,
-            User.is_verified == True,
-            User.ban == False,
-            User.location == 'Тбилиси'
-        )
-        .all()
-    )
-    return users if users else []
 
-def get_active_batumi():
-    users = (
-        session.query(
-            User
-        )
-        .filter(
-            User.is_active == True,
-            User.is_verified == True,
-            User.ban == False,
-            User.location == 'Батуми'
-        )
-        .all()
-    )
-    return users if users else []
+
+
 
 def get_inactive_users():
     users = (
