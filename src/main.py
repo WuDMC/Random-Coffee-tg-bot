@@ -813,7 +813,7 @@ def generate_pairs():
     sleep(1)
     pairs_db = get_pairs()
     for pair in pairs_db:
-        pair_history = create_pair_history(pair.id, pair.user_a, pair.user_b)
+        pair_history = create_pair_history(pair.id, pair.user_a, pair.user_b, pair.location)
         set_pair_field(pair.id, 'pair_history_id', pair_history.id)
         bot.send_message(wudmc_tg, pair_history.id)
 

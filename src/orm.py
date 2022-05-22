@@ -262,16 +262,17 @@ def create_pair(user_id_a, user_id_b, location):
     session.add(Pair(
         user_a=user_id_a,
         user_b=user_id_b,
-        about=location
+        location=location
     ))
     session.commit()
 
 
-def create_pair_history(id, user_id_a, user_id_b):
+def create_pair_history(id, user_id_a, user_id_b, location):
     pair = Pair_History(
         pair_id=id,
         user_a=user_id_a,
         user_b=user_id_b,
+        location=location
     )
     session.add(pair)
     session.commit()
