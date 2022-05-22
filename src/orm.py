@@ -130,6 +130,26 @@ def get_active_users():
     )
     return users if users else []
 
+def get_users_by_loc():
+  locs = [r.location for r in session.query(User.location).distinct()]
+  users = []
+  for loc in locs:
+        users_loc = (
+        session.query(
+            User
+        )
+        .filter(
+            User.is_active == True,
+            User.is_verified == True,
+            User.ban == False,
+            User.location == loc
+        )
+        .all()
+        )
+        users.append(users_loc)
+
+  return users if users else []
+
 def get_active_online():
     users = (
         session.query(

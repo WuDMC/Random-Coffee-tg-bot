@@ -14,7 +14,7 @@ from messages import generate_password
 from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_users, set_field, create_user, \
     get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users, \
     get_verified_users, get_user_field, get_active_online, get_active_tbilisi, get_active_batumi, is_user_fillevrth, \
-    get_ban_users, create_pair_history, set_pair_field, set_pair_history_field, get_pair_history
+    get_ban_users, create_pair_history, set_pair_field, set_pair_history_field, get_pair_history, get_users_by_loc
 
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
@@ -745,10 +745,7 @@ def show_pairs_callback(call):
 
 
 def generate_pairs():
-    all_active_users = []
-    all_active_users.append(get_active_online())
-    all_active_users.append(get_active_batumi())
-    all_active_users.append(get_active_tbilisi())
+    all_active_users = get_users_by_loc()
     delete_pairs()
 
     for user_list in all_active_users:
