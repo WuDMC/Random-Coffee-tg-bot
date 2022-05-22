@@ -508,24 +508,24 @@ def feedback_callback(call):
             #     callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'userfeedback'
             # ),
             types.InlineKeyboardButton(
-                text='⭐',
-                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star1'
-            ),
-            types.InlineKeyboardButton(
-                text='⭐⭐',
-                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star2'
-            ),
-            types.InlineKeyboardButton(
-                text='⭐⭐⭐',
-                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star3'
+                text='⭐⭐⭐⭐⭐',
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star5'
             ),
             types.InlineKeyboardButton(
                 text='⭐⭐⭐⭐',
                 callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star4'
             ),
             types.InlineKeyboardButton(
-                text='⭐⭐⭐⭐⭐',
-                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star5'
+                text='⭐⭐⭐',
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star3'
+            ),
+            types.InlineKeyboardButton(
+                text='⭐⭐',
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star2'
+            ),
+            types.InlineKeyboardButton(
+                text='⭐',
+                callback_data='feedbacktxt_' + str(pair_history_id) + '_pair_' + 'star1'
             ),
             types.InlineKeyboardButton(
                 text='Не хочу оставлять отзыв',
