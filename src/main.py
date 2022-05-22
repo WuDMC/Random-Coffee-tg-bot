@@ -187,11 +187,11 @@ def help(message):
     location = str(user.location)
     next_state = States.complete
     keyboard = types.InlineKeyboardMarkup()
-    if str(user.mail)[1:] != str(message.from_user.username):
+    if str(user.nickname)[1:] != str(message.from_user.username):
         nickname = str(message.from_user.username or 'Не указан')
         if nickname != 'Не указан':
             nickname = '@' + nickname
-        set_field(user_id, 'mail', nickname)
+        set_field(user_id, 'nickname', nickname)
     keyboard.row_width = 1
     keyboard.add(
         types.InlineKeyboardButton(
@@ -215,7 +215,7 @@ def help(message):
             callback_data='change_location'
         ),
     )
-    if user.mail == 'Не указан':
+    if user.nickname == 'Не указан':
         keyboard.add(
             types.InlineKeyboardButton(
                 text='‼ALERT‼️Укажи НИК в TG',
@@ -238,7 +238,7 @@ def help(message):
         status = '🟥 Не участвую в Random Coffee 🟥'
 
     help_txt = (f'*Статус на этой неделе:* {status}\n\n'
-                'Поддержка по боту в чате @BatumiRandomCoffee\n\n'
+                'Поддержка по боту в чате Civilians Capital Chat\n\n'
                 'Выбери подходящую опцию ниже')
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, help_txt,
@@ -249,7 +249,7 @@ def help(message):
 # admin callbacks
 
 @bot.message_handler(state=States.change_user_for_ask_id_admin)
-def ask_mail_handler(message):
+def ask_nickname_handler(message):
     user_id = message.from_user.id
     next_state = States.complete
 
@@ -654,7 +654,7 @@ def show_users_callback(call):
         answer = (
             '\n'.join(
                 [
-                    f'[{user.telegram_id}](tg://user?id={user.telegram_id}) \- {__escape_markdown(user.mail)} \- {"Verified" if user.is_verified else "Blocked"} \- {"Run" if user.is_active else "Pause"} \-  {(datetime.now() - user.created_at).days} days  \- '
+                    f'[{user.telegram_id}](tg://user?id={user.telegram_id}) \- {__escape_markdown(user.nickname)} \- {"Verified" if user.is_verified else "Blocked"} \- {"Run" if user.is_active else "Pause"} \-  {(datetime.now() - user.created_at).days} days  \- '
                     for user in users])
         )
     except Exception:
@@ -1157,22 +1157,22 @@ def start_handler(message):
     elif (not user or not user.is_verified) and message.from_user.username not in ADMINS:
         create_user(user_id)
         set_field(user_id, 'link', 'Не указана')
-        set_field(user_id, 'mail', nickname)
+        set_field(user_id, 'nickname', nickname)
         set_field(user_id, 'name', 'Имя не указано')
-        answer = ('Гамарджоба!🤩\n'
-                  'Я Random Coffee бот 🤖  в Грузии\n\n'
+        answer = ('Привет!🤩\n'
+                  'Я Random Coffee бот 🤖  для ivilians\n\n'
                   'Каждую неделю я буду предлагать '
                   'тебе для встречи интересного человека, '
                   'случайно выбранного среди '
                   'других участников🎲\n\n'
                   'Введи инвайт-код, чтобы продолжить\n\n'
-                  'ПОДСКАЗКА - инвайт-код был в рекламном сообщении\n'
-                  'Или спроси в нашем чате в @it\_batumi\_offlain')
+                  'ПОДСКАЗКА - инвайт-код был в прикреплен в сообщении со ссылкой на меня\n'
+                  'Или спроси в нашем чате в Civilians Capital Chat')
 
 
     elif not user and message.from_user.username in ADMINS:
         create_user(user_id)
-        set_field(user_id, 'mail', nickname)
+        set_field(user_id, 'nickname', nickname)
         set_field(user_id, 'is_admin', True)
         set_field(user_id, 'is_verified', True)
 
@@ -1182,8 +1182,7 @@ def start_handler(message):
     else:
         answer = ('Рад тебя видеть!🔥\n'
                   'Твой профиль - /help\n'
-                  'Обсуждение и вопросы по боту @BatumiRandomCoffee\n\n'
-                  'Еженедельные встречи в @it\_batumi\_offlain'
+                  'Обсуждение и вопросы по боту Civilians Capital Chat\n\n'
                   )
         next_state = States.complete
 
@@ -1223,47 +1222,14 @@ def ask_password_handler(message):
     bot.set_state(user_id, next_state)
 
 
-# @bot.message_handler(state=States.ask_name)
-# def ask_name_handler(message):
-#     user_id = message.from_user.id
-#     name = message.text
-#     set_field(user_id, 'name', name)
-#
-#
-#     answer = ('Рад познакомиться! \n\n'
-#               'Теперь выбери локацию для встреч, ты сможешь изменить ее в любое время.')
-#
-#     keyboard = types.InlineKeyboardMarkup()
-#     keyboard.row_width = 1
-#
-#
-#     keyboard.add(
-#         types.InlineKeyboardButton(
-#             text=f'Онлайн',
-#             callback_data='first_location_Online'
-#         ),
-#         types.InlineKeyboardButton(
-#             text=f'Батуми',
-#             callback_data='first_location_Батуми'
-#         ),
-#         types.InlineKeyboardButton(
-#             text=f'Тбилиси',
-#             callback_data='first_location_Тбилиси'
-#         )
-#     )
-#     bot.send_chat_action(user_id, 'typing')
-#     bot.send_message(user_id, answer, reply_markup=keyboard)
 
 @bot.message_handler(state=States.ask_name)
 def ask_name_handler(message):
     user_id = message.from_user.id
     name = message.text
     set_field(user_id, 'name', name)
-
-
     answer = ('Рад познакомиться! \n\n'
               'Теперь выбери локацию для встреч, ты сможешь изменить ее в любое время.')
-
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 1
 
@@ -1571,7 +1537,7 @@ def change_about_handler(message):
 #
 #     answer = 'Готово'
 #
-#     set_field(user_id, 'mail', nickname)
+#     set_field(user_id, 'nickname', nickname)
 #
 #     keyboard = types.InlineKeyboardMarkup()
 #
@@ -2080,8 +2046,8 @@ def update_nickname_callback(call):
     if nickname != 'Не указан':
         nickname = '@' + nickname
 
-    set_field(user_id, 'mail', nickname)
-    nickname_db = get_user(user_id).mail
+    set_field(user_id, 'nickname', nickname)
+    nickname_db = get_user(user_id).nickname
     nick = f'🟥{nickname_db}🟥' if nickname_db == 'Не указан' else nickname_db
     answer = ('👉 Обновить Имя пользователя\n'
               f'Твой никнейм сейчас {nick}')
@@ -2133,7 +2099,10 @@ def change_profile_callback(call):
 
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 1
-
+    link_status = '⬅️Не заполнено🟥' if get_user_field(user_id, 'link') == '' else ''
+    work_status = '⬅️Не заполнено🟥' if get_user_field(user_id, 'work') == '' else ''
+    about_status = '⬅️Не заполнено🟥' if get_user_field(user_id, 'about') == '' else ''
+    nick_status = '⬅️Не Указан🟥' if get_user_field(user_id, 'nickname') == 'Не указан' else ''
     keyboard.add(
         types.InlineKeyboardButton(
             text='Своё имя',
@@ -2144,19 +2113,19 @@ def change_profile_callback(call):
         #     callback_data='change_interests'
         # ),
         types.InlineKeyboardButton(
-            text='Ссылку на социальную сеть',
+            text= f'Ссылку на социальную сеть {link_status}',
             callback_data='change_link'
         ),
         types.InlineKeyboardButton(
-            text='Кем работаю',
+            text=f'Кем работаю {work_status}',
             callback_data='change_work'
         ),
         types.InlineKeyboardButton(
-            text='О себе',
+            text=f'О себе {about_status}',
             callback_data='change_about'
         ),
         types.InlineKeyboardButton(
-            text='Обновить Никнейм',
+            text=f'Обновить Никнейм {nick_status}',
             callback_data='update_nickname'
         ),
         types.InlineKeyboardButton(

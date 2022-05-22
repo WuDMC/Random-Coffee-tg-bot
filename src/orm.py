@@ -198,7 +198,7 @@ def get_no_nickname_users():
             User.is_active == True,
             User.is_verified == True,
             User.ban == False,
-            User.mail == 'Не указан'
+            User.nickname == 'Не указан'
         )
         .all()
     )
@@ -225,7 +225,7 @@ def get_no_link_users():
 def create_user(user_id):
     if not get_user(user_id):
         session.add(User(
-            mail='none',
+            nickname='Не указан',
             telegram_id=user_id,
             password=generate_password(),
 

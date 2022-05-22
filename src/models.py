@@ -13,7 +13,7 @@ class User(Base):
 
     id = Column(Integer, primary_key=True)
     telegram_id = Column(String, nullable=False)
-    mail = Column(String, default='', nullable=True)
+    nickname = Column(String, default='', nullable=True)
     name = Column(String, default='', nullable=False)
     link = Column(String, default='', nullable=False)
     work = Column(String, default='', nullable=False)
@@ -52,7 +52,7 @@ class User(Base):
                 f'*Чем занимается:* {self.work}\n'
                 f'*Зацепки для начала разговора:* {self.about}\n\n'
                 f'Напиши собеседнику в Telegram – [{self.name}](tg://user?id={self.telegram_id})\n\n'
-                f'*Никнейм в тг* {__escape_markdown(self.mail)}\n\n')
+                f'*Никнейм в тг* {__escape_markdown(self.nickname)}\n\n')
 
     def __getitem__(self, field):
         return self.__dict__[field]
