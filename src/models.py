@@ -26,10 +26,7 @@ class User(Base):
     updated_at = Column(DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     ban = Column(Boolean, default=False, nullable=False)
     points = Column(Integer, default=0, nullable=False)
-    # int_1 = Column(Boolean, default=False, nullable=False)
-    # int_2 = Column(Boolean, default=False, nullable=False)
-    # int_3 = Column(Boolean, default=False, nullable=False)
-    # int_4 = Column(Boolean, default=False, nullable=False)
+    temp = Column(String, default='', nullable=False)
     location = Column(String, default='', nullable=False)
 
     def __repr__(self):
@@ -82,8 +79,8 @@ class Pair_History(Base):
     user_b = Column(String, nullable=False)
     date = Column(DateTime, default=datetime.datetime.now)
     invited = Column(Boolean, nullable=True)
-    feedback_user_a = Column(String, nullable=True)
-    feedback_user_b = Column(String, nullable=True)
+    feedback_user_a = Column(Integer, nullable=True)
+    feedback_user_b = Column(Integer, nullable=True)
     success_user_a = Column(Boolean, nullable=True)
     success_user_b = Column(Boolean, nullable=True)
 

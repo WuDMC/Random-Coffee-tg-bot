@@ -608,9 +608,9 @@ def feedbacktxt_callback(call):
         elif feedback_status == 'userfeedback':
             next_state = States.userfeedback
 
-            answer = (f'Напиши пару слов о прошедшей встрече в одном сообщении.')
+            answer = (f'Оцени от 1 до 5 на сколько интересно было тебе')
 
-            set_field(user_id, 'about', pair_history_id)
+            set_field(user_id, 'temp', pair_history_id)
             set_pair_history_field(pair_history_id, field, 'userfeedback')
             bot.set_state(user_id, next_state)
             bot.send_chat_action(user_id, 'typing')
@@ -1295,7 +1295,7 @@ def change_location_callback(call):
             )
     )
     answer = ('Со станой разобрались, теперь выбери город \n\n'
-              'Если твоего города нету, ты можешь участвовать 🌎 ОНЛАЙН 🌎 \n'
+              'Если твоего города нету, ты можешь участвовать 🌎 ОНЛАЙН \n'
               'Чтобы выбрать онлайн >>> нажми "Назад"')
 
     bot.send_chat_action(user_id, 'typing')
@@ -1464,7 +1464,7 @@ def add_user_feedback(message):
               f'Проверь, что в твоем профиле актуальная информация')
 
     set_pair_history_field(pair_history_id, field, user_feedback)
-    set_field(user_id, 'about', 'None')
+    set_field(user_id, 'temp', 'None')
     keyboard = types.InlineKeyboardMarkup()
 
     keyboard.add(
@@ -1689,7 +1689,7 @@ def sender_callback(call):
 @bot.callback_query_handler(func=lambda call: call.data == 'test')
 def test_handler(call):
     try:
-        # test = str(bot.get_state)
+        ask_about_last_week()
         bot.send_message(wudmc_tg, 'test')
     except Exception:
         bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
