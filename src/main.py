@@ -13,7 +13,7 @@ from settings import ADMINS, TELEGRAM_TOKEN, SMTP
 from messages import generate_password
 from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_users, set_field, create_user, \
     get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users, \
-    get_verified_users, get_user_field, get_active_online, get_active_tbilisi, get_active_batumi, \
+    get_verified_users, get_user_field, get_active_online, get_active_tbilisi, get_active_batumi, is_user_fillevrth, \
     get_ban_users, create_pair_history, set_pair_field, set_pair_history_field, get_pair_history
 
 
@@ -1288,9 +1288,8 @@ def ask_name_handler(message):
 def change_location_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
-    user = get_user(user_id)
     action = 'first'
-    if user.is_verified:
+    if is_user_fillevrth(user_id):
         action = 'set'
 
     country = call.data[len('country_'):]

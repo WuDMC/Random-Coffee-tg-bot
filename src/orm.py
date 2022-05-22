@@ -23,6 +23,18 @@ def get_user(user_id):
     )
     return user if user else None
 
+def is_user_fillevrth(user_id):
+    user = (
+        session.query(
+            User
+        )
+        .filter(
+            User.telegram_id == user_id,
+        )
+        .first()
+    )
+    return True if (user.link != '' and user.about != '' and user.work != '') else False
+
 def get_user_field(user_id, field):
     user = (
         session.query(
