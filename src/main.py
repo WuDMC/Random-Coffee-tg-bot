@@ -15,7 +15,7 @@ from orm import get_blocked_users, get_user, get_no_link_users, get_no_nickname_
     get_admins, get_users, get_active_users, create_pair, delete_pairs, get_pairs, get_inactive_users, \
     get_verified_users, get_user_field, get_active_online, get_active_tbilisi, get_active_batumi, is_user_fillevrth, \
     get_ban_users, create_pair_history, set_pair_field, set_pair_history_field, get_pair_history, get_users_by_loc
-
+from passwords import password_map
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 wudmc_tg = '1205912479'
@@ -1196,7 +1196,7 @@ def ask_password_handler(message):
     admin = wudmc_tg
     user = get_user(user_id)
     password = message.text
-    if user.password == password:
+    if password in password_map.keys():
         try:
             answer_to_admin = (
                 'Новый пользователь!\n'
@@ -1206,7 +1206,7 @@ def ask_password_handler(message):
 
             answer = ('Ты в системе🌐\n\n'
                       'Как тебя зовут?☕️')
-
+            set_field(user_id, 'password', password)
             set_field(user_id, 'is_verified', True)
         except Exception:
             bot.send_message(wudmc_tg,
