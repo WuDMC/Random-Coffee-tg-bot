@@ -69,7 +69,7 @@ country_map = {
         'Испания': ['Валенсия', 'Барселона'],
         'Германия': ['Штутгарт', 'Гамбург', 'Берлин'],
         'Дания': ['Рибе'],
-        'Россия': ['Москва', 'Санкт-Путербург']
+        'Россия': ['Москва', 'Санкт-Путербург'],
     }
 
 flag_map = {
@@ -207,6 +207,10 @@ def help(message):
         if nickname != 'Не указан':
             nickname = '@' + nickname
         set_field(user_id, 'nickname', nickname)
+    flag = '🌎'
+    for country, cities in country_map.items():
+        if location in cities:
+            flag = flag_map[country]
     keyboard.row_width = 1
     keyboard.add(
         types.InlineKeyboardButton(
@@ -226,7 +230,7 @@ def help(message):
             callback_data=pause_data
         ),
         types.InlineKeyboardButton(
-            text=f'{flag_map[location]}󠁧󠁢󠁥 Локация: {location}',
+            text=f'{flag}󠁧󠁢󠁥 Локация: {location}',
             callback_data='change_location'
         ),
     )
