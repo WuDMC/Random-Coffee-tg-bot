@@ -625,7 +625,7 @@ def feedbacktxt_callback(call):
             bot.send_chat_action(user_id, 'typing')
             bot.send_message(user_id, answer, reply_markup=keyboard)
         elif feedback_status.startswith('star'):
-            answer = (f'😢 Спасибо за оценку, в следующий раз я учту это при подборе пары.\n\n'
+            answer = (f'Спасибо за оценку, в следующий раз я учту это при подборе пары.\n\n'
                       f'В понедельник будут назначены новые пары!\n'
                       f'Проверь, что в твоем профиле актуальная информация')
             set_pair_history_field(pair_history_id, field, feedback_status[len('star'):])
