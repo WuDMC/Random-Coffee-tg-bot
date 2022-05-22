@@ -57,6 +57,7 @@ class States:
     send_message_to_user_id = 14
     send_message_to_all_users = 15
     complete = 16
+    wait = 17
 
 
 country_map = {
@@ -1274,6 +1275,7 @@ def ask_password_handler(message):
 @bot.message_handler(state=States.ask_name)
 def ask_name_handler(message):
     user_id = message.from_user.id
+    next_state = States.wait
     name = message.text
     set_field(user_id, 'name', name)
     answer = ('Рад познакомиться! \n\n'
@@ -1296,6 +1298,7 @@ def ask_name_handler(message):
         )
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
+    bot.set_state(user_id, next_state)
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('country_'))
@@ -1684,22 +1687,22 @@ def sender_callback(call):
             text='TEST',
             callback_data='test'
         ),
-        types.InlineKeyboardButton(
-            text='Отправить админам заготовку',
-            callback_data='send_to_admins'
-        ),
-        types.InlineKeyboardButton(
-            text='Отправить безконтактным заготовку',
-            callback_data='send_to_nocontact'
-        ),
-        types.InlineKeyboardButton(
-            text='Отправить не подтверждённым заготовку',
-            callback_data='send_to_blocked'
-        ),
-        types.InlineKeyboardButton(
-            text='Отправить верифицированным заготовку',
-            callback_data='send_to_active'
-        ),
+        # types.InlineKeyboardButton(
+        #     text='Отправить админам заготовку',
+        #     callback_data='send_to_admins'
+        # ),
+        # types.InlineKeyboardButton(
+        #     text='Отправить безконтактным заготовку',
+        #     callback_data='send_to_nocontact'
+        # ),
+        # types.InlineKeyboardButton(
+        #     text='Отправить не подтверждённым заготовку',
+        #     callback_data='send_to_blocked'
+        # ),
+        # types.InlineKeyboardButton(
+        #     text='Отправить верифицированным заготовку',
+        #     callback_data='send_to_active'
+        # ),
         types.InlineKeyboardButton(
             text='Отправить свое сообщение всем ',
             callback_data='send_to_all'
@@ -2195,7 +2198,7 @@ def change_profile_callback(call):
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('set_location_'))
-def change_location_callback(call):
+def set_location_callback(call):
     user_id = call.message.chat.id
     message_id = call.message.message_id
 
@@ -2250,79 +2253,6 @@ def change_location_callback(call):
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer, reply_markup=keyboard)
 
-#
-# @bot.callback_query_handler(func=lambda call: call.data.startswith(tuple(['change_interests', 'switch_'])))
-# def change_interests_callback(call):
-#     user_id = call.message.chat.id
-#     message_id = call.message.message_id
-#
-#     if call.data.startswith('switch_'):
-#         interest = call.data[len('switch_'):]
-#         interest_value = get_user_field(user_id, interest)
-#         # try:
-#         #     bot.send_message(wudmc_tg, str(interest_value))
-#         #     bot.send_message(wudmc_tg, str(user_id))
-#         #     bot.send_message(wudmc_tg, interest_value)
-#         # except Exception:
-#         #     bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
-#         if interest_value:
-#             set_field(user_id, interest, False)
-#         else:
-#             set_field(user_id, interest, True)
-#         answer = 'Кликай по кнопкам'
-#         bot.delete_message(
-#                             chat_id=user_id,
-#                             message_id=message_id
-#                           )
-#
-#     else:
-#         answer = 'Чем Увлекаешься?'
-#         bot.send_chat_action(user_id, 'typing')
-#         # bot.edit_message_text(
-#         #     chat_id=user_id,
-#         #     message_id=message_id,
-#         #     text=answer
-#         # )
-#         bot.delete_message(
-#                             chat_id=user_id,
-#                             message_id=message_id
-#                           )
-#
-#     keyboard = types.InlineKeyboardMarkup()
-#     keyboard.row_width = 2
-#     get_chess = '✅' if get_user_field(user_id, 'int_1') else '❌'
-#     get_fifa = '✅' if get_user_field(user_id, 'int_2') else '❌'
-#     get_tur = '✅' if get_user_field(user_id, 'int_3') else '❌'
-#     get_sport = '✅' if get_user_field(user_id, 'int_4') else '❌'
-#     # try:
-#     #     bot.send_message(wudmc_tg, str(get_chess))
-#     #     bot.send_message(wudmc_tg, str(get_fifa))
-#     # except Exception:
-#     #     bot.send_message(wudmc_tg, f' ошибка: {traceback.format_exc()}')
-#     keyboard.add(
-#         types.InlineKeyboardButton(
-#             text=f'{get_chess} Шахматы',
-#             callback_data='switch_int_1'
-#         ),
-#         types.InlineKeyboardButton(
-#             text=f'{get_fifa} FIFA',
-#             callback_data='switch_int_2'
-#         ),
-#         types.InlineKeyboardButton(
-#             text=f'{get_tur} Пинг-понг',
-#             callback_data='switch_int_3'
-#         ),
-#         types.InlineKeyboardButton(
-#             text=f'{get_sport} Хуебала',
-#             callback_data='switch_int_4'
-#         ),
-#         types.InlineKeyboardButton(
-#             text='ГОТОВО',
-#             callback_data='help'
-#         )
-#     )
-#     bot.send_chat_action(user_id, 'typing')
-#     bot.send_message(user_id, answer, reply_markup=keyboard)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'set_pause')

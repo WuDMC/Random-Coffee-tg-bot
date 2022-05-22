@@ -33,7 +33,7 @@ def is_user_fillevrth(user_id):
         )
         .first()
     )
-    return True if (user.link != '' and user.about != '' and user.work != '') else False
+    return True if (user.link != 'Не указана' and user.about != '' and user.work != '' and user.name != 'Имя не указано') else False
 
 def get_user_field(user_id, field):
     user = (
