@@ -2177,24 +2177,15 @@ def change_location_callback(call):
     location = call.data[len('set_location_'):]
     set_field(user_id, 'location', location)
 
-    answer = 'Выбери локацию для встречи и нажми "ГОТОВО"'
+    answer = f'Ты изменил локацию на {location}'
     bot.delete_message(
                         chat_id=user_id,
                         message_id=message_id
                       )
 
-    location_value = get_user_field(user_id, 'location')
-    keyboard = types.InlineKeyboardMarkup()
-    keyboard.row_width = 1
-
-    keyboard.add(
-        types.InlineKeyboardButton(
-            text=f'вроде все ок',
-            callback_data='help'
-        )
-    )
     bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, reply_markup=keyboard)
+    bot.send_message(user_id, answer)
+    help(call)
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('change_location'))
 def change_location_callback(call):
