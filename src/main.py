@@ -1332,7 +1332,7 @@ def change_location_callback(call):
     keyboard.add(
         types.InlineKeyboardButton(
             text=f'Онлайн',
-            callback_data='set_location_Online'
+            callback_data='first_location_Online'
         )
     )
     answer = ('Со станой разобрались, теперь выбери город \n\n'
