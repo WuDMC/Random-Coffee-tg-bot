@@ -1440,7 +1440,7 @@ def ask_link_handler(message):
               'Изменить свой профиль тут - /help')
 
     set_field(user_id, 'about', about)
-
+    set_field(user_id, 'is_active', True)
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, answer)
     bot.set_state(user_id, next_state)
