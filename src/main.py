@@ -826,7 +826,6 @@ def generate_pairs():
         pair_history = create_pair_history(pair.id, pair.user_a, pair.user_b, pair.location)
         set_pair_field(pair.id, 'pair_history_id', pair_history.id)
         bot.send_message(wudmc_tg, pair_history.id)
-
     # sleep(1)
     # for user in get_verified_users():
     #     if user.is_active:
