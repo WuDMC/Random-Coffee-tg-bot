@@ -799,6 +799,7 @@ def show_pairs_callback(call):
 def generate_pairs():
     all_active_users = get_users_by_loc()
     delete_pairs()
+    additional_online_list = []
 
     for user_list in all_active_users:
         random.shuffle(user_list)
@@ -808,7 +809,17 @@ def generate_pairs():
             if len(pair) == 2:
                 create_pair(pair[0].telegram_id, pair[1].telegram_id, get_user_field(pair[0].telegram_id, 'location'))
             else:
-                create_pair(pair[0].telegram_id, '', get_user_field(pair[0].telegram_id, 'location'))
+                # create_pair(pair[0].telegram_id, '', get_user_field(pair[0].telegram_id, 'location'))
+                additional_online_list.append(pair[0])
+    sleep(1)
+    random.shuffle(additional_online_list)
+    additional_pairs = [additional_online_list[i:i + 2]
+             for i in range(0, len(additional_online_list), 2)]
+    for pair in additional_pairs:
+        if len(pair) == 2:
+            create_pair(pair[0].telegram_id, pair[1].telegram_id, 'Онлайн')
+        else:
+            create_pair(pair[0].telegram_id, '', 'Онлайн')
     sleep(1)
     pairs_db = get_pairs()
     for pair in pairs_db:
@@ -816,31 +827,31 @@ def generate_pairs():
         set_pair_field(pair.id, 'pair_history_id', pair_history.id)
         bot.send_message(wudmc_tg, pair_history.id)
 
-    sleep(1)
-    for user in get_verified_users():
-        if user.is_active:
-            try:
-                bot.send_message(wudmc_tg,
-                                 f'Отправляю сообщение юзеру {user.telegram_id} о назначении пары ')
-                bot.send_message(user.telegram_id,
-                                 'Ура! Пары назначены, скоро тебе придет сообщение с твоей парой на эту неделю')
-            except Exception:
-                set_field(user.telegram_id, 'is_active', False)
-                set_field(user.telegram_id, 'is_verified', False)
-                bot.send_message(wudmc_tg,
-                                 f' Сообщение юзеру о назначении пары {user.telegram_id} не отправлено: {traceback.format_exc()}')
-        else:
-            try:
-                bot.send_message(wudmc_tg,
-                                 f'Отправляю сообщение юзеру {user.telegram_id} о назначении пары ')
-                bot.send_message(user.telegram_id,
-                                 'Пары назначены, но твой профиль был на паузе. Не упусти свой шанс на будущей неделе.')
-            except Exception:
-                set_field(user.telegram_id, 'is_active', False)
-                set_field(user.telegram_id, 'is_verified', False)
-                bot.send_message(wudmc_tg,
-                                 f'Сообщение юзеру о назначении пары {user.telegram_id} не отправлено: {traceback.format_exc()}')
-        sleep(1)
+    # sleep(1)
+    # for user in get_verified_users():
+    #     if user.is_active:
+    #         try:
+    #             bot.send_message(wudmc_tg,
+    #                              f'Отправляю сообщение юзеру {user.telegram_id} о назначении пары ')
+    #             bot.send_message(user.telegram_id,
+    #                              'Ура! Пары назначены, скоро тебе придет сообщение с твоей парой на эту неделю')
+    #         except Exception:
+    #             set_field(user.telegram_id, 'is_active', False)
+    #             set_field(user.telegram_id, 'is_verified', False)
+    #             bot.send_message(wudmc_tg,
+    #                              f' Сообщение юзеру о назначении пары {user.telegram_id} не отправлено: {traceback.format_exc()}')
+    #     else:
+    #         try:
+    #             bot.send_message(wudmc_tg,
+    #                              f'Отправляю сообщение юзеру {user.telegram_id} о назначении пары ')
+    #             bot.send_message(user.telegram_id,
+    #                              'Пары назначены, но твой профиль был на паузе. Не упусти свой шанс на будущей неделе.')
+    #         except Exception:
+    #             set_field(user.telegram_id, 'is_active', False)
+    #             set_field(user.telegram_id, 'is_verified', False)
+    #             bot.send_message(wudmc_tg,
+    #                              f'Сообщение юзеру о назначении пары {user.telegram_id} не отправлено: {traceback.format_exc()}')
+    #     sleep(1)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'generate_pairs')
