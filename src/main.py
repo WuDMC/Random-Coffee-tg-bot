@@ -82,7 +82,7 @@ flag_map = {
         'Германия': '🇩🇪',
         'Дания': '🇩🇰',
         'Россия': '🇷🇺',
-        'Онлайн' : '🌎'
+        'Online' : '🌎'
     }
 
 # заготовки сообщения
@@ -817,39 +817,39 @@ def generate_pairs():
              for i in range(0, len(additional_online_list), 2)]
     for pair in additional_pairs:
         if len(pair) == 2:
-            create_pair(pair[0].telegram_id, pair[1].telegram_id, 'Онлайн')
+            create_pair(pair[0].telegram_id, pair[1].telegram_id, 'Online')
         else:
-            create_pair(pair[0].telegram_id, '', 'Онлайн')
+            create_pair(pair[0].telegram_id, '', 'Online')
     sleep(1)
     pairs_db = get_pairs()
     for pair in pairs_db:
         pair_history = create_pair_history(pair.id, pair.user_a, pair.user_b, pair.location)
         set_pair_field(pair.id, 'pair_history_id', pair_history.id)
         bot.send_message(wudmc_tg, pair_history.id)
-    # sleep(1)
-    # for user in get_verified_users():
-    #     if user.is_active:
-    #         try:
-    #             bot.send_message(wudmc_tg,
-    #                              f'Отправляю сообщение юзеру {user.telegram_id} о назначении пары ')
-    #             bot.send_message(user.telegram_id,
-    #                              'Ура! Пары назначены, скоро тебе придет сообщение с твоей парой на эту неделю')
-    #         except Exception:
-    #             set_field(user.telegram_id, 'is_active', False)
-    #             set_field(user.telegram_id, 'is_verified', False)
-    #             bot.send_message(wudmc_tg,
-    #                              f' Сообщение юзеру о назначении пары {user.telegram_id} не отправлено: {traceback.format_exc()}')
-    #     else:
-    #         try:
-    #             bot.send_message(wudmc_tg,
-    #                              f'Отправляю сообщение юзеру {user.telegram_id} о назначении пары ')
-    #             bot.send_message(user.telegram_id,
-    #                              'Пары назначены, но твой профиль был на паузе. Не упусти свой шанс на будущей неделе.')
-    #         except Exception:
-    #             set_field(user.telegram_id, 'is_active', False)
-    #             set_field(user.telegram_id, 'is_verified', False)
-    #             bot.send_message(wudmc_tg,
-    #                              f'Сообщение юзеру о назначении пары {user.telegram_id} не отправлено: {traceback.format_exc()}')
+    sleep(1)
+    for user in get_verified_users():
+        if user.is_active:
+            try:
+                bot.send_message(wudmc_tg,
+                                 f'Отправляю сообщение юзеру {user.telegram_id} о назначении пары ')
+                bot.send_message(user.telegram_id,
+                                 'Ура! Пары назначены, скоро тебе придет сообщение с твоей парой на эту неделю')
+            except Exception:
+                set_field(user.telegram_id, 'is_active', False)
+                set_field(user.telegram_id, 'is_verified', False)
+                bot.send_message(wudmc_tg,
+                                 f' Сообщение юзеру о назначении пары {user.telegram_id} не отправлено: {traceback.format_exc()}')
+        else:
+            try:
+                bot.send_message(wudmc_tg,
+                                 f'Отправляю сообщение юзеру {user.telegram_id} о назначении пары ')
+                bot.send_message(user.telegram_id,
+                                 'Пары назначены, но твой профиль был на паузе. Не упусти свой шанс на будущей неделе.')
+            except Exception:
+                set_field(user.telegram_id, 'is_active', False)
+                set_field(user.telegram_id, 'is_verified', False)
+                bot.send_message(wudmc_tg,
+                                 f'Сообщение юзеру о назначении пары {user.telegram_id} не отправлено: {traceback.format_exc()}')
     #     sleep(1)
 
 
@@ -1038,12 +1038,12 @@ def send_invites():
                 bot.send_message(
 
                     pair.user_a,
-                    f'На этой неделе я познакомил {len_pairs} пар\n\nТвоя пара!\n\n{get_user(pair.user_b)}',
+                    f'На этой неделе я познакомил {len_pairs} пар\n\nТвоя пара!\n\n{get_user(pair.user_b)}\nЛокация для встречи: {pair.location}',
                     parse_mode='Markdown')
 
                 bot.send_message(
                     pair.user_b,
-                    f'На этой неделе я познакомил {len_pairs} пар\n\nТвоя пара!\n\n{get_user(pair.user_a)}',
+                    f'На этой неделе я познакомил {len_pairs} пар\n\nТвоя пара!\n\n{get_user(pair.user_a)}\nЛокация для встречи: {pair.location}',
                     parse_mode='Markdown')
             else:
                 bot.send_message(
@@ -1295,7 +1295,7 @@ def ask_name_handler(message):
 
     keyboard.add(
         types.InlineKeyboardButton(
-            text=f'Онлайн',
+            text=f'Online',
             callback_data='first_location_Online'
         )
     )
@@ -1341,12 +1341,12 @@ def change_location_callback(call):
     # )
     keyboard.add(
         types.InlineKeyboardButton(
-            text=f'Онлайн',
+            text=f'Online',
             callback_data='first_location_Online'
         )
     )
     answer = ('Со станой разобрались, теперь выбери город \n\n'
-              'Если твоего города нету, ты можешь участвовать 🌎 ОНЛАЙН ')
+              'Если твоего города нету, ты можешь участвовать 🌎 Online ')
 
               # 'Чтобы выбрать онлайн >>> нажми "Назад"'
 
@@ -2248,7 +2248,7 @@ def change_location_callback(call):
 
     keyboard.add(
         types.InlineKeyboardButton(
-            text=f'Онлайн',
+            text=f'Online',
             callback_data='set_location_Online'
         )
     )
@@ -2367,7 +2367,7 @@ if __name__ == "__main__":
     schedule.every().monday.at('12:00').do(send_invites)
     schedule.every().wednesday.at('17:30').do(send_blocked_users)
     schedule.every().saturday.at('14:05').do(ask_about_next_week)
-    schedule.every().sunday.at('14:30').do(ask_about_last_week)
+    # schedule.every().sunday.at('14:30').do(ask_about_last_week)
     schedule.every().sunday.at('19:42').do(remind_inactive)
     Thread(target=schedule_checker).start()
 
