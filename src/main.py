@@ -995,7 +995,7 @@ def ask_about_last_week():
                     set_field(pair.user_a, 'is_verified', False)
                     bot.send_message(wudmc_tg,
                                      f' запрос фидбека юзеру А {pair.user_b} НЕ отправлено: {traceback.format_exc()}')
-
+                sleep(1)
                 try:
                     keyboard = types.InlineKeyboardMarkup()
                     keyboard.row_width = 1
@@ -1024,9 +1024,9 @@ def ask_about_last_week():
                     set_field(pair.user_b, 'is_verified', False)
                     bot.send_message(wudmc_tg,
                                      f' запрос фидбека юзеру Б {pair.user_b} НЕ отправлено: {traceback.format_exc()}')
-
             bot.send_message(wudmc_tg,
                              f' запрос фидбека паре {pair.id} успешно отправлено')
+            sleep(1)
         except Exception:
 
             bot.send_message(wudmc_tg,
@@ -1041,12 +1041,12 @@ def send_invites():
                 bot.send_message(
 
                     pair.user_a,
-                    f'На этой неделе я познакомил {len_pairs} пар\n\nТвоя пара!\n\n{get_user(pair.user_b)}\nЛокация для встречи: {pair.location}',
+                    f'На этой неделе я познакомил {len_pairs} пар\n\nТвоя пара!\n\n{get_user(pair.user_b)}\n',
                     parse_mode='Markdown')
 
                 bot.send_message(
                     pair.user_b,
-                    f'На этой неделе я познакомил {len_pairs} пар\n\nТвоя пара!\n\n{get_user(pair.user_a)}\nЛокация для встречи: {pair.location}',
+                    f'На этой неделе я познакомил {len_pairs} пар\n\nТвоя пара!\n\n{get_user(pair.user_a)}\n',
                     parse_mode='Markdown')
             else:
                 bot.send_message(
@@ -2369,7 +2369,7 @@ if __name__ == "__main__":
     schedule.every().monday.at('12:00').do(send_invites)
     schedule.every().wednesday.at('17:30').do(send_blocked_users)
     schedule.every().saturday.at('14:05').do(ask_about_next_week)
-    # schedule.every().sunday.at('14:30').do(ask_about_last_week)
+    schedule.every().sunday.at('14:30').do(ask_about_last_week)
     schedule.every().sunday.at('19:42').do(remind_inactive)
     Thread(target=schedule_checker).start()
 
