@@ -1979,7 +1979,10 @@ def show_profile_callback(call):
         'Вот так будет выглядеть твой профиль для собеседника:\n\n'
         f'{user}\n\n'
     )
-
+    answer = (
+        'Вот так будет выглядеть твой профиль для собеседника:\n\n'
+        f'{user}\n\n'
+    )
     keyboard = types.InlineKeyboardMarkup()
 
     keyboard.add(
