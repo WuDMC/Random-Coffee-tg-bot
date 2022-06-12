@@ -824,7 +824,7 @@ def generate_pairs():
         set_pair_field(pair.id, 'pair_history_id', pair_history.id)
         bot.send_message(wudmc_tg, pair_history.id)
     sleep(1)
-    send_msg_about_gen_pairs
+    send_msg_about_gen_pairs()
 
 
 
