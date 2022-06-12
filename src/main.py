@@ -229,10 +229,10 @@ def help(message):
             text=f'{pause_txt}',
             callback_data=pause_data
         ),
-        types.InlineKeyboardButton(
-            text=f'{flag}󠁧󠁢󠁥 Локация: {location}',
-            callback_data='change_location'
-        ),
+        # types.InlineKeyboardButton(
+        #     text=f'{flag}󠁧󠁢󠁥 Локация: {location}',
+        #     callback_data='change_location'
+        # ),
     )
     if user.nickname == 'Не указан':
         keyboard.add(
@@ -257,7 +257,7 @@ def help(message):
         status = '🟥 Не участвую в Random Coffee 🟥'
 
     help_txt = (f'*Статус на этой неделе:* {status}\n\n'
-                'Поддержка по боту в чате Civilians Capital Chat\n\n'
+                'Поддержка по боту в чате @BatumiRandomCoffee\n\n'
                 'Выбери подходящую опцию ниже')
     bot.send_chat_action(user_id, 'typing')
     bot.send_message(user_id, help_txt,
@@ -593,7 +593,7 @@ def feedbacktxt_callback(call):
             field = 'feedback_user_a'
         if feedback_status == 'dontwant':
             set_pair_history_field(pair_history_id, field, 'dontwant')
-            answer = (f'Спасибо , я запомню что ты не очень общительный 😂\n\n'
+            answer = (f'Спасибо , я запомню, что ты не очень общительный 😂\n\n'
                       f'В понедельник будут назначены новые пары!\n'
                       f'Проверь, что в твоем профиле актуальная информация')
 
@@ -803,13 +803,11 @@ def generate_pairs():
 
     for user_list in all_active_users:
         random.shuffle(user_list)
-        pairs = [user_list[i:i + 2]
-                 for i in range(0, len(user_list), 2)]
+        pairs = [user_list[i:i + 2] for i in range(0, len(user_list), 2)]
         for pair in pairs:
             if len(pair) == 2:
                 create_pair(pair[0].telegram_id, pair[1].telegram_id, get_user_field(pair[0].telegram_id, 'location'))
             else:
-                # create_pair(pair[0].telegram_id, '', get_user_field(pair[0].telegram_id, 'location'))
                 additional_online_list.append(pair[0])
     sleep(1)
     random.shuffle(additional_online_list)
@@ -827,6 +825,12 @@ def generate_pairs():
         set_pair_field(pair.id, 'pair_history_id', pair_history.id)
         bot.send_message(wudmc_tg, pair_history.id)
     sleep(1)
+    send_msg_about_gen_pairs
+
+
+
+
+def send_msg_about_gen_pairs():
     for user in get_verified_users():
         if user.is_active:
             try:
@@ -1218,15 +1222,7 @@ def start_handler(message):
         set_field(user_id, 'link', 'Не указана')
         set_field(user_id, 'nickname', nickname)
         set_field(user_id, 'name', 'Имя не указано')
-        answer = ('Привет!🤩\n'
-                  'Я Random Coffee бот 🤖  для Сivilians\n\n'
-                  'Каждую неделю я буду предлагать '
-                  'тебе для встречи интересного человека, '
-                  'случайно выбранного среди '
-                  'других участников🎲\n\n'
-                  'Введи инвайт-код, чтобы продолжить\n\n'
-                  'ПОДСКАЗКА - инвайт-код был в прикреплен в сообщении со ссылкой на меня\n'
-                  'Или спроси в нашем чате в Civilians Capital Chat')
+        answer = txts.hello_msg
 
 
     elif not user and message.from_user.username in ADMINS:
@@ -1241,7 +1237,7 @@ def start_handler(message):
     else:
         answer = ('Рад тебя видеть!🔥\n'
                   'Твой профиль - /help\n'
-                  'Обсуждение и вопросы по боту Civilians Capital Chat\n\n'
+                  'Обсуждение и вопросы по боту @BatumiRandomCoffee'
                   )
         next_state = States.complete
 
@@ -1285,11 +1281,18 @@ def ask_password_handler(message):
 @bot.message_handler(state=States.ask_name)
 def ask_name_handler(message):
     user_id = message.from_user.id
-    next_state = States.wait
+    # next_state = States.wait
+    next_state = States.ask_link
     name = message.text
     set_field(user_id, 'name', name)
+    # answer = ('Рад познакомиться! \n\n'
+    #           'Теперь выбери локацию для встреч, ты сможешь изменить ее в любое время.')
     answer = ('Рад познакомиться! \n\n'
-              'Теперь выбери локацию для встреч, ты сможешь изменить ее в любое время.')
+              'Перед тем как твой профиль станет активным надо заполнить информацию о себе.'
+              'Так вы в паре сможете лучше узнать '
+              'друг о друге до встречи🔎\n\n'
+              'Для начала пришли ссылку (или никнейм) на свой профиль '
+              'в любой социальной сети. ')
     keyboard = types.InlineKeyboardMarkup()
     keyboard.row_width = 1
 
@@ -1424,7 +1427,7 @@ def ask_link_handler(message):
     bot.set_state(user_id, next_state)
 
 @bot.message_handler(state=States.ask_work)
-def ask_link_handler(message):
+def ask_work_handler(message):
     user_id = message.from_user.id
     next_state = States.ask_about
 
@@ -1442,7 +1445,7 @@ def ask_link_handler(message):
     bot.set_state(user_id, next_state)
 
 @bot.message_handler(state=States.ask_about)
-def ask_link_handler(message):
+def ask_about_handler(message):
     user_id = message.from_user.id
     next_state = States.complete
 
