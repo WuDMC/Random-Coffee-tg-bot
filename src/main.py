@@ -1914,7 +1914,7 @@ def change_profile_callback(call):
     if call.data == 'help_from_show_profile':
         user = get_user(user_id)
         answer = (
-            f'*Твоя локация на этой неделе:* {user.location}\n\n'
+            # f'*Твоя локация на этой неделе:* {user.location}\n\n'
             'Вот так будет выглядеть твой профиль для собеседника:\n\n'
             f'{user}'
         )
