@@ -1292,24 +1292,25 @@ def ask_name_handler(message):
               'друг о друге до встречи🔎\n\n'
               'Для начала пришли ссылку (или никнейм) на свой профиль '
               'в любой социальной сети. ')
-    keyboard = types.InlineKeyboardMarkup()
-    keyboard.row_width = 1
+    # keyboard = types.InlineKeyboardMarkup()
+    # keyboard.row_width = 1
 
-    keyboard.add(
-        types.InlineKeyboardButton(
-            text=f'Online',
-            callback_data='first_location_Online'
-        )
-    )
-    for country in country_map.keys():
-        keyboard.add(
-            types.InlineKeyboardButton(
-                text=f'{country}',
-                callback_data=f'country_{country}'
-            )
-        )
+    # keyboard.add(
+    #     types.InlineKeyboardButton(
+    #         text=f'Online',
+    #         callback_data='first_location_Online'
+    #     )
+    # )
+    # for country in country_map.keys():
+    #     keyboard.add(
+    #         types.InlineKeyboardButton(
+    #             text=f'{country}',
+    #             callback_data=f'country_{country}'
+    #         )
+    #     )
+    bot.send_message(user_id, answer)
     bot.send_chat_action(user_id, 'typing')
-    bot.send_message(user_id, answer, reply_markup=keyboard)
+    # bot.send_message(user_id, answer, reply_markup=keyboard)
     bot.set_state(user_id, next_state)
 
 
