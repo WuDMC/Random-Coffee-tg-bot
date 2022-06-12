@@ -264,7 +264,7 @@ def help(message):
                      reply_markup=keyboard, parse_mode='Markdown')
     bot.set_state(user_id, next_state)
 
-# admin callbacks
+#  admin callbacks
 
 @bot.message_handler(state=States.change_user_for_ask_id_admin)
 def ask_nickname_handler(message):
