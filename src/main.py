@@ -1219,6 +1219,7 @@ def start_handler(message):
     elif (not user or not user.is_verified) and message.from_user.username not in ADMINS:
         create_user(user_id)
         set_field(user_id, 'link', 'Не указана')
+        set_field(user_id, 'location', 'Батуми')
         set_field(user_id, 'nickname', nickname)
         set_field(user_id, 'name', 'Имя не указано')
         answer = txts.hello_msg
