@@ -70,7 +70,6 @@ class Pair(Base):
     def __repr__(self):
         return f'<Pair {self.id}; User A {self.user_a} - User B {self.user_b}>'
 
-
 class Pair_History(Base):
     __tablename__ = 'Pair_History'
 
