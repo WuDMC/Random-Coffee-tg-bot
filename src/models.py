@@ -65,6 +65,7 @@ class Pair(Base):
     created_at = Column(DateTime, default=datetime.datetime.now)
     updated_at = Column(DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     pair_history_id = Column(Integer, nullable=True)
+    about = Column(String, nullable=False)
 
     def __repr__(self):
         return f'<Pair {self.id}; User A {self.user_a} - User B {self.user_b}>'
