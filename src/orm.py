@@ -257,7 +257,6 @@ def set_pair_history_field(pair_history_id, key, value):
     )
     session.commit()
 
-
 def create_pair(user_id_a, user_id_b, location):
     session.add(Pair(
         user_a=user_id_a,
