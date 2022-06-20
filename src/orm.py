@@ -262,7 +262,8 @@ def create_pair(user_id_a, user_id_b, location):
     session.add(Pair(
         user_a=user_id_a,
         user_b=user_id_b,
-        location=location
+        location=location,
+        about='none'
     ))
     session.commit()
 
